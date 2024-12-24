@@ -10,7 +10,7 @@ const WritingApi = axios.create({
    withCredentials: true,
 })
 
-export const registerUser = async (userData) => {
+export const createUser = async (userData) => {
    try {
       const response = await WritingApi.post('/auth/join', userData)
       return response
@@ -40,7 +40,7 @@ export const logoutUser = async () => {
    }
 }
 
-export const checkAuthStatus = async () => {
+export const authStatus = async () => {
    try {
       const response = await WritingApi.get('/auth/status')
       return response

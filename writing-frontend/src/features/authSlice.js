@@ -1,21 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser, loginUser, logoutUser, checkAuthStatus } from '../api/writingApi'
+import { createUser, loginUser, logoutUser, authStatus } from '../api/writingApi'
 
-// 회원가입 thunk
-export const registerUserThunk = createAsyncThunk(
-   'auth/registerUser',
+export const createUserThunk = createAsyncThunk(
+   'auth/createUser',
    async (userData, { rejectWithValue }) => {
       try {
-         const response = await registerUser(userData)
+         const response = await createUser(userData)
          return response.data.user
       } catch (error) {
          return rejectWithValue(error.response?.data?.message || '회원가입 실패')
       }
    }
 )
-
-/* rejectWithValue : 에러 메세지를 rejected에 action.payload로 전달할때 사용 
-rejectWithValue 사용시 에러에 더 구체적인 내용을 담을 수 있음 */
 
 export const loginUserThunk = createAsyncThunk(
    'auth/loginUser',
@@ -41,11 +37,11 @@ export const logoutUserThunk = createAsyncThunk(
    }
 )
 
-export const checkAuthStatusThunk = createAsyncThunk(
-   'auth/checkAuthStatus',
+export const authStatusThunk = createAsyncThunk(
+   'auth/authStatus',
    async (_, { rejectWithValue }) => {
       try {
-         const response = await checkAuthStatus()
+         const response = await authStatus()
          return response.data
       } catch (error) {
          return rejectWithValue(error.response?.data?.message || '상태 확인 실패')
@@ -56,8 +52,6 @@ export const checkAuthStatusThunk = createAsyncThunk(
 const authSlice = createSlice({
    name: 'auth',
    initialState: {
-      // 서버에서 가져오는 데이터가 배열일때만 []로 초기값을 주고 나머지는 null로 준다
-      // null은 주로 문자열, json 객체 데이터 일때 사용
       user: null,
       isAuthenticated: false,
       loading: false,
@@ -65,17 +59,16 @@ const authSlice = createSlice({
    },
    reducers: {},
    extraReducers: (builder) => {
-      // 회원가입
       builder
-         .addCase(registerUserThunk.pending, (state) => {
+         .addCase(createUserThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(registerUserThunk.fulfilled, (state, action) => {
+         .addCase(createUserThunk.fulfilled, (state, action) => {
             state.loading = false
             state.user = action.payload
          })
-         .addCase(registerUserThunk.rejected, (state, action) => {
+         .addCase(createUserThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
@@ -105,16 +98,16 @@ const authSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         .addCase(checkAuthStatusThunk.pending, (state) => {
+         .addCase(authStatusThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(checkAuthStatusThunk.fulfilled, (state, action) => {
+         .addCase(authStatusThunk.fulfilled, (state, action) => {
             state.loading = false
             state.user = action.payload.user || null
             state.isAuthenticated = action.payload.isAuthenticated
          })
-         .addCase(checkAuthStatusThunk.rejected, (state, action) => {
+         .addCase(authStatusThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
             state.user = null

@@ -1,5 +1,5 @@
 import Postitem from '../components/post/PostItem'
-import { Container } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 
 function PostPage() {
    return (
