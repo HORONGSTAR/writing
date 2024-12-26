@@ -1,53 +1,41 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { createUser, loginUser, logoutUser, authStatus } from '../api/writingApi'
 
-export const createUserThunk = createAsyncThunk(
-   'auth/createUser',
-   async (userData, { rejectWithValue }) => {
-      try {
-         const response = await createUser(userData)
-         return response.data.user
-      } catch (error) {
-         return rejectWithValue(error.response?.data?.message || '회원가입 실패')
-      }
+export const createUserThunk = createAsyncThunk('auth/createUser', async (userData, { rejectWithValue }) => {
+   try {
+      const response = await createUser(userData)
+      return response.data.user
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '회원가입 실패')
    }
-)
+})
 
-export const loginUserThunk = createAsyncThunk(
-   'auth/loginUser',
-   async (credentials, { rejectWithValue }) => {
-      try {
-         const response = await loginUser(credentials)
-         return response.data.user
-      } catch (error) {
-         return rejectWithValue(error.response?.data?.message || '로그인 실패')
-      }
+export const loginUserThunk = createAsyncThunk('auth/loginUser', async (credentials, { rejectWithValue }) => {
+   try {
+      const response = await loginUser(credentials)
+      return response.data.user
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '로그인 실패')
    }
-)
+})
 
-export const logoutUserThunk = createAsyncThunk(
-   'auth/logoutUser',
-   async (_, { rejectWithValue }) => {
-      try {
-         const response = await logoutUser()
-         return response.data
-      } catch (error) {
-         return rejectWithValue(error.response?.data?.message || '로그아웃 실패')
-      }
+export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
+   try {
+      const response = await logoutUser()
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '로그아웃 실패')
    }
-)
+})
 
-export const authStatusThunk = createAsyncThunk(
-   'auth/authStatus',
-   async (_, { rejectWithValue }) => {
-      try {
-         const response = await authStatus()
-         return response.data
-      } catch (error) {
-         return rejectWithValue(error.response?.data?.message || '상태 확인 실패')
-      }
+export const authStatusThunk = createAsyncThunk('auth/authStatus', async (_, { rejectWithValue }) => {
+   try {
+      const response = await authStatus()
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '상태 확인 실패')
    }
-)
+})
 
 const authSlice = createSlice({
    name: 'auth',

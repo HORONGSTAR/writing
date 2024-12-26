@@ -2,23 +2,31 @@ import './styles/common.css'
 import Home from './pages/Home'
 import ThemePage from './pages/ThemePage'
 import PostPage from './pages/PostPage'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
+import WritePage from './pages/WritePage'
+import AuthPage from './pages/AuthPage'
 import Navber from './components/shared/Navber'
 import { Route, Routes } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { authStatusThunk } from './features/authSlice'
+import { useEffect } from 'react'
 
 function App() {
    const { isAuthenticated, user } = useSelector((state) => state.auth)
-   console.log(isAuthenticated)
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      dispatch(authStatusThunk())
+   }, [dispatch])
+
    return (
       <>
-         <Navber isAuthenticated={isAuthenticated} />
+         <Navber isAuthenticated={isAuthenticated} user={user} />
          <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage />} />
             <Route path="/post/:type" element={<PostPage />} />
+            <Route path="/write" element={<WritePage />} />
             <Route path="/theme" element={<ThemePage />} />
          </Routes>
       </>

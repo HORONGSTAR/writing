@@ -10,19 +10,19 @@ module.exports = () => {
    passport.deserializeUser((id, done) => {
       User.findOne({
          where: { id },
-         attributes: ['id', 'nick', 'email', 'createdAt', 'updatedAt'],
-         include: [
-            {
-               model: User,
-               as: 'Followers',
-               attributes: ['id', 'nick', 'email'],
-            },
-            {
-               model: User,
-               as: 'Followings',
-               attributes: ['id', 'nick', 'email'],
-            },
-         ],
+         // attributes: ['id', 'nick', 'email', 'createdAt', 'updatedAt'],
+         // include: [
+         //    {
+         //       model: User,
+         //       as: 'Followers',
+         //       attributes: ['id', 'nick', 'email'],
+         //    },
+         //    {
+         //       model: User,
+         //       as: 'Followings',
+         //       attributes: ['id', 'nick', 'email'],
+         //    },
+         // ],
       })
          .then((user) => done(null, user))
          .catch((err) => done(err))

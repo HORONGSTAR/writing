@@ -1,20 +1,13 @@
-import * as React from 'react'
+import React, { useState, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { logoutUserThunk } from '../../features/authSlice'
 import { Link as RouterLink } from 'react-router-dom'
-import {
-   Box,
-   Avatar,
-   Menu,
-   MenuItem,
-   Divider,
-   IconButton,
-   Container,
-   Tooltip,
-   Link,
-   Button,
-} from '@mui/material'
+import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button } from '@mui/material'
 
-function Navber({ isAuthenticated }) {
-   const [anchorEl, setAnchorEl] = React.useState(null)
+function Navber({ isAuthenticated, user }) {
+   const dispatch = useDispatch()
+
+   const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
    const handleClick = (event) => {
       setAnchorEl(event.currentTarget)
@@ -22,25 +15,33 @@ function Navber({ isAuthenticated }) {
    const handleClose = () => {
       setAnchorEl(null)
    }
+   const handleLogout = useCallback(() => {
+      dispatch(logoutUserThunk())
+         .unwrap()
+         .then(() => (window.location.href = '/'))
+         .catch((error) => {
+            alert(error)
+         })
+   }, [dispatch])
    return (
-      <Container>
-         <Box
+      <>
+         <Container
             sx={{
                display: 'flex',
                alignItems: 'center',
                height: 80,
             }}
          >
-            <Link mx={3} component={RouterLink} to="/" underline="none">
+            <Link mr={3} component={RouterLink} to="/" underline="none">
                글조각
             </Link>
-            <Link mx={3} component={RouterLink} to="/post/all" underline="hover">
+            <Link mr={3} component={RouterLink} to="/post/all" underline="hover">
                전체 글
             </Link>
-            <Link mx={3} component={RouterLink} to="/post/follow" underline="hover">
+            <Link mr={3} component={RouterLink} to="/post/follow" underline="hover">
                구독
             </Link>
-            <Link mx={3} component={RouterLink} to="/theme" underline="hover">
+            <Link mr={3} component={RouterLink} to="/theme" underline="hover">
                주제 모음집
             </Link>
 
@@ -58,16 +59,11 @@ function Navber({ isAuthenticated }) {
                   </IconButton>
                </Tooltip>
             ) : (
-               <Button
-                  sx={{ marginLeft: 'auto' }}
-                  component={RouterLink}
-                  to="/login"
-                  variant="outlined"
-               >
+               <Button sx={{ marginLeft: 'auto' }} component={RouterLink} to="/login" variant="outlined">
                   로그인
                </Button>
             )}
-         </Box>
+         </Container>
          <Menu
             anchorEl={anchorEl}
             id="account-menu"
@@ -106,7 +102,7 @@ function Navber({ isAuthenticated }) {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
          >
             <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/post" underline="none">
+               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/write" underline="none">
                   글 쓰기
                </Link>
             </MenuItem>
@@ -122,13 +118,13 @@ function Navber({ isAuthenticated }) {
                </Link>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleLogout}>
                <Link sx={{ minWidth: 100 }} component={RouterLink} to="/logout" underline="none">
                   로그아웃
                </Link>
             </MenuItem>
          </Menu>
-      </Container>
+      </>
    )
 }
 
