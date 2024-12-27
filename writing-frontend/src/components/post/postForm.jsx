@@ -1,22 +1,42 @@
-import { TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
-import { useState } from 'react'
+import { TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl, Snackbar } from '@mui/material'
+import { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 
-function PostForm() {
-   const [age, setAge] = useState('')
+function PostForm({ onSubmit, initialValues = {} }) {
+   const [title, setTitle] = useState('')
+   const [content, setContent] = useState('')
+   const [themeId, setThemeId] = useState('')
+   const { themes } = useSelector((state) => state.themes)
+   const [open, setOpen] = useState(false)
+
+   const handleSubmit = useCallback(
+      (e) => {
+         e.preventDefault()
+         const value = { ti: title.trim(), ct: content.trim() }
+         if (!value.ti || !value.ct) return setOpen(true)
+         onSubmit({ title, content })
+      },
+      [title, content, onSubmit]
+   )
 
    return (
-      <Stack component="form" spacing={2}>
+      <Stack spacing={2}>
          <FormControl sx={{ width: '300px' }}>
-            <InputLabel id="demo-simple-select-label">참여주제</InputLabel>
-            <Select labelId="demo-simple-select-label" id="demo-simple-select" value={age} label="참여주제" onChange={(e) => setAge(e.target.value)}>
-               <MenuItem value={10}>Ten</MenuItem>
-               <MenuItem value={20}>Twenty</MenuItem>
-               <MenuItem value={30}>Thirty</MenuItem>
+            <InputLabel id="select">참여주제</InputLabel>
+            <Select labelId="select" id="select" value={themeId} label="참여주제" onChange={(e) => setThemeId(e.target.value)}>
+               {themes.map((theme) => (
+                  <MenuItem key={`theme_keyword_${theme.id}`} value={theme.id}>
+                     {theme.keyword}
+                  </MenuItem>
+               ))}
             </Select>
          </FormControl>
-         <TextField fullWidth placeholder="제목을 작성하세요." />
-         <TextField fullWidth placeholder="내용을 작성하세요." rows={24} multiline />
-         <Button></Button>
+         <TextField fullWidth label="제목" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+         <TextField fullWidth multiline label="내용" rows={24} id="content" value={content} onChange={(e) => setContent(e.target.value)} />
+         <Button sx={{ marginLeft: 'auto' }} onClick={handleSubmit} variant="contained">
+            등록
+         </Button>
+         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message="제목 및 내용을 채워주세요." />
       </Stack>
    )
 }

@@ -1,10 +1,10 @@
-import Postitem from '../components/post/PostItem'
+import PostDetail from '../components/post/PostDetail'
 import { Container } from '@mui/material'
 
 function PostPage() {
    return (
       <Container>
-         <Postitem />
+         <PostDetail />
       </Container>
    )
 }

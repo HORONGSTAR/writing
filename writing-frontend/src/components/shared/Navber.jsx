@@ -35,10 +35,10 @@ function Navber({ isAuthenticated, user }) {
             <Link mr={3} component={RouterLink} to="/" underline="none">
                글조각
             </Link>
-            <Link mr={3} component={RouterLink} to="/post/all" underline="hover">
+            <Link mr={3} component={RouterLink} to="/main/all" underline="hover">
                전체 글
             </Link>
-            <Link mr={3} component={RouterLink} to="/post/follow" underline="hover">
+            <Link mr={3} component={RouterLink} to="/main/follow" underline="hover">
                구독
             </Link>
             <Link mr={3} component={RouterLink} to="/theme" underline="hover">

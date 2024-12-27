@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize')
-const { all } = require('../routes/post')
 
 module.exports = class Post extends Sequelize.Model {
    static init(sequelize) {
