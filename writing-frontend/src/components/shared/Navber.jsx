@@ -102,7 +102,7 @@ function Navber({ isAuthenticated, user }) {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
          >
             <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/write" underline="none">
+               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/post/create" underline="none">
                   글 쓰기
                </Link>
             </MenuItem>
@@ -113,7 +113,7 @@ function Navber({ isAuthenticated, user }) {
                </Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/my" underline="none">
+               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/profile" underline="none">
                   마이페이지
                </Link>
             </MenuItem>

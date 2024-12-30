@@ -60,9 +60,9 @@ export const createPost = async (postDate) => {
    }
 }
 
-export const getPostById = async (id) => {
+export const updatePost = async (postDate, id) => {
    try {
-      const response = await writingApi.get(`/post/${id}`)
+      const response = await writingApi.put(`/post/user/${id}`, postDate)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -70,9 +70,19 @@ export const getPostById = async (id) => {
    }
 }
 
-export const getPostByFollow = async () => {
+export const deletePost = async (id) => {
    try {
-      const response = await writingApi.get('/post/follow')
+      const response = await writingApi.delete(`/post/user/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const getPostById = async (id) => {
+   try {
+      const response = await writingApi.get(`/post/user/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -82,7 +92,17 @@ export const getPostByFollow = async () => {
 
 export const getPosts = async (page) => {
    try {
-      const response = await writingApi.get(`/post?page=${page}`)
+      const response = await writingApi.get(`/post/all?page=${page}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const getFolloingPosts = async (page) => {
+   try {
+      const response = await writingApi.get(`/post/following?page=${page}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -108,6 +128,46 @@ export const createTheme = async (themeDate) => {
 export const getThemes = async (page) => {
    try {
       const response = await writingApi.get(`/theme?page=${page}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const getProfile = async () => {
+   try {
+      const response = await writingApi.get(`/page/profile`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const getProfileId = async (id) => {
+   try {
+      const response = await writingApi.get(`/page/profile/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const followUser = async (id) => {
+   try {
+      const response = await writingApi.post(`/user/follow/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const unFollowUser = async (id) => {
+   try {
+      const response = await writingApi.delete(`/user/follow/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)

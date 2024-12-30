@@ -7,10 +7,12 @@ module.exports = class User extends Sequelize.Model {
             email: {
                type: Sequelize.STRING(40),
                allowNull: false,
+               unique: true,
             },
             nick: {
                type: Sequelize.STRING(40),
                allowNull: false,
+               unique: true,
             },
             password: {
                type: Sequelize.STRING(100),
@@ -50,5 +52,15 @@ module.exports = class User extends Sequelize.Model {
       })
       db.User.belongsToMany(db.Post, { through: 'LikePosts' })
       db.User.belongsToMany(db.Post, { through: 'BookmarkPosts' })
+      db.User.belongsToMany(db.User, {
+         foreignKey: 'FollowingId',
+         as: 'Followers',
+         through: 'Follow',
+      })
+      db.User.belongsToMany(db.User, {
+         foreignKey: 'FollowerId',
+         as: 'Followings',
+         through: 'Follow',
+      })
    }
 }

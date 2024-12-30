@@ -32,7 +32,7 @@ router.post('/', isLoggedIn, async (req, res) => {
    }
 })
 
-router.put('/:id', isLoggedIn, async (req, res) => {
+router.put('/user/:id', isLoggedIn, async (req, res) => {
    try {
       const post = await Post.findOne({
          where: {
@@ -81,7 +81,7 @@ router.put('/:id', isLoggedIn, async (req, res) => {
    }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/user/:id', async (req, res) => {
    try {
       const post = await Post.findOne({
          where: {
@@ -110,7 +110,7 @@ router.delete('/:id', async (req, res) => {
    }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/user/:id', async (req, res) => {
    try {
       const post = await Post.findOne({
          where: { id: req.params.id },
@@ -146,14 +146,13 @@ router.get('/:id', async (req, res) => {
    }
 })
 
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
    const limit = parseInt(req.query.limit, 10) || 3
    const offset = (page - 1) * limit
 
    try {
       const count = await Post.count()
-
       const posts = await Post.findAll({
          limit,
          offset,
@@ -191,17 +190,18 @@ router.get('/', async (req, res) => {
    }
 })
 
-router.get('/follow', async (req, res) => {
+router.get('/following', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
    const limit = parseInt(req.query.limit, 10) || 3
    const offset = (page - 1) * limit
+   const followingId = req.user?.Followings.map((following) => following.id)
 
    try {
       const count = await Post.count()
-
-      const posts = await Post.findAll({
+      const followingPosts = await Post.findAll({
          limit,
          offset,
+         where: { id: followingId },
          order: [['createdAt', 'DESC']],
          include: [
             {
@@ -217,14 +217,14 @@ router.get('/follow', async (req, res) => {
 
       res.json({
          success: true,
-         posts,
+         followingPosts,
          pagination: {
             totalPosts: count,
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             limit,
          },
-         message: '전체 게시물 리스트를 성공적으로 불러왔습니다.',
+         message: '구독 게시물 리스트를 성공적으로 불러왔습니다.',
       })
    } catch (error) {
       console.error(error)

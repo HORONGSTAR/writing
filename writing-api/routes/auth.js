@@ -34,11 +34,19 @@ router.post('/join', isNotLoggedIn, upload.single('img'), async (req, res, next)
    const { email, nick, password, avatar, info } = req.body
    try {
       const exUser = await User.findOne({ where: { email } })
+      const exNick = await User.findOne({ where: { nick } })
 
       if (exUser) {
          return res.status(409).json({
             success: false,
             message: '이미 존재하는 사용자입니다.',
+         })
+      }
+
+      if (exNick) {
+         return res.status(409).json({
+            success: false,
+            message: '이미 존재하는 닉네임입니다.',
          })
       }
 
@@ -74,9 +82,7 @@ router.post('/join', isNotLoggedIn, upload.single('img'), async (req, res, next)
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
    passport.authenticate('local', (authError, user, info) => {
       if (authError) {
-         return res
-            .status(500)
-            .json({ success: false, message: '인증 중 오류 발생', error: authError })
+         return res.status(500).json({ success: false, message: '인증 중 오류 발생', error: authError })
       }
       if (!user) {
          return res.status(401).json({
@@ -86,9 +92,7 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
       }
       req.logIn(user, (loginError) => {
          if (loginError) {
-            return res
-               .status(500)
-               .json({ success: false, message: '로그인 중 오류 발생', error: loginError })
+            return res.status(500).json({ success: false, message: '로그인 중 오류 발생', error: loginError })
          }
 
          res.json({

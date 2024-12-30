@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createPost, getPosts, getPostById, getPostByFollow } from '../api/writingApi'
+import { createPost, getPosts, getPostById, getFolloingPosts, updatePost, deletePost } from '../api/writingApi'
 
 export const createPostThunk = createAsyncThunk('posts/createPost', async (postData, { rejectWithValue }) => {
    try {
@@ -10,14 +10,43 @@ export const createPostThunk = createAsyncThunk('posts/createPost', async (postD
    }
 })
 
-export const getPostsThunk = createAsyncThunk('posts/getPosts', async (postData, { rejectWithValue }) => {
+export const updatePostThunk = createAsyncThunk('posts/updatePost', async (data, { rejectWithValue }) => {
+   const { postData, id } = data
    try {
-      const response = await getPosts(postData)
+      const response = await updatePost(postData, id)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '게시물 수정 실패')
+   }
+})
+
+export const deletePostThunk = createAsyncThunk('posts/deletePost', async (id, { rejectWithValue }) => {
+   try {
+      const response = await deletePost(id)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '게시물 삭제 실패')
+   }
+})
+
+export const getPostsThunk = createAsyncThunk('posts/getPosts', async (page, { rejectWithValue }) => {
+   try {
+      const response = await getPosts(page)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
    }
 })
+
+export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', async (page, { rejectWithValue }) => {
+   try {
+      const response = await getFolloingPosts(page)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
+   }
+})
+
 export const getPostByIdThunk = createAsyncThunk('posts/getPostById', async (id, { rejectWithValue }) => {
    try {
       const response = await getPostById(id)
@@ -26,14 +55,7 @@ export const getPostByIdThunk = createAsyncThunk('posts/getPostById', async (id,
       return rejectWithValue(error.response?.data?.message || '특정 게시물 가져오기 실패')
    }
 })
-export const getPostsByFollowThunk = createAsyncThunk('posts/getPostByFollow', async (_, { rejectWithValue }) => {
-   try {
-      const response = await getPostByFollow(_)
-      return response.data
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '구독 게시물 가져오기 실패')
-   }
-})
+
 const postSlice = createSlice({
    name: 'posts',
    initialState: {
@@ -41,6 +63,7 @@ const postSlice = createSlice({
       isAuthenticated: false,
       post: null,
       posts: [],
+      followingPosts: [],
       loading: false,
       error: null,
    },
@@ -58,30 +81,6 @@ const postSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         .addCase(getPostByIdThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(getPostByIdThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.post = action.payload
-         })
-         .addCase(getPostByIdThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         .addCase(getPostsByFollowThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(getPostsByFollowThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.post = action.payload
-         })
-         .addCase(getPostsByFollowThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
          .addCase(getPostsThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -91,6 +90,30 @@ const postSlice = createSlice({
             state.posts = action.payload.posts
          })
          .addCase(getPostsThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         .addCase(getFolloingPostsThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getFolloingPostsThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.followingPosts = action.payload.followingPosts
+         })
+         .addCase(getFolloingPostsThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         .addCase(getPostByIdThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getPostByIdThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.post = action.payload
+         })
+         .addCase(getPostByIdThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

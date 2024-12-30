@@ -7,8 +7,9 @@ import PostForm from '../components/post/PostForm'
 import { Container } from '@mui/material'
 
 function PostPage() {
+   const location = useLocation()
    const dispatch = useDispatch()
-
+   console.log(location)
    const handleCreatePost = useCallback(
       (postDate) => {
          dispatch(createPostThunk(postDate))

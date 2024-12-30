@@ -11,9 +11,11 @@ export const theme = createTheme({
 
 export const Ellipsis = styled.div`
    width: 100%;
-   white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: ${(props) => props.$line || 2};
+   -webkit-box-orient: vertical;
 `
 export const AlertBox = ({ children, display }) => {
    return (
