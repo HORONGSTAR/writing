@@ -2,7 +2,18 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUserThunk } from '../../features/authSlice'
 import { Link as RouterLink } from 'react-router-dom'
-import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button } from '@mui/material'
+import {
+   Avatar,
+   Menu,
+   MenuItem,
+   Divider,
+   IconButton,
+   Container,
+   Tooltip,
+   Link,
+   Button,
+   Typography,
+} from '@mui/material'
 
 function Navber({ isAuthenticated, user }) {
    const dispatch = useDispatch()
@@ -35,10 +46,10 @@ function Navber({ isAuthenticated, user }) {
             <Link mr={3} component={RouterLink} to="/" underline="none">
                글조각
             </Link>
-            <Link mr={3} component={RouterLink} to="/main/all" underline="hover">
+            <Link mr={3} component={RouterLink} to="/all" underline="hover">
                전체 글
             </Link>
-            <Link mr={3} component={RouterLink} to="/main/follow" underline="hover">
+            <Link mr={3} component={RouterLink} to="/follow" underline="hover">
                구독
             </Link>
             <Link mr={3} component={RouterLink} to="/theme" underline="hover">
@@ -59,7 +70,12 @@ function Navber({ isAuthenticated, user }) {
                   </IconButton>
                </Tooltip>
             ) : (
-               <Button sx={{ marginLeft: 'auto' }} component={RouterLink} to="/login" variant="outlined">
+               <Button
+                  sx={{ marginLeft: 'auto' }}
+                  component={RouterLink}
+                  to="/login"
+                  variant="outlined"
+               >
                   로그인
                </Button>
             )}
@@ -102,7 +118,12 @@ function Navber({ isAuthenticated, user }) {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
          >
             <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/post/create" underline="none">
+               <Link
+                  sx={{ minWidth: 100 }}
+                  component={RouterLink}
+                  to="/post/create"
+                  underline="none"
+               >
                   글 쓰기
                </Link>
             </MenuItem>

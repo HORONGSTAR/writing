@@ -15,8 +15,8 @@ function AuthPage() {
    const dispatch = useDispatch()
 
    const handleLogin = useCallback(
-      (authDate) => {
-         dispatch(loginUserThunk(authDate))
+      (authData) => {
+         dispatch(loginUserThunk(authData))
             .unwrap()
             .then(() => (window.location.href = '/'))
             .catch((err) => console.error(err))
@@ -25,8 +25,8 @@ function AuthPage() {
       [dispatch]
    )
    const handleSignup = useCallback(
-      (authDate) => {
-         dispatch(createUserThunk(authDate))
+      (authData) => {
+         dispatch(createUserThunk(authData))
             .unwrap()
             .then(() => setComplete(true))
             .catch((err) => console.error(err))
@@ -37,7 +37,9 @@ function AuthPage() {
 
    return (
       <Container>
-         {location.pathname === '/login' && <Login onSubmit={handleLogin} error={error} loading={loading} />}
+         {location.pathname === '/login' && (
+            <Login onSubmit={handleLogin} error={error} loading={loading} />
+         )}
          {location.pathname === '/signup' &&
             (isComplete ? (
                <Stack spacing={2}>

@@ -7,16 +7,16 @@ const { User, Post, Theme } = require('../models')
 const { isLoggedIn } = require('./middlewares')
 
 try {
-   fs.readdirSync('themebg-uploads')
+   fs.readdirSync('uploads')
 } catch (err) {
-   console.log('themebg-uploads 폴더 생성')
-   fs.mkdirSync('themebg-uploads')
+   console.log('uploads 폴더 생성')
+   fs.mkdirSync('uploads')
 }
 
 const upload = multer({
    storage: multer.diskStorage({
       destination(req, file, cb) {
-         cb(null, 'themebg-uploads/')
+         cb(null, 'uploads/')
       },
       filename(req, file, cb) {
          const decodedFileName = decodeURIComponent(file.originalname)
@@ -25,21 +25,21 @@ const upload = multer({
          cb(null, basename + Date.now() + ext)
       },
    }),
-   limits: { fileSize: 5 * 1024 * 1024 },
+   limits: { fileSize: 6 * 1024 * 1024 },
 })
 
 router.post('/', isLoggedIn, upload.single('img'), async (req, res) => {
    try {
       const theme = await Theme.create({
          keyword: req.body.keyword,
-         background: req.file ? `/${req.file.filename}` : `#${req.fill}`,
+         background: req.file ? `/${req.file.filename}` : `#${req.file}`,
          alt: req.body.alt,
          UserId: req.user.id,
       })
 
       res.json({
          success: true,
-         post: {
+         theme: {
             id: theme.id,
             keyword: theme.keyword,
             background: theme.background,
@@ -150,6 +150,7 @@ router.get('/:id', async (req, res) => {
             },
          ],
       })
+
       if (!theme) {
          return res.status(404).json({
             success: false,
@@ -191,6 +192,12 @@ router.get('/', async (req, res) => {
             {
                model: Post,
                attributes: ['id', 'title', 'content'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick'],
+                  },
+               ],
             },
          ],
       })

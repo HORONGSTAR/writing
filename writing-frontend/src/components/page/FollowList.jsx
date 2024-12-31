@@ -1,23 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { List, ListItem } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { List, ListItem, Avatar, Typography } from '@mui/material'
 
-const FollowList = () => {
-   const [follow, setFollow] = useState([])
-   const { user } = useSelector((state) => state.page)
-   useEffect(() => {
-      setFollow()
-   }, [follow])
-
+function FollowList({ users }) {
    return (
-      <List>
-         {user?.Followings.map((following) => (
-            <ListItem key={'following' + following.id}>{following.nick}</ListItem>
-         ))}
-         {user?.Followers.map((follower) => (
-            <ListItem key={'follower' + follower.id}>{follower.nick}</ListItem>
-         ))}
-      </List>
+      <>
+         {users &&
+            users.map((user) => (
+               <List key={'follow' + user.id}>
+                  <ListItem>
+                     <Avatar sx={{ width: 24, height: 24, marginRight: 0.5 }} />
+                     <Typography>{user.nick}</Typography>
+                  </ListItem>
+                  <ListItem>
+                     <Typography variant="body2">{user.info || '자기소개가 없습니다.'}</Typography>
+                  </ListItem>
+               </List>
+            ))}
+      </>
    )
 }
 

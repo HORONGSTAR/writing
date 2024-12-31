@@ -13,7 +13,7 @@ export const getProfileThunk = createAsyncThunk('page/getProfile', async (_, { r
 export const getProfileIdThunk = createAsyncThunk('page/getProfileId', async (id, { rejectWithValue }) => {
    try {
       const response = await getProfileId(id)
-      return response.data.followings
+      return response.data.user
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '프로필정보 가져오기 실패')
    }
@@ -22,7 +22,7 @@ export const getProfileIdThunk = createAsyncThunk('page/getProfileId', async (id
 const pageSlice = createSlice({
    name: 'page',
    initialState: {
-      followings: [],
+      user: null,
       loading: false,
       error: null,
    },
@@ -49,7 +49,7 @@ const pageSlice = createSlice({
          })
          .addCase(getProfileIdThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.followings = action.payload
+            state.user = action.payload
          })
          .addCase(getProfileIdThunk.rejected, (state, action) => {
             state.loading = false

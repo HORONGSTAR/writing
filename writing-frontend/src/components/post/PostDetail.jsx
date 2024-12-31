@@ -1,4 +1,4 @@
-import { Avatar, Typography, List, ListItem, Divider, Box, Button } from '@mui/material'
+import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack } from '@mui/material'
 import { getPostByIdThunk, deletePostThunk } from '../../features/postSlice'
 import { Link as RouterLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,7 +6,7 @@ import { useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 
-function PostDetail() {
+function PostDetail({ auth }) {
    const { loading, error, post } = useSelector((state) => state.posts)
    const dispatch = useDispatch()
    const { id } = useParams()
@@ -34,24 +34,28 @@ function PostDetail() {
          {post && (
             <List>
                <ListItem>
-                  <Typography variant="h6">{post.title}</Typography>
-                  <Box sx={{ marginLeft: 'auto' }}>
-                     <Button onClick={onClickDelete}>삭제</Button>
-                     <Button component={RouterLink} to={`/post/edit/${id}`}>
-                        수정
-                     </Button>
-                  </Box>
+                  <Typography variant="h4">{post.title}</Typography>
+               </ListItem>
+               <ListItem>
+                  <Avatar sx={{ width: 32, height: 32, marginRight: 0.5 }} />
+                  <Stack>
+                     {post.User.nick}
+                     <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>
+                        {dayjs(post.createdAt).format('YYYY-MM-DD')}
+                     </Typography>
+                  </Stack>
+                  {auth?.id === post.UserId && (
+                     <Box sx={{ marginLeft: 'auto' }}>
+                        <Button onClick={onClickDelete}>삭제</Button>
+                        <Button component={RouterLink} to={`/post/edit/${id}`}>
+                           수정
+                        </Button>
+                     </Box>
+                  )}
                </ListItem>
                <Divider />
                <ListItem>
-                  <Typography>{post.content}</Typography>
-               </ListItem>
-               <ListItem>
-                  <Avatar sx={{ width: 24, height: 24, marginRight: 0.5 }} />
-                  {post.User.nick}
-                  <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>
-                     {dayjs(post.createdAt).format('YYYY-MM-DD')}
-                  </Typography>
+                  <Typography sx={{ whiteSpace: 'pre-wrap' }}>{post.content}</Typography>
                </ListItem>
             </List>
          )}

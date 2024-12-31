@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfileThunk, getProfileIdThunk } from '../../features/pageSlice'
 import { followUserThunk, unFollowUserThunk } from '../../features/userSlice'
 import { Box, List, ListItem, Button } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
 
-const MyProfile = ({ auth }) => {
+function MyProfile({ auth }) {
    const { id } = useParams()
    const [followers, setFollowers] = useState(0)
    const [followings, setFollowings] = useState(0)
@@ -48,7 +49,7 @@ const MyProfile = ({ auth }) => {
       } else {
          setButtonName('팔로우')
       }
-   }, [fetchProfileData, follow, user])
+   }, [fetchProfileData, follow])
 
    const onClickFollow = useCallback(
       (userId) => {
@@ -79,9 +80,6 @@ const MyProfile = ({ auth }) => {
       [dispatch, user]
    )
 
-   const onClickFollowers = useCallback(() => {}, [])
-   const onClickFollowings = useCallback(() => {}, [])
-
    return (
       <>
          {user && (
@@ -91,13 +89,23 @@ const MyProfile = ({ auth }) => {
                   <ListItem>{user.nick}</ListItem>
                   <ListItem>자기소개</ListItem>
                   <ListItem>
-                     <Button onClick={() => onClickFollowers(`${user.id}`)}>{followings} 팔로잉</Button>
-                     <Button onClick={() => onClickFollowings(`${user.id}`)}>{followers} 팔로워</Button>
+                     <Button component={RouterLink} to={`/profile/${user.id}/followings`}>
+                        {followings} 팔로잉
+                     </Button>
+                     <Button component={RouterLink} to={`/profile/${user.id}/followers`}>
+                        {followers} 팔로워
+                     </Button>
+                  </ListItem>
+                  <ListItem>
+                     {!id || String(auth?.id) === String(id) ? (
+                        <Button component={RouterLink} to={`/setting`}>
+                           계정설정
+                        </Button>
+                     ) : (
+                        <Button onClick={() => onClickFollow(`${user.id}`)}>{buttonName}</Button>
+                     )}
                   </ListItem>
                </List>
-               <Box sx={{ display: (!id && 'none') || (String(auth?.id) === String(id) && 'none') }}>
-                  <Button onClick={() => onClickFollow(`${user.id}`)}>{buttonName}</Button>
-               </Box>
             </Box>
          )}
       </>

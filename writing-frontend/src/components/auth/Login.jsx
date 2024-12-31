@@ -6,13 +6,24 @@ import { AlertBox } from '../../styles/StyledComponent'
 function Login({ onSubmit, loading, error }) {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
-   const [alert, setAlert] = useState({ display: false, email: false, password: false })
+   const [alert, setAlert] = useState({
+      display: false,
+      email: false,
+      password: false,
+   })
 
    const handleLogin = useCallback(
       (e) => {
          e.preventDefault()
-         const value = { em: email.trim(), pw: password.trim() }
-         setAlert({ email: !value.em, password: !value.pw, display: true })
+         const value = {
+            em: email.trim(),
+            pw: password.trim(),
+         }
+         setAlert({
+            email: !value.em,
+            password: !value.pw,
+            display: true,
+         })
          if (!value.em || !value.pw) return
 
          onSubmit({ email, password })

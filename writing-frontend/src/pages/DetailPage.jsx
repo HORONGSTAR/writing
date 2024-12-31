@@ -1,10 +1,10 @@
 import PostDetail from '../components/post/PostDetail'
 import { Container } from '@mui/material'
 
-function PostPage() {
+function PostPage({ auth }) {
    return (
       <Container>
-         <PostDetail />
+         <PostDetail auth={auth} />
       </Container>
    )
 }

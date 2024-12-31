@@ -7,10 +7,10 @@ const User = require('../models/user')
 const fs = require('fs')
 
 try {
-   fs.readdirSync('avatar-uploads')
+   fs.readdirSync('uploads')
 } catch (err) {
-   console.log('avatar-uploads 폴더 생성')
-   fs.mkdirSync('avatar-uploads')
+   console.log('uploads 폴더 생성')
+   fs.mkdirSync('uploads')
 }
 
 const router = express.Router()
@@ -18,7 +18,7 @@ const router = express.Router()
 const upload = multer({
    storage: multer.diskStorage({
       destination(req, file, cb) {
-         cb(null, 'avatar-uploads/')
+         cb(null, 'uploads/')
       },
       filename(req, file, cb) {
          const decodedFileName = decodeURIComponent(file.originalname)

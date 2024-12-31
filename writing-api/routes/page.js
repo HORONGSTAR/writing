@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { isLoggedIn } = require('./middlewares')
-const { User } = require('../models')
+const { User, Post } = require('../models')
 
 router.get('/profile', isLoggedIn, async (req, res) => {
    res.json({

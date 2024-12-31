@@ -4,4 +4,6 @@
    padding: 0;
    margin: 0;
    font-family: 'Pretendard', sans-serif !important;
+   text-decoration: none;
+   color: inherit;
 }

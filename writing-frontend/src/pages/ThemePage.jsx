@@ -1,7 +1,6 @@
-import { Container, Box } from '@mui/material'
+import { Button, Container } from '@mui/material'
 import ThemeForm from '../components/theme/ThemeForm'
 import ThemeItem from '../components/theme/ThemeItem'
-import ThemeList from '../components/theme/ThemeList'
 import { useDispatch, useSelector } from 'react-redux'
 import { createThemeThunk } from '../features/themeSlice'
 import { useCallback } from 'react'
@@ -15,7 +14,9 @@ function ThemePage() {
       (themeData) => {
          dispatch(createThemeThunk(themeData))
             .unwrap()
-            .then(() => {})
+            .then(() => {
+               window.location.href = '/theme'
+            })
             .catch((error) => {
                console.error('게시물 등록 중 에러:', error)
                alert('게시물 등록에 실패했습니다.')
@@ -28,10 +29,12 @@ function ThemePage() {
    if (error) return <>{error}</>
    return (
       <Container>
-         <ThemeList />
+         {themes.map((theme) => (
+            <Button>{theme.keyword}</Button>
+         ))}
+
          <ThemeForm onSubmit={handleSubmit} />
-         {themes.length > 0 && themes.map((theme) => <Box key={'theme' + theme.id}>{theme.keyword}</Box>)}
-         <ThemeItem />
+         <ThemeItem themes={themes} />
       </Container>
    )
 }

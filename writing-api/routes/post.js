@@ -32,7 +32,7 @@ router.post('/', isLoggedIn, async (req, res) => {
    }
 })
 
-router.put('/user/:id', isLoggedIn, async (req, res) => {
+router.put('/id/:id', isLoggedIn, async (req, res) => {
    try {
       const post = await Post.findOne({
          where: {
@@ -50,8 +50,7 @@ router.put('/user/:id', isLoggedIn, async (req, res) => {
       await post.update({
          title: req.body.title,
          content: req.body.content,
-         UserId: req.user.id,
-         ThemeId: req.theme.id,
+         ThemeId: req.body.themeId,
       })
 
       const updatedPost = await Post.findOne({
@@ -81,7 +80,7 @@ router.put('/user/:id', isLoggedIn, async (req, res) => {
    }
 })
 
-router.delete('/user/:id', async (req, res) => {
+router.delete('/id/:id', async (req, res) => {
    try {
       const post = await Post.findOne({
          where: {
@@ -110,7 +109,7 @@ router.delete('/user/:id', async (req, res) => {
    }
 })
 
-router.get('/user/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
    try {
       const post = await Post.findOne({
          where: { id: req.params.id },
@@ -197,11 +196,11 @@ router.get('/following', async (req, res) => {
    const followingId = req.user?.Followings.map((following) => following.id)
 
    try {
-      const count = await Post.count()
+      const count = await Post.count({ where: { UserId: followingId } })
       const followingPosts = await Post.findAll({
          limit,
          offset,
-         where: { id: followingId },
+         where: { UserId: followingId },
          order: [['createdAt', 'DESC']],
          include: [
             {
@@ -231,6 +230,50 @@ router.get('/following', async (req, res) => {
       res.status(500).json({
          success: false,
          message: '게시물 리스트를 불러오는 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
+router.get('/user/:id', async (req, res) => {
+   const page = parseInt(req.query.page, 10) || 1
+   const limit = parseInt(req.query.limit, 10) || 3
+   const offset = (page - 1) * limit
+   const userId = req.params.id
+   try {
+      const count = await Post.count({ where: { UserId: userId } })
+      const posts = await Post.findAll({
+         where: { UserId: userId },
+         limit,
+         offset,
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick'],
+            },
+            {
+               model: Theme,
+               attributes: ['id', 'keyword'],
+            },
+         ],
+      })
+
+      res.json({
+         success: true,
+         posts,
+         pagination: {
+            totalPosts: count,
+            currentPage: page,
+            totalPages: Math.ceil(count / limit),
+            limit,
+         },
+         message: '게시물을 성공적으로 불러왔습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '게시물을 불러오는 중 오류가 발생했습니다.',
          error,
       })
    }

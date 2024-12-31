@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createPost, getPosts, getPostById, getFolloingPosts, updatePost, deletePost } from '../api/writingApi'
+import { createPost, getPosts, getPostById, getFolloingPosts, getUserPosts, updatePost, deletePost } from '../api/writingApi'
 
 export const createPostThunk = createAsyncThunk('posts/createPost', async (postData, { rejectWithValue }) => {
    try {
@@ -11,7 +11,7 @@ export const createPostThunk = createAsyncThunk('posts/createPost', async (postD
 })
 
 export const updatePostThunk = createAsyncThunk('posts/updatePost', async (data, { rejectWithValue }) => {
-   const { postData, id } = data
+   const { id, postData } = data
    try {
       const response = await updatePost(postData, id)
       return response.data
@@ -41,6 +41,16 @@ export const getPostsThunk = createAsyncThunk('posts/getPosts', async (page, { r
 export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', async (page, { rejectWithValue }) => {
    try {
       const response = await getFolloingPosts(page)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
+   }
+})
+
+export const getUserPostsThunk = createAsyncThunk('posts/getUserPosts', async (data, { rejectWithValue }) => {
+   const { id, page } = data
+   try {
+      const response = await getUserPosts(id, page)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
@@ -102,6 +112,18 @@ const postSlice = createSlice({
             state.followingPosts = action.payload.followingPosts
          })
          .addCase(getFolloingPostsThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         .addCase(getUserPostsThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getUserPostsThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.posts = action.payload.posts
+         })
+         .addCase(getUserPostsThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

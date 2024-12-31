@@ -1,11 +1,11 @@
-import { TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl, Snackbar } from '@mui/material'
+import { TextField, Stack, Button, Select, NativeSelect, MenuItem, InputLabel, FormControl, Snackbar } from '@mui/material'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function PostForm({ onSubmit, initialValues = {} }) {
-   const [title, setTitle] = useState('')
-   const [content, setContent] = useState('')
-   const [themeId, setThemeId] = useState('')
+   const [title, setTitle] = useState(initialValues?.title || '')
+   const [content, setContent] = useState(initialValues?.content || '')
+   const [themeId, setThemeId] = useState(initialValues?.ThemeId || '')
    const { themes } = useSelector((state) => state.themes)
    const [open, setOpen] = useState(false)
 
@@ -14,23 +14,33 @@ function PostForm({ onSubmit, initialValues = {} }) {
          e.preventDefault()
          const value = { ti: title.trim(), ct: content.trim() }
          if (!value.ti || !value.ct) return setOpen(true)
-         onSubmit({ title, content })
+         onSubmit({ title, content, themeId })
       },
-      [title, content, onSubmit]
+      [title, content, themeId, onSubmit]
    )
 
    return (
       <Stack spacing={2}>
          <FormControl sx={{ width: '300px' }}>
-            <InputLabel id="select">참여주제</InputLabel>
-            <Select labelId="select" id="select" value={themeId} label="참여주제" onChange={(e) => setThemeId(e.target.value)}>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+               참여주제
+            </InputLabel>
+            <NativeSelect
+               defaultValue={themeId}
+               inputProps={{
+                  name: '참여주제',
+                  id: 'uncontrolled-native',
+               }}
+               onChange={(e) => setThemeId(e.target.value)}
+            >
                {themes.map((theme) => (
-                  <MenuItem key={`theme_keyword_${theme.id}`} value={theme.id}>
+                  <option key={`theme_keyword_${theme.id}`} value={theme.id}>
                      {theme.keyword}
-                  </MenuItem>
+                  </option>
                ))}
-            </Select>
+            </NativeSelect>
          </FormControl>
+
          <TextField fullWidth label="제목" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
          <TextField fullWidth multiline label="내용" rows={24} id="content" value={content} onChange={(e) => setContent(e.target.value)} />
          <Button sx={{ marginLeft: 'auto' }} onClick={handleSubmit} variant="contained">

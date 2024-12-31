@@ -50,9 +50,9 @@ export const authStatus = async () => {
    }
 }
 
-export const createPost = async (postDate) => {
+export const createPost = async (postData) => {
    try {
-      const response = await writingApi.post('/post', postDate)
+      const response = await writingApi.post('/post', postData)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -60,9 +60,9 @@ export const createPost = async (postDate) => {
    }
 }
 
-export const updatePost = async (postDate, id) => {
+export const updatePost = async (postData, id) => {
    try {
-      const response = await writingApi.put(`/post/user/${id}`, postDate)
+      const response = await writingApi.put(`/post/id/${id}`, postData)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -72,7 +72,7 @@ export const updatePost = async (postDate, id) => {
 
 export const deletePost = async (id) => {
    try {
-      const response = await writingApi.delete(`/post/user/${id}`)
+      const response = await writingApi.delete(`/post/id/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -82,7 +82,7 @@ export const deletePost = async (id) => {
 
 export const getPostById = async (id) => {
    try {
-      const response = await writingApi.get(`/post/user/${id}`)
+      const response = await writingApi.get(`/post/id/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -110,14 +110,24 @@ export const getFolloingPosts = async (page) => {
    }
 }
 
-export const createTheme = async (themeDate) => {
+export const getUserPosts = async (id, page) => {
+   try {
+      const response = await writingApi.get(`/post/user/${id}?page=${page}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const createTheme = async (themeData) => {
    try {
       const config = {
          headers: {
             'Content-Type': 'multipart/form-data',
          },
       }
-      const response = await writingApi.post('/theme', themeDate, config)
+      const response = await writingApi.post('/theme', themeData, config)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)

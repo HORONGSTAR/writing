@@ -8,11 +8,28 @@ function Signup({ onSubmit, loading, error }) {
    const [nick, setNick] = useState('')
    const [password, setPassword] = useState('')
    const [confirm, setConfirm] = useState('')
-   const [alert, setAlert] = useState({ display: false, email: false, nick: false, password: false, confirm: false })
+   const [alert, setAlert] = useState({
+      display: false,
+      email: false,
+      nick: false,
+      password: false,
+      confirm: false,
+   })
 
    const handleSignUp = useCallback(() => {
-      const value = { em: email.trim(), nk: nick.trim(), pw: password.trim(), cf: confirm.trim() }
-      setAlert({ email: !value.em, nick: !value.nk, password: !value.pw, confirm: !value.cf, display: true })
+      const value = {
+         em: email.trim(),
+         nk: nick.trim(),
+         pw: password.trim(),
+         cf: confirm.trim(),
+      }
+      setAlert({
+         email: !value.em,
+         nick: !value.nk,
+         password: !value.pw,
+         confirm: !value.cf,
+         display: true,
+      })
       if (!value.em || !value.nk || !value.pw || !value.cf) return
       if (password !== confirm) return
 

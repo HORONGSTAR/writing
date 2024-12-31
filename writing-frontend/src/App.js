@@ -2,9 +2,12 @@ import './styles/common.css'
 import MainPage from './pages/MainPage'
 import ThemePage from './pages/ThemePage'
 import DetailPage from './pages/DetailPage'
-import WritePage from './pages/WritePage'
+import PostCreatePage from './pages/PostCreatePage'
+import PostEditPage from './pages/PostEditPage'
 import AuthPage from './pages/AuthPage'
 import UserPage from './pages/UserPage'
+import FollowPage from './pages/FollowPage'
+
 import Navber from './components/shared/Navber'
 import { Route, Routes } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,15 +29,16 @@ function App() {
          <Navber isAuthenticated={isAuthenticated} user={user} />
          <Routes>
             <Route path="/" element={<MainPage />} />
+            <Route path="/all" element={<MainPage />} />
+            <Route path="/follow" element={<MainPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
             <Route path="/profile" element={<UserPage auth={user} />} />
             <Route path="/profile/:id" element={<UserPage auth={user} />} />
-            <Route path="/main/all" element={<MainPage />} />
-            <Route path="/main/follow" element={<MainPage />} />
-            <Route path="/post/detail/:id" element={<DetailPage />} />
-            <Route path="/post/create" element={<WritePage />} />
-            <Route path="/post/edit/:id" element={<WritePage />} />
+            <Route path="/profile/:id/:type" element={<FollowPage auth={user} />} />
+            <Route path="/detail/:id" element={<DetailPage auth={user} />} />
+            <Route path="/post/create" element={<PostCreatePage />} />
+            <Route path="/post/edit/:id" element={<PostEditPage />} />
             <Route path="/theme" element={<ThemePage />} />
          </Routes>
       </>
