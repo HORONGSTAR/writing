@@ -2,7 +2,6 @@ import { useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { updatePostThunk, getPostByIdThunk } from './../features/postSlice'
-
 import PostForm from '../components/post/PostForm'
 import { Container } from '@mui/material'
 

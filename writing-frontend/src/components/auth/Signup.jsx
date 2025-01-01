@@ -73,7 +73,9 @@ function Signup({ onSubmit, loading, error }) {
                value={confirm}
                onChange={(e) => setConfirm(e.target.value)}
                error={alert.confirm || password !== confirm}
-               helperText={(alert.confirm && '비밀번호를 한번 더 입력하세요') || (password !== confirm && '비밀번호가 다릅니다.')}
+               helperText={
+                  (alert.confirm && '비밀번호를 한번 더 입력하세요') || (password !== confirm && '비밀번호가 다릅니다.')
+               }
             />
             <AlertBox display={alert.display}>{error}</AlertBox>
             {loading ? (

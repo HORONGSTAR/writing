@@ -1,4 +1,4 @@
-import { TextField, Stack, Button, Select, NativeSelect, MenuItem, InputLabel, FormControl, Snackbar } from '@mui/material'
+import { TextField, Stack, Button, NativeSelect, InputLabel, FormControl, Snackbar } from '@mui/material'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -42,11 +42,24 @@ function PostForm({ onSubmit, initialValues = {} }) {
          </FormControl>
 
          <TextField fullWidth label="제목" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
-         <TextField fullWidth multiline label="내용" rows={24} id="content" value={content} onChange={(e) => setContent(e.target.value)} />
+         <TextField
+            fullWidth
+            multiline
+            label="내용"
+            rows={24}
+            id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+         />
          <Button sx={{ marginLeft: 'auto' }} onClick={handleSubmit} variant="contained">
             등록
          </Button>
-         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message="제목 및 내용을 채워주세요." />
+         <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            message="제목 및 내용을 채워주세요."
+         />
       </Stack>
    )
 }

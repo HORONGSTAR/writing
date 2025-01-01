@@ -1,11 +1,16 @@
-import { Button, Stack, TextField } from '@mui/material'
+import { Button, Stack, TextField, Container, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import { useState, useCallback } from 'react'
+import { SliderPicker } from 'react-color'
+import ThemeItem from './ThemeItem'
+import { Image, ColorLens, Block } from '@mui/icons-material'
 
-function ThemeForm({ onSubmit, initialValues = {} }) {
-   const [imgUrl, setImgUrl] = useState(initialValues.img ? process.env.REACT_APP_API_URL + initialValues.img : '')
+function ThemeForm({ onSubmit }) {
+   const [imgUrl, setImgUrl] = useState('')
    const [keyword, setKeyword] = useState('')
    const [imgFile, setImgFile] = useState('')
    const [imgAlt, setImgAlt] = useState('')
+   const [color, setColor] = useState('#b3c8e6')
+   const [type, setType] = useState('color')
 
    const handleImageChange = useCallback((e) => {
       const file = e.target.files && e.target.files[0]
@@ -26,48 +31,96 @@ function ThemeForm({ onSubmit, initialValues = {} }) {
             alert('내용을 입력하세요.')
             return
          }
-         if (!imgAlt.trim()) {
-            alert('ALT를 입력하세요.')
-            return
-         }
-         if (!imgUrl) {
-            alert('이미지 파일을 추가하세요.')
-            return
-         }
 
          const formData = new FormData()
          if (imgFile) {
             const encodedFile = new File([imgFile], encodeURIComponent(imgFile.name), {
                type: imgFile.type,
             })
-            formData.append('img', encodedFile)
+            formData.append('background', encodedFile || color)
          }
 
          formData.append('keyword', keyword)
          formData.append('alt', imgAlt || '게시물 이미지')
          onSubmit(formData)
       },
-      [keyword, imgFile, imgAlt, imgUrl, onSubmit]
+      [keyword, imgFile, imgAlt, color, onSubmit]
    )
 
    return (
-      <Stack spacing={2} component="form" onSubmit={handleSubmit} encType="multipart/form-data">
-         <TextField
-            id="keyword"
-            label="테마 키워드"
-            variant="standard"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            error={alert.keyword}
-            helperText={alert.keyword && '이메일을 입력하세요.'}
-         />
-         <Button variant="contained" component="label">
-            이미지 업로드
-            <input type="file" name="img" accept="image/*" hidden onChange={handleImageChange} />
-         </Button>
-         <TextField id="imgAlt" label="Alt" variant="standard" value={imgAlt} onChange={(e) => setImgAlt(e.target.value)} />
-         <Button type="submit">등록</Button>
-      </Stack>
+      <Container
+         component="form"
+         onSubmit={handleSubmit}
+         encType="multipart/form-data"
+         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+         <Stack sx={{ width: 400 }} spacing={2}>
+            <h4>주제 등록</h4>
+            <TextField
+               fullWidth
+               id="keyword"
+               label="글쓰기 주제"
+               value={keyword}
+               onChange={(e) => setKeyword(e.target.value)}
+               error={alert.keyword}
+               helperText={alert.keyword && '주제를 입력하세요.'}
+            />
+
+            <ToggleButtonGroup
+               exclusive
+               value={type}
+               onChange={(e, newValue) => {
+                  setType(newValue)
+               }}
+            >
+               <ToggleButton value="none">
+                  <Block />
+                  배경 없음
+               </ToggleButton>
+               <ToggleButton value="color">
+                  <ColorLens />
+                  배경 색상
+               </ToggleButton>
+               <ToggleButton value="image">
+                  <Image />
+                  배경 이미지
+               </ToggleButton>
+            </ToggleButtonGroup>
+
+            <Stack spacing={2}>
+               {type === 'color' && <SliderPicker color={color} onChangeComplete={(color) => setColor(color.hex)} />}
+               {type === 'image' && (
+                  <>
+                     <Button variant="contained" component="label">
+                        이미지 업로드
+                        <input type="file" name="img" accept="image/*" hidden onChange={handleImageChange} />
+                     </Button>
+                     <TextField
+                        fullWidth
+                        id="imgAlt"
+                        label="Alt"
+                        variant="standard"
+                        value={imgAlt}
+                        onChange={(e) => setImgAlt(e.target.value)}
+                     />
+                  </>
+               )}
+            </Stack>
+
+            <ThemeItem
+               themes={[
+                  {
+                     id: 'preview',
+                     keyword: keyword,
+                     background: type === 'color' ? color : type === 'image' ? imgUrl || '#EEEEEE' : '#EEEEEE',
+                  },
+               ]}
+            />
+            <Button variant="contained" type="submit">
+               완료
+            </Button>
+         </Stack>
+      </Container>
    )
 }
 

@@ -13,7 +13,7 @@ function PostDetail({ auth }) {
 
    useEffect(() => {
       dispatch(getPostByIdThunk(id))
-   }, [dispatch])
+   }, [dispatch, id])
 
    const onClickDelete = useCallback(() => {
       const check = window.confirm('게시물을 삭제하시겠습니까?')
@@ -27,7 +27,7 @@ function PostDetail({ auth }) {
             console.error('게시물 삭제중 오류 발생', error)
             alert('게시물 삭제 중 오류가 발생했습니다.')
          })
-   }, [dispatch])
+   }, [dispatch, id])
 
    return (
       <>

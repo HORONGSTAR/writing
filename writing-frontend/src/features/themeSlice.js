@@ -6,7 +6,7 @@ export const createThemeThunk = createAsyncThunk('theme/createTheme', async (the
       const response = await createTheme(themeData)
       return response.data.theme
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '회원가입 실패')
+      return rejectWithValue(error.response?.data?.message || '주제 생성 실패')
    }
 })
 export const getThemesThunk = createAsyncThunk('theme/getThemes', async (page, { rejectWithValue }) => {
@@ -14,7 +14,24 @@ export const getThemesThunk = createAsyncThunk('theme/getThemes', async (page, {
       const response = await getThemes(page)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '회원가입 실패')
+      return {
+         themes: [
+            {
+               id: 1,
+               keyword: 'test1',
+               alt: '...',
+               background: '#eee',
+               Posts: [
+                  { id: 1, title: 'test', content: 'test', User: { id: 1, nick: 'h' } },
+                  { id: 2, title: 'test', content: 'test', User: { id: 1, nick: 'h' } },
+                  { id: 3, title: 'test', content: 'test', User: { id: 1, nick: 'h' } },
+               ],
+            },
+            { id: 2, keyword: 'test2', alt: '...', background: '#eee' },
+            { id: 3, keyword: 'test3', alt: '...', background: '#eee' },
+         ],
+      }
+      // return rejectWithValue(error.response?.data?.message || '주제 불러오기 실패')
    }
 })
 const themeSlice = createSlice({

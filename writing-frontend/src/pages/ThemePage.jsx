@@ -1,14 +1,15 @@
-import { Button, Container } from '@mui/material'
+import { Button, Container, Stack, Box, Chip } from '@mui/material'
 import ThemeForm from '../components/theme/ThemeForm'
 import ThemeItem from '../components/theme/ThemeItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { createThemeThunk } from '../features/themeSlice'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { ModalBox } from './../styles/StyledComponent'
 
 function ThemePage() {
    const dispatch = useDispatch()
-
    const { loading, error, themes } = useSelector((state) => state.themes)
+   const [value, setValue] = useState(null)
 
    const handleSubmit = useCallback(
       (themeData) => {
@@ -29,12 +30,22 @@ function ThemePage() {
    if (error) return <>{error}</>
    return (
       <Container>
-         {themes.map((theme) => (
-            <Button>{theme.keyword}</Button>
-         ))}
-
-         <ThemeForm onSubmit={handleSubmit} />
-         <ThemeItem themes={themes} />
+         <Stack spacing={3}>
+            <Box>
+               {themes.map((theme) => (
+                  <Chip
+                     color={theme.id === value?.id ? 'primary' : ''}
+                     key={'theme' + theme.id}
+                     label={theme.keyword}
+                     onClick={() => (theme.id === value?.id ? setValue(null) : setValue(theme))}
+                  />
+               ))}
+            </Box>
+            <ModalBox btnName="주제 등록">
+               <ThemeForm onSubmit={handleSubmit} />
+            </ModalBox>
+            {value ? <ThemeItem themes={[value]} /> : <ThemeItem themes={themes} />}
+         </Stack>
       </Container>
    )
 }
