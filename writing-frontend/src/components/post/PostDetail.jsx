@@ -1,19 +1,12 @@
 import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack } from '@mui/material'
-import { getPostByIdThunk, deletePostThunk } from '../../features/postSlice'
+import { deletePostThunk } from '../../features/postSlice'
 import { Link as RouterLink } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
 
-function PostDetail({ auth }) {
-   const { loading, error, post } = useSelector((state) => state.posts)
+function PostDetail({ post, id, auth }) {
    const dispatch = useDispatch()
-   const { id } = useParams()
-
-   useEffect(() => {
-      dispatch(getPostByIdThunk(id))
-   }, [dispatch, id])
 
    const onClickDelete = useCallback(() => {
       const check = window.confirm('게시물을 삭제하시겠습니까?')
@@ -37,7 +30,7 @@ function PostDetail({ auth }) {
                   <Typography variant="h4">{post.title}</Typography>
                </ListItem>
                <ListItem>
-                  <Avatar sx={{ width: 32, height: 32, marginRight: 0.5 }} />
+                  <Avatar src={`${process.env.REACT_APP_API_URL}${post.User.avatar}`} sx={{ width: 32, height: 32, marginRight: 0.5 }} />
                   <Stack>
                      {post.User.nick}
                      <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>

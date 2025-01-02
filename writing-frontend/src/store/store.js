@@ -4,6 +4,7 @@ import postSlice from '../features/postSlice'
 import themeSlice from '../features/themeSlice'
 import pageSlice from '../features/pageSlice'
 import userSlice from '../features/userSlice'
+import commentSlice from '../features/commentSlice'
 
 const store = configureStore({
    reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
       page: pageSlice,
       user: userSlice,
       themes: themeSlice,
+      comments: commentSlice,
    },
 })
 

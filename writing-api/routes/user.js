@@ -43,4 +43,46 @@ router.delete('/follow/:id', isLoggedIn, async (req, res) => {
    }
 })
 
+router.get('/follow/:id', isLoggedIn, async (req, res) => {
+   try {
+      const userId = req.params.id
+      const follow = await User.findOne({
+         where: { id: userId },
+         attributes: ['id', 'nick'],
+         include: [
+            {
+               model: User,
+               as: 'Followers',
+               attributes: ['id', 'nick', 'email'],
+            },
+            {
+               model: User,
+               as: 'Followings',
+               attributes: ['id', 'nick', 'email'],
+            },
+         ],
+      })
+
+      if (!follow) {
+         return res.status(404).json({
+            success: false,
+            message: '사용자를 찾을 수 없습니다.',
+         })
+      }
+
+      res.json({
+         success: true,
+         follow,
+         message: '사용자 팔로 정보를 성공적으로 가져왔습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '사용자 팔로 정보를 불러오는 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
 module.exports = router

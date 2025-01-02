@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { User, Post, Theme } = require('../models')
+const { User, Post, Theme, Comment } = require('../models')
 const { isLoggedIn } = require('./middlewares')
 
 router.post('/', isLoggedIn, async (req, res) => {
@@ -116,11 +116,21 @@ router.get('/id/:id', async (req, res) => {
          include: [
             {
                model: User,
-               attributes: ['id', 'nick'],
+               as: 'User',
+               attributes: ['id', 'nick', 'avatar'],
             },
             {
                model: Theme,
                attributes: ['id', 'keyword'],
+            },
+         ],
+      })
+      const commands = await Comment.findAll({
+         where: { PostId: req.params.id },
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick', 'avatar'],
             },
          ],
       })
@@ -133,6 +143,7 @@ router.get('/id/:id', async (req, res) => {
       res.json({
          success: true,
          post,
+         commands,
          message: '게시물을 성공적으로 불러왔습니다.',
       })
    } catch (error) {
@@ -159,7 +170,7 @@ router.get('/all', async (req, res) => {
          include: [
             {
                model: User,
-               attributes: ['id', 'nick'],
+               attributes: ['id', 'nick', 'avatar'],
             },
             {
                model: Theme,
@@ -191,7 +202,7 @@ router.get('/all', async (req, res) => {
 
 router.get('/following', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
-   const limit = parseInt(req.query.limit, 10) || 3
+   const limit = parseInt(req.query.limit, 10) || 10
    const offset = (page - 1) * limit
    const followingId = req.user?.Followings.map((following) => following.id)
 
@@ -205,7 +216,7 @@ router.get('/following', async (req, res) => {
          include: [
             {
                model: User,
-               attributes: ['id', 'nick'],
+               attributes: ['id', 'nick', 'avatar'],
             },
             {
                model: Theme,
@@ -237,7 +248,7 @@ router.get('/following', async (req, res) => {
 
 router.get('/user/:id', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
-   const limit = parseInt(req.query.limit, 10) || 3
+   const limit = parseInt(req.query.limit, 10) || 10
    const offset = (page - 1) * limit
    const userId = req.params.id
    try {
@@ -249,7 +260,7 @@ router.get('/user/:id', async (req, res) => {
          include: [
             {
                model: User,
-               attributes: ['id', 'nick'],
+               attributes: ['id', 'nick', 'avatar'],
             },
             {
                model: Theme,

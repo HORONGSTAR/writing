@@ -3,7 +3,7 @@ import { Ellipsis } from '../../styles/StyledComponent'
 import { Link as RouterLink } from 'react-router-dom'
 import dayjs from 'dayjs'
 
-function PostItem({ posts, line, profile }) {
+function PostItem({ posts, line }) {
    return (
       <>
          {posts?.length > 0 &&
@@ -19,7 +19,7 @@ function PostItem({ posts, line, profile }) {
                   </ListItem>
                   <ListItem>
                      <Button component={RouterLink} to={`/profile/${post.User.id}`} sx={{ color: 'inherit' }}>
-                        <Avatar sx={{ width: 24, height: 24, marginRight: 0.5 }} />
+                        <Avatar src={`${process.env.REACT_APP_API_URL}${post.User.avatar}`} sx={{ width: 24, height: 24, marginRight: 0.5 }} />
                         {post.User.nick}
                      </Button>
 

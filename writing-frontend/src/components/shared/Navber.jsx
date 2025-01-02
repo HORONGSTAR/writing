@@ -2,18 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUserThunk } from '../../features/authSlice'
 import { Link as RouterLink } from 'react-router-dom'
-import {
-   Avatar,
-   Menu,
-   MenuItem,
-   Divider,
-   IconButton,
-   Container,
-   Tooltip,
-   Link,
-   Button,
-   Typography,
-} from '@mui/material'
+import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button, Typography } from '@mui/material'
 
 function Navber({ isAuthenticated, user }) {
    const dispatch = useDispatch()
@@ -34,6 +23,7 @@ function Navber({ isAuthenticated, user }) {
             alert(error)
          })
    }, [dispatch])
+
    return (
       <>
          <Container
@@ -66,16 +56,11 @@ function Navber({ isAuthenticated, user }) {
                      aria-haspopup="true"
                      aria-expanded={open ? 'true' : undefined}
                   >
-                     <Avatar sx={{ width: 32, height: 32 }} />
+                     <Avatar src={`${process.env.REACT_APP_API_URL}${user.avatar}`} sx={{ width: 32, height: 32 }} />
                   </IconButton>
                </Tooltip>
             ) : (
-               <Button
-                  sx={{ marginLeft: 'auto' }}
-                  component={RouterLink}
-                  to="/login"
-                  variant="outlined"
-               >
+               <Button sx={{ marginLeft: 'auto' }} component={RouterLink} to="/login" variant="outlined">
                   로그인
                </Button>
             )}
@@ -118,12 +103,7 @@ function Navber({ isAuthenticated, user }) {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
          >
             <MenuItem onClick={handleClose}>
-               <Link
-                  sx={{ minWidth: 100 }}
-                  component={RouterLink}
-                  to="/post/create"
-                  underline="none"
-               >
+               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/post/create" underline="none">
                   글 쓰기
                </Link>
             </MenuItem>

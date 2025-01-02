@@ -3,6 +3,7 @@ const multer = require('multer')
 const passport = require('passport')
 const bcrypt = require('bcrypt')
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
+const path = require('path')
 const User = require('../models/user')
 const fs = require('fs')
 
@@ -30,7 +31,7 @@ const upload = multer({
    limits: { fileSize: 5 * 1024 * 1024 },
 })
 
-router.post('/join', isNotLoggedIn, upload.single('img'), async (req, res, next) => {
+router.post('/join', isNotLoggedIn, async (req, res, next) => {
    const { email, nick, password, avatar, info } = req.body
    try {
       const exUser = await User.findOne({ where: { email } })
@@ -55,8 +56,6 @@ router.post('/join', isNotLoggedIn, upload.single('img'), async (req, res, next)
          email: email,
          nick: nick,
          password: hash,
-         avatar: avatar,
-         info: info,
       })
       res.status(201).json({
          success: true,
@@ -65,8 +64,6 @@ router.post('/join', isNotLoggedIn, upload.single('img'), async (req, res, next)
             id: newUser.id,
             email: newUser.email,
             nick: newUser.nick,
-            avatar: newUser.avatar,
-            info: newUser.info,
          },
       })
    } catch (err) {
@@ -132,11 +129,53 @@ router.get('/status', async (req, res, next) => {
          user: {
             id: req.user.id,
             nick: req.user.nick,
+            avatar: req.user.avatar,
          },
       })
    } else {
       res.json({
          isAuthenticated: false,
+      })
+   }
+})
+
+router.put('/edit', isLoggedIn, upload.single('avatar'), async (req, res) => {
+   try {
+      const user = await User.findOne({ where: { id: req.user.id } })
+
+      await user.update({
+         nick: req.body.nick,
+         avatar: req.file ? `/${req.file.filename}` : user.avatar,
+         info: req.body.info,
+      })
+
+      const updatedUser = await User.findAll({
+         where: { id: req.user.id },
+         attributes: ['id', 'nick', 'email', 'info', 'avatar', 'createdAt', 'updatedAt'],
+         include: [
+            {
+               model: User,
+               as: 'Followers',
+               attributes: ['id', 'nick', 'email'],
+            },
+            {
+               model: User,
+               as: 'Followings',
+               attributes: ['id', 'nick', 'email'],
+            },
+         ],
+      })
+
+      res.json({
+         success: true,
+         user: updatedUser,
+         message: '사용자 정보 수정을 성공적으로 완료하였습니다.',
+      })
+   } catch (err) {
+      console.error(err)
+      res.status(500).json({
+         success: false,
+         message: '사용자 정보 수정 중 오류가 발생했습니다.',
       })
    }
 })

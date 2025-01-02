@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import MyProfile from '../components/page/MyProfile'
-import MySetting from '../components/page/MySetting'
 import PostItem from '../components/post/PostItem'
 import { Container, Box, Tab } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
@@ -26,7 +25,6 @@ function UserPage({ auth }) {
    return (
       <Container>
          <MyProfile auth={auth} id={id} />
-         <MySetting auth={auth} />
          <Box sx={{ width: '100%', typography: 'body1' }}>
             <TabContext value={value}>
                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

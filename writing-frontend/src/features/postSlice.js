@@ -60,7 +60,7 @@ export const getUserPostsThunk = createAsyncThunk('posts/getUserPosts', async (d
 export const getPostByIdThunk = createAsyncThunk('posts/getPostById', async (id, { rejectWithValue }) => {
    try {
       const response = await getPostById(id)
-      return response.data.post
+      return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '특정 게시물 가져오기 실패')
    }
@@ -72,10 +72,12 @@ const postSlice = createSlice({
       user: null,
       isAuthenticated: false,
       post: null,
+      comments: [],
       posts: [],
       followingPosts: [],
       loading: false,
       error: null,
+      pagination: null,
    },
    reducers: {},
    extraReducers: (builder) => {
@@ -110,6 +112,7 @@ const postSlice = createSlice({
          .addCase(getFolloingPostsThunk.fulfilled, (state, action) => {
             state.loading = false
             state.followingPosts = action.payload.followingPosts
+            state.pagination = action.payload.pagination
          })
          .addCase(getFolloingPostsThunk.rejected, (state, action) => {
             state.loading = false
@@ -122,6 +125,7 @@ const postSlice = createSlice({
          .addCase(getUserPostsThunk.fulfilled, (state, action) => {
             state.loading = false
             state.posts = action.payload.posts
+            state.pagination = action.payload.pagination
          })
          .addCase(getUserPostsThunk.rejected, (state, action) => {
             state.loading = false
@@ -133,9 +137,21 @@ const postSlice = createSlice({
          })
          .addCase(getPostByIdThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.post = action.payload
+            state.post = action.payload.post
+            state.comments = action.payload.comments
          })
          .addCase(getPostByIdThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         .addCase(deletePostThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(deletePostThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deletePostThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

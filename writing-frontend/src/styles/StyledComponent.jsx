@@ -7,6 +7,7 @@ import { useState } from 'react'
 export const theme = createTheme({
    palette: {
       primary: { main: '#222' },
+      secondary: { main: '#00bcd4' },
    },
 })
 

@@ -28,14 +28,15 @@ const upload = multer({
    limits: { fileSize: 6 * 1024 * 1024 },
 })
 
-router.post('/', isLoggedIn, upload.single('img'), async (req, res) => {
+router.post('/', isLoggedIn, upload.single('background'), async (req, res) => {
    try {
       const theme = await Theme.create({
          keyword: req.body.keyword,
-         background: req.file ? `/${req.file.filename}` : `#${req.file}`,
+         background: req.file ? `/${req.file.filename}` : req.body.background,
          alt: req.body.alt,
          UserId: req.user.id,
       })
+      console.log(req.body, req.file)
 
       res.json({
          success: true,
@@ -58,57 +59,9 @@ router.post('/', isLoggedIn, upload.single('img'), async (req, res) => {
    }
 })
 
-router.put('/:id', isLoggedIn, upload.single('img'), async (req, res) => {
+router.delete('/id/:id', async (req, res) => {
    try {
       const theme = await Theme.findOne({
-         where: {
-            id: req.params.id,
-            UserId: req.user.id,
-         },
-      })
-      if (!theme) {
-         return res.status(404).json({
-            success: false,
-            message: '게시물을 찾을 수 없습니다.',
-         })
-      }
-
-      await theme.update({
-         keyword: req.body.keyword,
-         background: req.file ? `/${req.file.filename}` : theme.background,
-         alt: req.body.alt,
-      })
-
-      const updatedTheme = await Theme.findOne({
-         where: { id: req.params.id },
-         include: [
-            {
-               model: User,
-               attributes: ['id', 'nick'],
-            },
-            {
-               model: Post,
-               attributes: ['id', 'title', 'content'],
-            },
-         ],
-      })
-      res.json({
-         success: true,
-         theme: updatedTheme,
-         message: '게시글을 성공적으로 수정했습니다.',
-      })
-   } catch (err) {
-      console.error(err)
-      res.status(500).json({
-         success: false,
-         message: '게시글 수정중 오류가 발생했습니다.',
-      })
-   }
-})
-
-router.delete('/:id', async (req, res) => {
-   try {
-      const theme = await Post.findOne({
          where: {
             id: req.params.id,
             UserId: req.user.id,
@@ -135,14 +88,14 @@ router.delete('/:id', async (req, res) => {
    }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
    try {
       const theme = await Theme.findOne({
-         where: { id: req.params.id },
+         where: { UserId: req.params.id },
          include: [
             {
                model: User,
-               attributes: ['id', 'nick'],
+               attributes: ['id', 'nick', 'avatar'],
             },
             {
                model: Post,
@@ -172,9 +125,30 @@ router.get('/:id', async (req, res) => {
    }
 })
 
+router.get('/list', async (req, res) => {
+   try {
+      const themeList = await Theme.findAll({
+         order: [['createdAt', 'DESC']],
+      })
+
+      res.json({
+         success: true,
+         themeList,
+         message: '전체 주제 리스트를 성공적으로 불러왔습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '주제 리스트를 불러오는 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
 router.get('/', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
-   const limit = parseInt(req.query.limit, 10) || 3
+   const limit = parseInt(req.query.limit, 10) || 10
    const offset = (page - 1) * limit
 
    try {
@@ -187,7 +161,7 @@ router.get('/', async (req, res) => {
          include: [
             {
                model: User,
-               attributes: ['id', 'nick'],
+               attributes: ['id', 'nick', 'avatar'],
             },
             {
                model: Post,
@@ -195,7 +169,7 @@ router.get('/', async (req, res) => {
                include: [
                   {
                      model: User,
-                     attributes: ['id', 'nick'],
+                     attributes: ['id', 'nick', 'avatar'],
                   },
                ],
             },

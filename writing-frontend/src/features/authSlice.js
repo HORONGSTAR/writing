@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createUser, loginUser, logoutUser, authStatus } from '../api/writingApi'
+import { createUser, loginUser, logoutUser, authStatus, editUser } from '../api/writingApi'
 
 export const createUserThunk = createAsyncThunk('auth/createUser', async (userData, { rejectWithValue }) => {
    try {
@@ -34,6 +34,15 @@ export const authStatusThunk = createAsyncThunk('auth/authStatus', async (_, { r
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '상태 확인 실패')
+   }
+})
+
+export const editUserThunk = createAsyncThunk('auth/editUser', async (userData, { rejectWithValue }) => {
+   try {
+      const response = await editUser(userData)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '사용자 정보 수정 실패')
    }
 })
 
@@ -100,6 +109,18 @@ const authSlice = createSlice({
             state.error = action.payload
             state.user = null
             state.isAuthenticated = false
+         })
+         .addCase(editUserThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(editUserThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload.user
+         })
+         .addCase(editUserThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
          })
    },
 })

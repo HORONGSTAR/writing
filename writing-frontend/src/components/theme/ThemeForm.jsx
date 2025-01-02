@@ -2,12 +2,12 @@ import { Button, Stack, TextField, Container, ToggleButton, ToggleButtonGroup } 
 import { useState, useCallback } from 'react'
 import { SliderPicker } from 'react-color'
 import ThemeItem from './ThemeItem'
-import { Image, ColorLens, Block } from '@mui/icons-material'
+import { Image, ColorLens, Block, Contrast } from '@mui/icons-material'
 
-function ThemeForm({ onSubmit }) {
+function ThemeForm({ onSubmit, user }) {
    const [imgUrl, setImgUrl] = useState('')
    const [keyword, setKeyword] = useState('')
-   const [imgFile, setImgFile] = useState('')
+   const [imgFile, setImgFile] = useState(null)
    const [imgAlt, setImgAlt] = useState('')
    const [color, setColor] = useState('#b3c8e6')
    const [type, setType] = useState('color')
@@ -33,18 +33,20 @@ function ThemeForm({ onSubmit }) {
          }
 
          const formData = new FormData()
-         if (imgFile) {
+         if (type === 'image' && imgFile) {
             const encodedFile = new File([imgFile], encodeURIComponent(imgFile.name), {
                type: imgFile.type,
             })
-            formData.append('background', encodedFile || color)
+            formData.append('background', encodedFile)
+         } else {
+            formData.append('background', type === 'color' ? color : '#EEEEEE')
          }
 
          formData.append('keyword', keyword)
-         formData.append('alt', imgAlt || '게시물 이미지')
+         formData.append('alt', imgAlt || '게시물 배경')
          onSubmit(formData)
       },
-      [keyword, imgFile, imgAlt, color, onSubmit]
+      [keyword, imgFile, imgAlt, color, type, onSubmit]
    )
 
    return (
@@ -65,7 +67,6 @@ function ThemeForm({ onSubmit }) {
                error={alert.keyword}
                helperText={alert.keyword && '주제를 입력하세요.'}
             />
-
             <ToggleButtonGroup
                exclusive
                value={type}
@@ -95,26 +96,19 @@ function ThemeForm({ onSubmit }) {
                         이미지 업로드
                         <input type="file" name="img" accept="image/*" hidden onChange={handleImageChange} />
                      </Button>
-                     <TextField
-                        fullWidth
-                        id="imgAlt"
-                        label="Alt"
-                        variant="standard"
-                        value={imgAlt}
-                        onChange={(e) => setImgAlt(e.target.value)}
-                     />
+                     <TextField fullWidth id="imgAlt" label="Alt" variant="standard" value={imgAlt} onChange={(e) => setImgAlt(e.target.value)} />
                   </>
                )}
             </Stack>
 
             <ThemeItem
-               themes={[
-                  {
-                     id: 'preview',
-                     keyword: keyword,
-                     background: type === 'color' ? color : type === 'image' ? imgUrl || '#EEEEEE' : '#EEEEEE',
-                  },
-               ]}
+               theme={{
+                  id: 'preview',
+                  keyword: keyword,
+                  background: type === 'color' ? color : type === 'image' ? imgUrl || '#EEEEEE' : '#EEEEEE',
+                  User: user,
+               }}
+               fontsize={'h6'}
             />
             <Button variant="contained" type="submit">
                완료

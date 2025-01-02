@@ -50,6 +50,21 @@ export const authStatus = async () => {
    }
 }
 
+export const editUser = async (userData) => {
+   try {
+      const config = {
+         headers: {
+            'Content-Type': 'multipart/form-data',
+         },
+      }
+      const response = await writingApi.put('/auth/edit', userData, config)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
 export const createPost = async (postData) => {
    try {
       const response = await writingApi.post('/post', postData)
@@ -135,9 +150,29 @@ export const createTheme = async (themeData) => {
    }
 }
 
-export const getThemes = async (page) => {
+export const deleteTheme = async (id) => {
    try {
-      const response = await writingApi.get(`/theme?page=${page}`)
+      const response = await writingApi.delete(`/theme/id/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const getThemes = async (page, limit) => {
+   try {
+      const response = await writingApi.get(`/theme?page=${page}&limit=${limit}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const getThemeList = async () => {
+   try {
+      const response = await writingApi.get(`/theme/list`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -178,6 +213,26 @@ export const followUser = async (id) => {
 export const unFollowUser = async (id) => {
    try {
       const response = await writingApi.delete(`/user/follow/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const createComment = async (commentData) => {
+   try {
+      const response = await writingApi.post('/comment', commentData)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const deleteComment = async (id) => {
+   try {
+      const response = await writingApi.delete(`/comment/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)

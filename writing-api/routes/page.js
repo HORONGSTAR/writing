@@ -16,7 +16,7 @@ router.get('/profile/:id', isLoggedIn, async (req, res) => {
       const userId = req.params.id
       const user = await User.findOne({
          where: { id: userId },
-         attributes: ['id', 'nick', 'email', 'createdAt', 'updatedAt'],
+         attributes: ['id', 'nick', 'email', 'info', 'avatar', 'createdAt', 'updatedAt'],
          include: [
             {
                model: User,

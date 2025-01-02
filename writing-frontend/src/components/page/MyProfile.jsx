@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfileThunk, getProfileIdThunk } from '../../features/pageSlice'
 import { followUserThunk, unFollowUserThunk } from '../../features/userSlice'
-import { Box, List, ListItem, Button } from '@mui/material'
+import { Box, Button, Avatar, Typography, Stack } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
+import { ModalBox } from '../../styles/StyledComponent'
+import MySetting from './MySetting'
 
-function MyProfile({ auth }) {
-   const { id } = useParams()
+function MyProfile({ auth, id }) {
    const [followers, setFollowers] = useState(0)
    const [followings, setFollowings] = useState(0)
    const [follow, setFollow] = useState(false)
@@ -40,7 +40,7 @@ function MyProfile({ auth }) {
                alert('사용자 정보 가져오기를 실패했습니다.', error)
             })
       }
-   }, [dispatch, id])
+   }, [dispatch, id, followers, followings])
 
    useEffect(() => {
       fetchProfileData()
@@ -84,28 +84,31 @@ function MyProfile({ auth }) {
       <>
          {user && (
             <Box>
-               <List>
-                  <ListItem>{user.email}</ListItem>
-                  <ListItem>{user.nick}</ListItem>
-                  <ListItem>자기소개</ListItem>
-                  <ListItem>
+               <Stack>
+                  <Avatar src={`${process.env.REACT_APP_API_URL}${user.avatar}`} sx={{ width: 150, height: 150 }} />
+                  <Typography variant="h6">{user.nick}</Typography>
+                  <Typography variant="caption">{user.email}</Typography>
+                  <Typography sx={{ whiteSpace: 'pre-wrap' }}>{user.info}</Typography>
+                  <Box>
                      <Button component={RouterLink} to={`/profile/${user.id}/followings`}>
                         {followings} 팔로잉
                      </Button>
                      <Button component={RouterLink} to={`/profile/${user.id}/followers`}>
                         {followers} 팔로워
                      </Button>
-                  </ListItem>
-                  <ListItem>
+                  </Box>
+                  <Box>
                      {!id || String(auth?.id) === String(id) ? (
-                        <Button component={RouterLink} to={`/setting`}>
-                           계정설정
-                        </Button>
+                        <ModalBox btnName={'계정 설정'}>
+                           <MySetting />
+                        </ModalBox>
                      ) : (
-                        <Button onClick={() => onClickFollow(`${user.id}`)}>{buttonName}</Button>
+                        <Button variant="outlined" onClick={() => onClickFollow(user.id)}>
+                           {buttonName}
+                        </Button>
                      )}
-                  </ListItem>
-               </List>
+                  </Box>
+               </Stack>
             </Box>
          )}
       </>

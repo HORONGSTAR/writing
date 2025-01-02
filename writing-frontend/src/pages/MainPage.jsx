@@ -1,7 +1,7 @@
 import PostItem from '../components/post/PostItem'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Paper, Container, Grid2, Typography, Button, Box } from '@mui/material'
+import { Paper, Container, Grid2, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { getPostsThunk, getFolloingPostsThunk } from '../features/postSlice'
 

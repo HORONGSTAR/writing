@@ -1,13 +1,19 @@
 import { TextField, Stack, Button, NativeSelect, InputLabel, FormControl, Snackbar } from '@mui/material'
-import { useCallback, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getThemeListThunk } from '../../features/themeSlice'
 
 function PostForm({ onSubmit, initialValues = {} }) {
    const [title, setTitle] = useState(initialValues?.title || '')
    const [content, setContent] = useState(initialValues?.content || '')
    const [themeId, setThemeId] = useState(initialValues?.ThemeId || '')
-   const { themes } = useSelector((state) => state.themes)
+   const { themeList } = useSelector((state) => state.themes)
    const [open, setOpen] = useState(false)
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      dispatch(getThemeListThunk())
+   }, [dispatch])
 
    const handleSubmit = useCallback(
       (e) => {
@@ -33,7 +39,7 @@ function PostForm({ onSubmit, initialValues = {} }) {
                }}
                onChange={(e) => setThemeId(e.target.value)}
             >
-               {themes.map((theme) => (
+               {themeList.map((theme) => (
                   <option key={`theme_keyword_${theme.id}`} value={theme.id}>
                      {theme.keyword}
                   </option>
@@ -42,24 +48,11 @@ function PostForm({ onSubmit, initialValues = {} }) {
          </FormControl>
 
          <TextField fullWidth label="제목" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
-         <TextField
-            fullWidth
-            multiline
-            label="내용"
-            rows={24}
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-         />
+         <TextField fullWidth multiline label="내용" rows={24} id="content" value={content} onChange={(e) => setContent(e.target.value)} />
          <Button sx={{ marginLeft: 'auto' }} onClick={handleSubmit} variant="contained">
             등록
          </Button>
-         <Snackbar
-            open={open}
-            autoHideDuration={3000}
-            onClose={() => setOpen(false)}
-            message="제목 및 내용을 채워주세요."
-         />
+         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message="제목 및 내용을 채워주세요." />
       </Stack>
    )
 }

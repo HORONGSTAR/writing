@@ -1,15 +1,21 @@
-import { Button, Container, Stack, Box, Chip } from '@mui/material'
+import { Container, Stack, Box, Chip, Pagination } from '@mui/material'
 import ThemeForm from '../components/theme/ThemeForm'
-import ThemeItem from '../components/theme/ThemeItem'
+import ThemeList from '../components/theme/ThemeList'
 import { useDispatch, useSelector } from 'react-redux'
 import { createThemeThunk } from '../features/themeSlice'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { ModalBox } from './../styles/StyledComponent'
+import { getThemesThunk } from '../features/themeSlice'
 
-function ThemePage() {
+function ThemePage({ user }) {
    const dispatch = useDispatch()
-   const { loading, error, themes } = useSelector((state) => state.themes)
+   const [page, setPage] = useState(1)
+   const { loading, error, themes, themeList, pagination } = useSelector((state) => state.themes)
    const [value, setValue] = useState(null)
+
+   useEffect(() => {
+      dispatch(getThemesThunk({ page: page, limit: 10 }))
+   }, [dispatch, page])
 
    const handleSubmit = useCallback(
       (themeData) => {
@@ -32,7 +38,7 @@ function ThemePage() {
       <Container>
          <Stack spacing={3}>
             <Box>
-               {themes.map((theme) => (
+               {themeList.map((theme) => (
                   <Chip
                      color={theme.id === value?.id ? 'primary' : ''}
                      key={'theme' + theme.id}
@@ -42,9 +48,12 @@ function ThemePage() {
                ))}
             </Box>
             <ModalBox btnName="주제 등록">
-               <ThemeForm onSubmit={handleSubmit} />
+               <ThemeForm onSubmit={handleSubmit} user={user} />
             </ModalBox>
-            {value ? <ThemeItem themes={[value]} /> : <ThemeItem themes={themes} />}
+            {value ? <ThemeList themes={themes.filter((theme) => theme.id === value.id)} /> : <ThemeList themes={themes} />}
+            <Stack spacing={2} sx={{ alignItems: 'center' }}>
+               <Pagination count={pagination?.totalPages} page={page} onChange={(e, value) => setPage(value)} />
+            </Stack>
          </Stack>
       </Container>
    )
