@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { createPostThunk } from './../features/postSlice'
-
 import PostForm from '../components/post/PostForm'
 import { Container } from '@mui/material'
 

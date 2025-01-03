@@ -1,4 +1,4 @@
-import { Avatar, Typography, List, ListItem, Divider, Button } from '@mui/material'
+import { Avatar, Typography, List, ListItem, Divider, Stack } from '@mui/material'
 import { Ellipsis } from '../../styles/StyledComponent'
 import { Link as RouterLink } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -18,10 +18,10 @@ function PostItem({ posts, line }) {
                      <Ellipsis $line={line}>{post.content}</Ellipsis>
                   </ListItem>
                   <ListItem>
-                     <Button component={RouterLink} to={`/profile/${post.User.id}`} sx={{ color: 'inherit' }}>
+                     <Stack direction="row" component={RouterLink} to={`/profile/${post.User.id}`} sx={{ color: 'inherit' }}>
                         <Avatar src={`${process.env.REACT_APP_API_URL}${post.User.avatar}`} sx={{ width: 24, height: 24, marginRight: 0.5 }} />
                         {post.User.nick}
-                     </Button>
+                     </Stack>
 
                      <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>
                         {dayjs(post.createdAt).format('YYYY-MM-DD')}

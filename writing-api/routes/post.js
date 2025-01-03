@@ -60,6 +60,7 @@ router.put('/id/:id', isLoggedIn, async (req, res) => {
                model: User,
                attributes: ['id', 'nick'],
             },
+
             {
                model: Theme,
                attributes: ['id', 'keyword'],
@@ -116,7 +117,6 @@ router.get('/id/:id', async (req, res) => {
          include: [
             {
                model: User,
-               as: 'User',
                attributes: ['id', 'nick', 'avatar'],
             },
             {
@@ -125,25 +125,22 @@ router.get('/id/:id', async (req, res) => {
             },
          ],
       })
-      const commands = await Comment.findAll({
-         where: { PostId: req.params.id },
-         include: [
-            {
-               model: User,
-               attributes: ['id', 'nick', 'avatar'],
-            },
-         ],
-      })
+
       if (!post) {
          return res.status(404).json({
             success: false,
             message: '게시물을 찾을 수 없습니다.',
          })
       }
+
+      const bookmarks = await post.getBookmarkUser()
+      const Likemarks = await post.getLikemarkUser()
+
       res.json({
          success: true,
          post,
-         commands,
+         bookmarks,
+         Likemarks,
          message: '게시물을 성공적으로 불러왔습니다.',
       })
    } catch (error) {

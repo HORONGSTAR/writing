@@ -6,7 +6,7 @@ import { getThemeListThunk } from '../../features/themeSlice'
 function PostForm({ onSubmit, initialValues = {} }) {
    const [title, setTitle] = useState(initialValues?.title || '')
    const [content, setContent] = useState(initialValues?.content || '')
-   const [themeId, setThemeId] = useState(initialValues?.ThemeId || '')
+   const [themeId, setThemeId] = useState(initialValues?.ThemeId || null)
    const { themeList } = useSelector((state) => state.themes)
    const [open, setOpen] = useState(false)
    const dispatch = useDispatch()

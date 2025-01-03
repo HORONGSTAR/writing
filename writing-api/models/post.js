@@ -32,8 +32,8 @@ module.exports = class Post extends Sequelize.Model {
          foreignKey: 'ThemeId',
          targetKey: 'id',
       })
-      db.Post.belongsToMany(db.User, { through: 'LikePosts' })
-      db.Post.belongsToMany(db.User, { through: 'BookmarkPosts' })
+      db.Post.belongsToMany(db.User, { as: 'LikemarkUser', through: 'Likemark' })
+      db.Post.belongsToMany(db.User, { as: 'BookmarkUser', through: 'Bookmark' })
       db.Post.hasMany(db.Comment)
    }
 }

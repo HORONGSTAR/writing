@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updatePostThunk, getPostByIdThunk } from './../features/postSlice'
 import PostForm from '../components/post/PostForm'
 import { Container } from '@mui/material'
+import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
 
 function PostEditPage() {
    const { id } = useParams()
@@ -28,6 +29,14 @@ function PostEditPage() {
       },
       [dispatch, id]
    )
+
+   if (loading) {
+      return <LoadingBox />
+   }
+
+   if (error) {
+      return <NoticeBox>{error}</NoticeBox>
+   }
 
    return (
       <Container>

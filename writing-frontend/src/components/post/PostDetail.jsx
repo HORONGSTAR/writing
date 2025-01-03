@@ -30,12 +30,14 @@ function PostDetail({ post, id, auth }) {
                   <Typography variant="h4">{post.title}</Typography>
                </ListItem>
                <ListItem>
-                  <Avatar src={`${process.env.REACT_APP_API_URL}${post.User.avatar}`} sx={{ width: 32, height: 32, marginRight: 0.5 }} />
-                  <Stack>
-                     {post.User.nick}
-                     <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>
-                        {dayjs(post.createdAt).format('YYYY-MM-DD')}
-                     </Typography>
+                  <Stack direction="row" component={RouterLink} to={`/profile/${post.User.id}`} sx={{ color: 'inherit' }}>
+                     <Avatar src={`${process.env.REACT_APP_API_URL}${post.User.avatar}`} sx={{ width: 32, height: 32, marginRight: 0.5 }} />
+                     <Stack>
+                        {post.User.nick}
+                        <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>
+                           {dayjs(post.createdAt).format('YYYY-MM-DD')}
+                        </Typography>
+                     </Stack>
                   </Stack>
                   {auth?.id === post.UserId && (
                      <Box sx={{ marginLeft: 'auto' }}>

@@ -105,9 +105,9 @@ export const getPostById = async (id) => {
    }
 }
 
-export const getPosts = async (page) => {
+export const getPosts = async (page, limit) => {
    try {
-      const response = await writingApi.get(`/post/all?page=${page}`)
+      const response = await writingApi.get(`/post/all?page=${page}&limit=${limit}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -115,9 +115,9 @@ export const getPosts = async (page) => {
    }
 }
 
-export const getFolloingPosts = async (page) => {
+export const getFolloingPosts = async (page, limit) => {
    try {
-      const response = await writingApi.get(`/post/following?page=${page}`)
+      const response = await writingApi.get(`/post/following?page=${page}&limit=${limit}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -125,9 +125,9 @@ export const getFolloingPosts = async (page) => {
    }
 }
 
-export const getUserPosts = async (id, page) => {
+export const getUserPosts = async (id, page, limit) => {
    try {
-      const response = await writingApi.get(`/post/user/${id}?page=${page}`)
+      const response = await writingApi.get(`/post/user/${id}?page=${page}&limit=${limit}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
@@ -230,9 +230,69 @@ export const createComment = async (commentData) => {
    }
 }
 
+export const getComments = async (id) => {
+   try {
+      const response = await writingApi.get(`/comment/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const updateComment = async (commentData, id) => {
+   try {
+      const response = await writingApi.put(`/comment/${id}`, commentData)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
 export const deleteComment = async (id) => {
    try {
       const response = await writingApi.delete(`/comment/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const addLikemark = async (id) => {
+   try {
+      const response = await writingApi.post(`/user/likemark/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const removeLikemark = async (id) => {
+   try {
+      const response = await writingApi.delete(`/user/likemark/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const addBookmark = async (id) => {
+   try {
+      const response = await writingApi.post(`/user/bookmark/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}
+
+export const removeBookmark = async (id) => {
+   try {
+      const response = await writingApi.delete(`/user/bookmark/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)

@@ -1,6 +1,8 @@
 import { Box, Stack, Typography, Button } from '@mui/material'
+import { useLocation } from 'react-router-dom'
 
 function ThemeItem({ theme, fontsize }) {
+   const location = useLocation()
    return (
       <Box
          sx={{

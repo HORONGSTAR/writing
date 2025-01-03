@@ -1,23 +1,30 @@
 const express = require('express')
 const router = express.Router()
-const { Comment } = require('../models')
+const { Comment, User } = require('../models')
 const { isLoggedIn } = require('./middlewares')
+const { Op } = require('sequelize')
 
 router.post('/', isLoggedIn, async (req, res) => {
    try {
-      const comment = await Comment.create({
+      await Comment.create({
          comment: req.body.comment,
          UserId: req.user.id,
          PostId: req.body.PostId,
       })
+
+      const comments = await Comment.findAll({
+         where: { PostId: req.body.PostId },
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick', 'avatar'],
+            },
+         ],
+      })
+
       res.json({
          success: true,
-         post: {
-            id: comment.id,
-            comment: comment.title,
-            UserId: comment.content,
-            PostId: comment.UserId,
-         },
+         comments,
          message: '댓글이 성공적으로 등록되었습니다.',
       })
    } catch (error) {
@@ -30,7 +37,79 @@ router.post('/', isLoggedIn, async (req, res) => {
    }
 })
 
-router.delete('/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
+   try {
+      const comments = await Comment.findAll({
+         where: { PostId: req.params.id },
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick', 'avatar'],
+            },
+         ],
+      })
+
+      res.json({
+         success: true,
+         comments,
+         message: '댓글을 성공적으로 불러왔습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '댓글을 불러오는 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
+router.put('/:id', isLoggedIn, async (req, res) => {
+   try {
+      const comment = await Comment.findOne({
+         where: {
+            id: req.params.id,
+            UserId: req.user.id,
+         },
+      })
+
+      if (!comment) {
+         return res.status(404).json({
+            success: false,
+            message: '댓글을 찾을 수 없습니다.',
+         })
+      }
+
+      await comment.update({
+         comment: req.body.comment,
+      })
+
+      const comments = await Comment.findAll({
+         where: { PostId: comment.PostId },
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick', 'avatar'],
+            },
+         ],
+      })
+
+      res.json({
+         success: true,
+         comments,
+         message: '댓글이 성공적으로 수정되었습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '댓글 수정 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
+router.delete('/:id', isLoggedIn, async (req, res) => {
    try {
       const comment = await Comment.findOne({
          where: {
@@ -44,9 +123,22 @@ router.delete('/:id', async (req, res) => {
             message: '댓글을 찾을 수 없습니다.',
          })
       }
+
+      const comments = await Comment.findAll({
+         where: { PostId: comment.PostId, [Op.not]: { id: comment.id } },
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick', 'avatar'],
+            },
+         ],
+      })
+
       await comment.destroy()
+
       res.json({
          success: true,
+         comments,
          message: '댓글이 성공적으로 삭제되었습니다.',
       })
    } catch (error) {

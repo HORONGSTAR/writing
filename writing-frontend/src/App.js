@@ -26,7 +26,7 @@ function App() {
       <>
          <Navber isAuthenticated={isAuthenticated} user={user} />
          <Routes>
-            <Route path="/" element={<MainPage />} />
+            <Route path="/" element={<MainPage user={user} />} />
             <Route path="/all" element={<MainPage />} />
             <Route path="/follow" element={<MainPage />} />
             <Route path="/login" element={<AuthPage />} />

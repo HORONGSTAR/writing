@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { createPost, getPosts, getPostById, getFolloingPosts, getUserPosts, updatePost, deletePost } from '../api/writingApi'
+import { Bookmark } from '@mui/icons-material'
 
 export const createPostThunk = createAsyncThunk('posts/createPost', async (postData, { rejectWithValue }) => {
    try {
@@ -29,18 +30,20 @@ export const deletePostThunk = createAsyncThunk('posts/deletePost', async (id, {
    }
 })
 
-export const getPostsThunk = createAsyncThunk('posts/getPosts', async (page, { rejectWithValue }) => {
+export const getPostsThunk = createAsyncThunk('posts/getPosts', async (data, { rejectWithValue }) => {
+   const { page, limit } = data
    try {
-      const response = await getPosts(page)
+      const response = await getPosts(page, limit)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
    }
 })
 
-export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', async (page, { rejectWithValue }) => {
+export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', async (data, { rejectWithValue }) => {
+   const { page, limit } = data
    try {
-      const response = await getFolloingPosts(page)
+      const response = await getFolloingPosts(page, limit)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
@@ -48,9 +51,9 @@ export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', 
 })
 
 export const getUserPostsThunk = createAsyncThunk('posts/getUserPosts', async (data, { rejectWithValue }) => {
-   const { id, page } = data
+   const { id, page, limit } = data
    try {
-      const response = await getUserPosts(id, page)
+      const response = await getUserPosts(id, page, limit)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
@@ -72,9 +75,10 @@ const postSlice = createSlice({
       user: null,
       isAuthenticated: false,
       post: null,
-      comments: [],
       posts: [],
       followingPosts: [],
+      bookmarks: [],
+      likemarks: [],
       loading: false,
       error: null,
       pagination: null,
@@ -138,7 +142,8 @@ const postSlice = createSlice({
          .addCase(getPostByIdThunk.fulfilled, (state, action) => {
             state.loading = false
             state.post = action.payload.post
-            state.comments = action.payload.comments
+            state.bookmarks = action.payload.bookmarks
+            state.likemarks = action.payload.likemarks
          })
          .addCase(getPostByIdThunk.rejected, (state, action) => {
             state.loading = false

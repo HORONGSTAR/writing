@@ -1,4 +1,4 @@
-import { Container, Stack, Box, Chip, Pagination } from '@mui/material'
+import { Container, Stack, Box, Chip, Pagination, Typography, Divider } from '@mui/material'
 import ThemeForm from '../components/theme/ThemeForm'
 import ThemeList from '../components/theme/ThemeList'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,6 +6,7 @@ import { createThemeThunk } from '../features/themeSlice'
 import { useCallback, useState, useEffect } from 'react'
 import { ModalBox } from './../styles/StyledComponent'
 import { getThemesThunk } from '../features/themeSlice'
+import { ThemeBanner, LoadingBox, NoticeBox } from '../styles/StyledComponent'
 
 function ThemePage({ user }) {
    const dispatch = useDispatch()
@@ -32,11 +33,21 @@ function ThemePage({ user }) {
       [dispatch]
    )
 
-   if (loading) return <>load</>
-   if (error) return <>{error}</>
+   if (loading) {
+      return <LoadingBox />
+   }
+
+   if (error) {
+      return <NoticeBox>{error}</NoticeBox>
+   }
+
    return (
       <Container>
-         <Stack spacing={3}>
+         <Stack spacing={2}>
+            <Typography variant="h5" color="secondary">
+               주제 모음집
+            </Typography>
+            <Divider />
             <Box>
                {themeList.map((theme) => (
                   <Chip
@@ -47,10 +58,14 @@ function ThemePage({ user }) {
                   />
                ))}
             </Box>
-            <ModalBox btnName="주제 등록">
-               <ThemeForm onSubmit={handleSubmit} user={user} />
-            </ModalBox>
+            {user && (
+               <ModalBox btnName="주제 등록">
+                  <ThemeForm onSubmit={handleSubmit} user={user} />
+               </ModalBox>
+            )}
+
             {value ? <ThemeList themes={themes.filter((theme) => theme.id === value.id)} /> : <ThemeList themes={themes} />}
+            {themeList.length === 0 && <ThemeBanner />}
             <Stack spacing={2} sx={{ alignItems: 'center' }}>
                <Pagination count={pagination?.totalPages} page={page} onChange={(e, value) => setPage(value)} />
             </Stack>

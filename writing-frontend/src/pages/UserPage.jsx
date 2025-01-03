@@ -6,6 +6,7 @@ import { Container, Box, Tab } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserPostsThunk } from '../features/postSlice'
+import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
 
 function UserPage({ auth }) {
    const { id } = useParams()
@@ -20,6 +21,14 @@ function UserPage({ auth }) {
 
    const handleChange = (event, newValue) => {
       setValue(newValue)
+   }
+
+   if (loading) {
+      return <LoadingBox />
+   }
+
+   if (error) {
+      return <NoticeBox>{error}</NoticeBox>
    }
 
    return (
