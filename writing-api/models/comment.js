@@ -8,9 +8,10 @@ module.exports = class Comment extends Sequelize.Model {
                type: Sequelize.TEXT,
                allowNull: false,
             },
-            alarm: {
-               type: Sequelize.TEXT,
+            checked: {
+               type: Sequelize.BOOLEAN,
                allowNull: false,
+               defaultValue: false,
             },
          },
          {

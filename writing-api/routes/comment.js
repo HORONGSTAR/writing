@@ -81,7 +81,7 @@ router.put('/:id', isLoggedIn, async (req, res) => {
       }
 
       await comment.update({
-         comment: req.body.comment,
+         checked: req.body.checked,
       })
 
       const comments = await Comment.findAll({

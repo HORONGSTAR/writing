@@ -3,6 +3,7 @@ import { getCommentsThunk, createCommentThunk, updateCommentThunk, deleteComment
 import { useDispatch, useSelector } from 'react-redux'
 import { useCallback, useEffect, useState } from 'react'
 import { Create, Delete } from '@mui/icons-material'
+import { LoadingBox, NoticeBox } from '../../styles/StyledComponent'
 import dayjs from 'dayjs'
 
 function CommentBox({ id, auth }) {
@@ -53,6 +54,9 @@ function CommentBox({ id, auth }) {
    useEffect(() => {
       dispatch(getCommentsThunk(id))
    }, [dispatch, id])
+
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <>
