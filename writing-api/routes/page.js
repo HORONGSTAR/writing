@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { isLoggedIn } = require('./middlewares')
-const { User, Post } = require('../models')
+const { User, Post, Theme } = require('../models')
 
 router.get('/profile', isLoggedIn, async (req, res) => {
    res.json({
@@ -21,12 +21,47 @@ router.get('/profile/:id', isLoggedIn, async (req, res) => {
             {
                model: User,
                as: 'Followers',
-               attributes: ['id', 'nick', 'email'],
+               attributes: ['id', 'nick', 'email', 'avatar'],
             },
             {
                model: User,
                as: 'Followings',
-               attributes: ['id', 'nick', 'email'],
+               attributes: ['id', 'nick', 'email', 'avatar'],
+            },
+            {
+               model: Post,
+               attributes: ['id', 'title', 'content'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick', 'avatar'],
+                  },
+               ],
+            },
+            {
+               model: Post,
+               as: 'BookmarkPost',
+               attributes: ['id', 'title', 'content'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick', 'avatar'],
+                  },
+               ],
+            },
+            {
+               model: Theme,
+               attributes: ['id', 'keyword', 'background'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick', 'avatar'],
+                  },
+                  {
+                     model: Post,
+                     attributes: ['id', 'title', 'content'],
+                  },
+               ],
             },
          ],
       })

@@ -6,17 +6,19 @@ import { createThemeThunk } from '../features/themeSlice'
 import { useCallback, useState, useEffect } from 'react'
 import { ModalBox } from './../styles/StyledComponent'
 import { getThemesThunk } from '../features/themeSlice'
-import { ThemeBanner, LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import { useParams } from 'react-router-dom'
 
 function ThemePage({ user }) {
+   const { id } = useParams()
    const dispatch = useDispatch()
-   const [page, setPage] = useState(1)
    const { loading, error, themes, themeList, pagination } = useSelector((state) => state.themes)
-   const [value, setValue] = useState(null)
+   const [value, setValue] = useState(id || null)
+   const [page, setPage] = useState(1)
 
    useEffect(() => {
       dispatch(getThemesThunk({ page: page, limit: 10 }))
-   }, [dispatch, page])
+   }, [dispatch, page, value])
 
    const handleSubmit = useCallback(
       (themeData) => {
@@ -30,7 +32,7 @@ function ThemePage({ user }) {
                alert('게시물 등록에 실패했습니다.')
             })
       },
-      [dispatch]
+      [dispatch, id]
    )
 
    if (loading) {
@@ -51,10 +53,10 @@ function ThemePage({ user }) {
             <Box>
                {themeList.map((theme) => (
                   <Chip
-                     color={theme.id === value?.id ? 'primary' : ''}
+                     color={String(theme.id) === String(value) ? 'primary' : ''}
                      key={'theme' + theme.id}
                      label={theme.keyword}
-                     onClick={() => (theme.id === value?.id ? setValue(null) : setValue(theme))}
+                     onClick={() => (String(theme.id) === String(value) ? setValue(null) : setValue(theme.id))}
                   />
                ))}
             </Box>
@@ -64,8 +66,8 @@ function ThemePage({ user }) {
                </ModalBox>
             )}
 
-            {value ? <ThemeList themes={themes.filter((theme) => theme.id === value.id)} /> : <ThemeList themes={themes} />}
-            {themeList.length === 0 && <ThemeBanner />}
+            {id ? <ThemeList themes={themes.filter((theme) => String(theme.id) === String(value))} /> : <ThemeList themes={themes} />}
+            {themeList.length === 0 && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
             <Stack spacing={2} sx={{ alignItems: 'center' }}>
                <Pagination count={pagination?.totalPages} page={page} onChange={(e, value) => setPage(value)} />
             </Stack>

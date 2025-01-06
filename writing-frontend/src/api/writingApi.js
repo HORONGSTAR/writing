@@ -125,16 +125,6 @@ export const getFolloingPosts = async (page, limit) => {
    }
 }
 
-export const getUserPosts = async (id, page, limit) => {
-   try {
-      const response = await writingApi.get(`/post/user/${id}?page=${page}&limit=${limit}`)
-      return response
-   } catch (error) {
-      console.error(`API Request 오류: ${error.message}`)
-      throw error
-   }
-}
-
 export const createTheme = async (themeData) => {
    try {
       const config = {

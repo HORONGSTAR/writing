@@ -50,16 +50,6 @@ export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', 
    }
 })
 
-export const getUserPostsThunk = createAsyncThunk('posts/getUserPosts', async (data, { rejectWithValue }) => {
-   const { id, page, limit } = data
-   try {
-      const response = await getUserPosts(id, page, limit)
-      return response.data
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
-   }
-})
-
 export const getPostByIdThunk = createAsyncThunk('posts/getPostById', async (id, { rejectWithValue }) => {
    try {
       const response = await getPostById(id)
@@ -104,6 +94,7 @@ const postSlice = createSlice({
          .addCase(getPostsThunk.fulfilled, (state, action) => {
             state.loading = false
             state.posts = action.payload.posts
+            state.pagination = action.payload.pagination
          })
          .addCase(getPostsThunk.rejected, (state, action) => {
             state.loading = false
@@ -119,19 +110,6 @@ const postSlice = createSlice({
             state.pagination = action.payload.pagination
          })
          .addCase(getFolloingPostsThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         .addCase(getUserPostsThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(getUserPostsThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.posts = action.payload.posts
-            state.pagination = action.payload.pagination
-         })
-         .addCase(getUserPostsThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

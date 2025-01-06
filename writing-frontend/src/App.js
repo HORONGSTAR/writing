@@ -37,6 +37,7 @@ function App() {
             <Route path="/post/create" element={<PostCreatePage />} />
             <Route path="/post/edit/:id" element={<PostEditPage />} />
             <Route path="/theme" element={<ThemePage user={user} />} />
+            <Route path="/theme/:id" element={<ThemePage user={user} />} />
          </Routes>
       </>
    )

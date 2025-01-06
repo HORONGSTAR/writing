@@ -12,26 +12,19 @@ function MainPage({ user }) {
    const { loading, error, posts, followingPosts, pagination } = useSelector((state) => state.posts)
    const { themeList } = useSelector((state) => state.themes)
    const [page, setPage] = useState(1)
-   const [value, setValue] = useState(null)
 
    const dispatch = useDispatch()
-
    const PostsLoad = useCallback(() => {
-      if (user) dispatch(getFolloingPostsThunk({ page: page, limit: 10 }))
-      if (location.pathname !== '/follow') dispatch(getPostsThunk({ page: page, limit: 10 }))
-   }, [location, dispatch, user])
+      if (user && location.pathname !== '/all') dispatch(getFolloingPostsThunk({ page, limit: 5 }))
+      if (location.pathname !== '/follow') dispatch(getPostsThunk({ page, limit: 5 }))
+   }, [location, dispatch, user, page])
 
    useEffect(() => {
       PostsLoad()
    }, [PostsLoad])
 
-   if (loading) {
-      return <LoadingBox />
-   }
-
-   if (error) {
-      return <NoticeBox>{error}</NoticeBox>
-   }
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container>
@@ -51,7 +44,8 @@ function MainPage({ user }) {
                      전체 글
                   </Typography>
                   <Paper sx={{ height: '100%' }}>
-                     <PostItem posts={posts} />
+                     {posts.length === 0 && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
+                     <PostItem posts={posts.length > 3 ? posts.slice(0, 3) : posts} />
                   </Paper>
                </Grid2>
                <Grid2 size={{ xs: 12, sm: 6 }}>
@@ -59,8 +53,10 @@ function MainPage({ user }) {
                      구독
                   </Typography>
                   <Paper sx={{ height: '100%' }}>
-                     {!followingPosts && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
-                     <PostItem posts={followingPosts} />
+                     {followingPosts.length === 0 && (
+                        <NoticeBox>{user ? '등록된 글이 없습니다.' : '로그인해서 다양한 작가님을 구독해보세요!'}</NoticeBox>
+                     )}
+                     <PostItem posts={followingPosts.length > 3 ? followingPosts.slice(0, 3) : followingPosts} />
                   </Paper>
                </Grid2>
             </Grid2>
@@ -72,7 +68,7 @@ function MainPage({ user }) {
                </Typography>
                <Divider />
                <Paper>
-                  {!posts && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
+                  {posts.length === 0 && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
                   <PostItem posts={posts} line={3} />
                </Paper>
                <Stack spacing={2} sx={{ alignItems: 'center' }}>
@@ -87,7 +83,7 @@ function MainPage({ user }) {
                </Typography>
                <Divider />
                <Paper>
-                  {!followingPosts && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
+                  {followingPosts.length === 0 && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
                   <PostItem posts={followingPosts} line={3} />
                </Paper>
                <Stack spacing={2} sx={{ alignItems: 'center' }}>

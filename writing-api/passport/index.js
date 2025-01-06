@@ -1,6 +1,6 @@
 const passport = require('passport')
 const local = require('./localStrategy')
-const User = require('../models/user')
+const { User, Post, Theme } = require('../models')
 
 module.exports = () => {
    passport.serializeUser((user, done) => {
@@ -15,12 +15,47 @@ module.exports = () => {
             {
                model: User,
                as: 'Followers',
-               attributes: ['id', 'nick', 'email'],
+               attributes: ['id', 'nick', 'email', 'avatar'],
             },
             {
                model: User,
                as: 'Followings',
-               attributes: ['id', 'nick', 'email'],
+               attributes: ['id', 'nick', 'email', 'avatar'],
+            },
+            {
+               model: Post,
+               attributes: ['id', 'title', 'content'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick', 'avatar'],
+                  },
+               ],
+            },
+            {
+               model: Post,
+               as: 'BookmarkPost',
+               attributes: ['id', 'title', 'content'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick', 'avatar'],
+                  },
+               ],
+            },
+            {
+               model: Theme,
+               attributes: ['id', 'keyword', 'background'],
+               include: [
+                  {
+                     model: User,
+                     attributes: ['id', 'nick', 'avatar'],
+                  },
+                  {
+                     model: Post,
+                     attributes: ['id', 'title', 'content'],
+                  },
+               ],
             },
          ],
       })

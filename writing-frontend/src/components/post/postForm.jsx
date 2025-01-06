@@ -20,10 +20,13 @@ function PostForm({ onSubmit, initialValues = {} }) {
          e.preventDefault()
          const value = { ti: title.trim(), ct: content.trim() }
          if (!value.ti || !value.ct) return setOpen(true)
+         if (themeId === 'default') return setThemeId(null)
          onSubmit({ title, content, themeId })
       },
       [title, content, themeId, onSubmit]
    )
+
+   console.log(themeId)
 
    return (
       <Stack spacing={2}>
@@ -39,6 +42,7 @@ function PostForm({ onSubmit, initialValues = {} }) {
                }}
                onChange={(e) => setThemeId(e.target.value)}
             >
+               <option value={'default'}>선택 안함</option>
                {themeList.map((theme) => (
                   <option key={`theme_keyword_${theme.id}`} value={theme.id}>
                      {theme.keyword}

@@ -123,6 +123,16 @@ router.get('/id/:id', async (req, res) => {
                model: Theme,
                attributes: ['id', 'keyword'],
             },
+            {
+               model: User,
+               as: 'BookmarkUser',
+               attributes: ['id'],
+            },
+            {
+               model: User,
+               as: 'LikemarkUser',
+               attributes: ['id'],
+            },
          ],
       })
 
@@ -133,14 +143,9 @@ router.get('/id/:id', async (req, res) => {
          })
       }
 
-      const bookmarks = await post.getBookmarkUser()
-      const Likemarks = await post.getLikemarkUser()
-
       res.json({
          success: true,
          post,
-         bookmarks,
-         Likemarks,
          message: '게시물을 성공적으로 불러왔습니다.',
       })
    } catch (error) {

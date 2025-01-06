@@ -1,55 +1,118 @@
 import { useParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import MyProfile from '../components/page/MyProfile'
-import PostItem from '../components/post/PostItem'
-import { Container, Box, Tab } from '@mui/material'
-import { TabContext, TabList, TabPanel } from '@mui/lab'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserPostsThunk } from '../features/postSlice'
-import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import { getProfileThunk, getProfileIdThunk } from '../features/pageSlice'
+import { followUserThunk, unFollowUserThunk } from '../features/userSlice'
+import { Box, Button, Typography, Stack, Container } from '@mui/material'
+import FollowList from '../components/page/FollowList'
+import MySetting from '../components/page/MySetting'
+import MyProfile from '../components/page/MyProfile'
+import ProfileTab from '../components/page/ProfileTab'
+import { ModalBox, LoadingBox, NoticeBox } from '../styles/StyledComponent'
 
 function UserPage({ auth }) {
    const { id } = useParams()
-   const [value, setValue] = useState('1')
-
-   const { loading, error, posts } = useSelector((state) => state.posts)
+   const [followers, setFollowers] = useState(0)
+   const [followings, setFollowings] = useState(0)
+   const [follow, setFollow] = useState(false)
+   const [buttonName, setButtonName] = useState('')
+   const { user, loading, error } = useSelector((state) => state.page)
    const dispatch = useDispatch()
 
+   const fetchProfileData = useCallback(() => {
+      if (id) {
+         dispatch(getProfileIdThunk(id))
+            .unwrap()
+            .then((result) => {
+               setFollowers(result.Followers.length)
+               setFollowings(result.Followings.length)
+            })
+            .catch((error) => {
+               console.error('사용자 정보 가져오는 중 오류 발생:', error)
+               alert('사용자 정보 가져오기를 실패했습니다.', error)
+            })
+      } else {
+         dispatch(getProfileThunk())
+            .unwrap()
+            .then((result) => {
+               setFollowers(result.Followers.length)
+               setFollowings(result.Followings.length)
+            })
+            .catch((error) => {
+               console.error('사용자 정보 가져오는 중 오류 발생:', error)
+               alert('사용자 정보 가져오기를 실패했습니다.', error)
+            })
+      }
+   }, [dispatch, id, followers, followings])
+
    useEffect(() => {
-      dispatch(getUserPostsThunk({ id: id || auth?.id }))
-   }, [dispatch, id, auth])
+      fetchProfileData()
+      if (user?.Followers.filter((f) => f.id === auth?.id).length > 0) {
+         setButtonName('언팔로우')
+      } else {
+         setButtonName('팔로우')
+      }
+   }, [fetchProfileData, follow])
 
-   const handleChange = (event, newValue) => {
-      setValue(newValue)
-   }
+   const onClickFollow = useCallback(
+      (userId) => {
+         if (user.Followers.filter((f) => f.id === auth?.id).length > 0) {
+            dispatch(unFollowUserThunk(userId))
+               .unwrap()
+               .then(() => {
+                  alert('언팔로우 되었습니다!')
+                  setFollow((prev) => !prev)
+               })
+               .catch((error) => {
+                  console.error('팔로우 중 :', error)
+                  alert('언팔로우를 실패했습니다.', error)
+               })
+         } else {
+            dispatch(followUserThunk(userId))
+               .unwrap()
+               .then(() => {
+                  alert('팔로우 되었습니다!')
+                  setFollow((prev) => !prev)
+               })
+               .catch((error) => {
+                  console.error('팔로우 중 :', error)
+                  alert('팔로우를 실패했습니다.', error)
+               })
+         }
+      },
+      [dispatch, user]
+   )
 
-   if (loading) {
-      return <LoadingBox />
-   }
-
-   if (error) {
-      return <NoticeBox>{error}</NoticeBox>
-   }
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container>
-         <MyProfile auth={auth} id={id} />
-         <Box sx={{ width: '100%', typography: 'body1' }}>
-            <TabContext value={value}>
-               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <TabList onChange={handleChange} aria-label="lab API tabs example">
-                     <Tab label="작품 목록" value="1" />
-                     <Tab label="책갈피" value="2" />
-                     <Tab label="참여한 주제" value="3" />
-                  </TabList>
-               </Box>
-               <TabPanel value="1">
-                  <PostItem posts={posts} profile={true} />
-               </TabPanel>
-               <TabPanel value="2">Item Two</TabPanel>
-               <TabPanel value="3">Item Three</TabPanel>
-            </TabContext>
-         </Box>
+         <Stack>
+            <MyProfile user={user} />
+            <Box>
+               <ModalBox variant="text" btnName={`${followings} 팔로잉`}>
+                  <Typography variant="h6">{user?.nick}님의 팔로잉</Typography>
+                  <FollowList users={user?.Followings} />
+               </ModalBox>
+               <ModalBox variant="text" btnName={`${followers} 팔로워`}>
+                  <Typography variant="h6">{user?.nick}님의 팔로워</Typography>
+                  <FollowList users={user?.Followers} />
+               </ModalBox>
+            </Box>
+            <Box>
+               {!id || String(auth?.id) === String(id) ? (
+                  <ModalBox btnName={'계정 설정'}>
+                     <MySetting />
+                  </ModalBox>
+               ) : (
+                  <Button variant="outlined" onClick={() => onClickFollow(user.id)}>
+                     {buttonName}
+                  </Button>
+               )}
+            </Box>
+         </Stack>
+         <ProfileTab user={user} />
       </Container>
    )
 }

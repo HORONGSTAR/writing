@@ -22,7 +22,6 @@ function PostItem({ posts, line }) {
                         <Avatar src={`${process.env.REACT_APP_API_URL}${post.User.avatar}`} sx={{ width: 24, height: 24, marginRight: 0.5 }} />
                         {post.User.nick}
                      </Stack>
-
                      <Typography variant="caption" sx={{ display: 'block', marginLeft: 'auto' }}>
                         {dayjs(post.createdAt).format('YYYY-MM-DD')}
                      </Typography>

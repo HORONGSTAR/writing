@@ -156,12 +156,12 @@ router.put('/edit', isLoggedIn, upload.single('avatar'), async (req, res) => {
             {
                model: User,
                as: 'Followers',
-               attributes: ['id', 'nick', 'email'],
+               attributes: ['id', 'nick', 'email', 'avatar'],
             },
             {
                model: User,
                as: 'Followings',
-               attributes: ['id', 'nick', 'email'],
+               attributes: ['id', 'nick', 'email', 'avatar'],
             },
          ],
       })

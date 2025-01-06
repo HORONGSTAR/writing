@@ -1,6 +1,6 @@
 import PostDetail from '../components/post/PostDetail'
 import CommentBox from '../components/comment/CommentBox'
-import { Container, Paper, IconButton, Stack } from '@mui/material'
+import { Container, Paper, IconButton, Stack, Typography } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import { getPostByIdThunk } from '../features/postSlice'
 import { addLikemarkThunk, removeLikemarkThunk, addBookmarkThunk, removeBookmarkThunk } from '../features/userSlice'
@@ -10,23 +10,36 @@ import { TurnedIn, TurnedInNot, Favorite, FavoriteBorder, Comment, CommentOutlin
 import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
 
 function PostPage({ auth }) {
-   const [onBookmark, setOnBookmark] = useState(false)
    const [onLikemark, setOnLikemark] = useState(false)
+   const [likemarks, setLikemarks] = useState([])
+   const [onBookmark, setOnBookmark] = useState(false)
+   const [bookmarks, setBookmarks] = useState([])
    const [onCommentBox, setOnCommentBox] = useState(false)
 
    const dispatch = useDispatch()
-   const { loading, error, post, bookmarks, likemarks } = useSelector((state) => state.posts)
+   const { loading, error, post } = useSelector((state) => state.posts)
    const { id } = useParams()
 
    useEffect(() => {
       dispatch(getPostByIdThunk(id))
-      if (bookmarks?.filter((bookmark) => bookmark.UserId === auth?.id).length > 0) {
-         setOnBookmark(!onBookmark)
-      }
-      if (likemarks?.filter((likemark) => likemark.UserId === auth?.id).length > 0) {
-         setOnLikemark(!onLikemark)
-      }
-   }, [dispatch, id, onBookmark, onLikemark])
+         .unwrap()
+         .then((result) => {
+            setLikemarks(result.post.LikemarkUser)
+            setBookmarks(result.post.BookmarkUser)
+         })
+         .catch((error) => {
+            console.error('게시물 불러오기 중 에러:', error)
+            alert('게시물 불러오기에 실패했습니다.')
+         })
+   }, [dispatch, id])
+
+   useEffect(() => {
+      likemarks.filter((user) => user.id === auth?.id).length > 0 ? setOnLikemark(true) : setOnLikemark(false)
+   }, [post, likemarks])
+
+   useEffect(() => {
+      bookmarks.filter((user) => user.id === auth?.id).length > 0 ? setOnBookmark(true) : setOnBookmark(false)
+   }, [post, bookmarks])
 
    const handleLikemark = useCallback(() => {
       if (onLikemark) {
@@ -48,18 +61,13 @@ function PostPage({ auth }) {
       }
    }, [dispatch, id, onBookmark])
 
-   if (loading) {
-      return <LoadingBox />
-   }
-
-   if (error) {
-      return <NoticeBox>{error}</NoticeBox>
-   }
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container>
          <PostDetail id={id} auth={auth} post={post} />
-         <Stack direction="row">
+         <Stack direction="row" sx={{ alignItems: 'center' }}>
             <IconButton color="secondary" aria-label="댓글" onClick={() => setOnCommentBox(!onCommentBox)}>
                {onCommentBox ? <Comment /> : <CommentOutlined />}
             </IconButton>

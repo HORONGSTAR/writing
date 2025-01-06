@@ -49,11 +49,9 @@ export const Ellipsis = styled.div`
 export const ThemeBanner = () => {
    return (
       <BannerImg>
-         <Stack sx={{ alignItems: 'center', color: '#fff' }} spacing={2}>
-            <Box>
-               <Typography variant="h5">첫번째 주제를 등록해보세요</Typography>
-               <Typography>함께 글감을 나누며 글을 쓸 수 있어요!</Typography>
-            </Box>
+         <Stack sx={{ alignItems: 'center', color: '#fff' }}>
+            <Typography variant="h5">첫번째 주제를 등록해보세요.</Typography>
+            <Typography>함께 글감을 나누며 글을 쓸 수 있어요!</Typography>
          </Stack>
       </BannerImg>
    )
@@ -67,12 +65,12 @@ export const AlertBox = ({ children, display }) => {
    )
 }
 
-export const ModalBox = ({ children, btnName }) => {
+export const ModalBox = ({ children, btnName, variant }) => {
    const [open, setOpen] = useState(false)
 
    return (
       <>
-         <Button variant="outlined" onClick={() => setOpen(true)}>
+         <Button variant={variant || 'outlined'} onClick={() => setOpen(true)}>
             {btnName}
          </Button>
          <Modal open={open} onClose={() => setOpen(false)} aria-labelledby="title" aria-describedby="description">
