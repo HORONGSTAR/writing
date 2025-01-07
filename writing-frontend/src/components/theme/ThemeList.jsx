@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux'
 import { deleteThemeThunk } from '../../features/themeSlice'
 import { ModalBox } from '../../styles/StyledComponent'
 
-function ThemeList({ themes }) {
+function ThemeList({ themes, auth }) {
    const dispatch = useDispatch()
    const [open, setOpen] = useState(false)
 
@@ -44,13 +44,17 @@ function ThemeList({ themes }) {
                      <ThemeItem theme={theme} />
                   </AccordionSummary>
                   <AccordionActions>
-                     <ModalBox btnName={'삭제'}>
-                        <DialogTitle>정말로 주제를 삭제하시겠습니까?</DialogTitle>
-                        <DialogContent>주제를 삭제하면 해당 주제에 등록된 글은 그대로 유지되며, 게시글의 주제만 미정으로 변환됩니다.</DialogContent>
-                        <DialogActions>
-                           <Button onClick={() => onClickDelete(theme)}>확인</Button>
-                        </DialogActions>
-                     </ModalBox>
+                     {theme.UserId === auth?.id && (
+                        <ModalBox btnName={'삭제'}>
+                           <DialogTitle>정말로 주제를 삭제하시겠습니까?</DialogTitle>
+                           <DialogContent>
+                              주제를 삭제하면 해당 주제에 등록된 글은 그대로 유지되며, 게시글의 주제만 미정으로 변환됩니다.
+                           </DialogContent>
+                           <DialogActions>
+                              <Button onClick={() => onClickDelete(theme)}>확인</Button>
+                           </DialogActions>
+                        </ModalBox>
+                     )}
                   </AccordionActions>
                   <AccordionDetails>
                      <PostItem posts={theme.Posts} />

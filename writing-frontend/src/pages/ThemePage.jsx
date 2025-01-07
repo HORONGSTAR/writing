@@ -61,7 +61,11 @@ function ThemePage({ user }) {
                </ModalBox>
             )}
 
-            {id ? <ThemeList themes={themes.filter((theme) => String(theme.id) === String(value))} /> : <ThemeList themes={themes} />}
+            {id ? (
+               <ThemeList themes={themes.filter((theme) => String(theme.id) === String(value))} auth={user} />
+            ) : (
+               <ThemeList themes={themes} auth={user} />
+            )}
             {themeList.length === 0 && <NoticeBox>등록된 글이 없습니다.</NoticeBox>}
             <Stack spacing={2} sx={{ alignItems: 'center' }}>
                <Pagination count={pagination?.totalPages} page={page} onChange={(e, value) => setPage(value)} />
