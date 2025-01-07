@@ -1,13 +1,24 @@
-import { Accordion, AccordionDetails, AccordionSummary, AccordionActions, DialogTitle, DialogActions, Button, DialogContent } from '@mui/material'
+import {
+   Accordion,
+   AccordionDetails,
+   AccordionSummary,
+   AccordionActions,
+   DialogTitle,
+   DialogActions,
+   Button,
+   DialogContent,
+   Snackbar,
+} from '@mui/material'
 import PostItem from '../post/PostItem'
 import ThemeItem from './ThemeItem'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { deleteThemeThunk } from '../../features/themeSlice'
 import { ModalBox } from '../../styles/StyledComponent'
 
 function ThemeList({ themes }) {
    const dispatch = useDispatch()
+   const [open, setOpen] = useState(false)
 
    const onClickDelete = useCallback(
       (theme) => {
@@ -18,7 +29,7 @@ function ThemeList({ themes }) {
             })
             .catch((error) => {
                console.error('주제 삭제중 오류 발생', error)
-               alert('주제 삭제 중 오류가 발생했습니다.')
+               setOpen(true)
             })
       },
       [dispatch]
@@ -44,6 +55,7 @@ function ThemeList({ themes }) {
                   <AccordionDetails>
                      <PostItem posts={theme.Posts} />
                   </AccordionDetails>
+                  <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message={'주제 삭제 중 오류가 발생했습니다.'} />
                </Accordion>
             ))}
       </>

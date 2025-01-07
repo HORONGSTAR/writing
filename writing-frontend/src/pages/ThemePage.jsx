@@ -32,7 +32,7 @@ function ThemePage({ user }) {
                setOpen(true)
             })
       },
-      [dispatch, id]
+      [dispatch]
    )
 
    if (loading) return <LoadingBox />

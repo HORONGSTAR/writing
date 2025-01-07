@@ -26,8 +26,6 @@ function PostForm({ onSubmit, initialValues = {} }) {
       [title, content, themeId, onSubmit]
    )
 
-   console.log(themeId)
-
    return (
       <Stack spacing={2}>
          <FormControl sx={{ width: '300px' }}>

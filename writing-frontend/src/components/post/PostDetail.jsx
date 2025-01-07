@@ -52,9 +52,11 @@ function PostDetail({ post, id, auth }) {
                <ListItem>
                   <Typography sx={{ whiteSpace: 'pre-wrap' }}>{post.content}</Typography>
                </ListItem>
-               <ListItem>
-                  <Chip component={RouterLink} to={`/theme/${post.Theme.id}`} label={post.Theme.keyword} sx={{ cursor: 'pointer' }} />
-               </ListItem>
+               {post.Theme && (
+                  <ListItem>
+                     <Chip component={RouterLink} to={`/theme/${post.Theme.id}`} label={post.Theme.keyword} sx={{ cursor: 'pointer' }} />
+                  </ListItem>
+               )}
             </List>
          )}
       </>
