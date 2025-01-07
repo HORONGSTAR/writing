@@ -159,6 +159,66 @@ router.get('/id/:id', async (req, res) => {
    }
 })
 
+router.get('/', async (req, res) => {
+   const limit = 3
+   const offset = 0
+
+   try {
+      const followingId = req.user?.Followings.map((following) => following.id)
+
+      const all = await Post.findAll({
+         limit,
+         offset,
+         order: [['createdAt', 'DESC']],
+         include: [
+            {
+               model: User,
+               attributes: ['id', 'nick', 'avatar'],
+            },
+            {
+               model: Theme,
+               attributes: ['id', 'keyword'],
+            },
+         ],
+      })
+      const posts = { all, follow: [] }
+
+      if (followingId) {
+         const follow = await Post.findAll({
+            limit,
+            offset,
+            where: { UserId: followingId },
+            order: [['createdAt', 'DESC']],
+            include: [
+               {
+                  model: User,
+                  attributes: ['id', 'nick', 'avatar'],
+               },
+               {
+                  model: Theme,
+                  attributes: ['id', 'keyword'],
+               },
+            ],
+         })
+
+         posts.follow = follow
+      }
+
+      res.json({
+         success: true,
+         posts,
+         message: '전체 게시물 리스트를 성공적으로 불러왔습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '게시물 리스트를 불러오는 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
 router.get('/all', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
    const limit = parseInt(req.query.limit, 10) || 3
@@ -203,7 +263,7 @@ router.get('/all', async (req, res) => {
    }
 })
 
-router.get('/following', async (req, res) => {
+router.get('/follow', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
    const limit = parseInt(req.query.limit, 10) || 10
    const offset = (page - 1) * limit
@@ -211,7 +271,7 @@ router.get('/following', async (req, res) => {
 
    try {
       const count = await Post.count({ where: { UserId: followingId } })
-      const followingPosts = await Post.findAll({
+      const posts = await Post.findAll({
          limit,
          offset,
          where: { UserId: followingId },
@@ -230,7 +290,7 @@ router.get('/following', async (req, res) => {
 
       res.json({
          success: true,
-         followingPosts,
+         posts,
          pagination: {
             totalPosts: count,
             currentPage: page,

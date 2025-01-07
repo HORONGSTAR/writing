@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfileThunk, getProfileIdThunk } from '../features/pageSlice'
 import { followUserThunk, unFollowUserThunk } from '../features/userSlice'
-import { Box, Button, Typography, Stack, Container } from '@mui/material'
+import { Box, Button, Typography, Stack, Container, Snackbar } from '@mui/material'
 import { ModalBox, LoadingBox, NoticeBox } from '../styles/StyledComponent'
 import FollowList from '../components/page/FollowList'
 import MySetting from '../components/page/MySetting'
@@ -15,8 +15,10 @@ function UserPage({ auth }) {
    const [followers, setFollowers] = useState(0)
    const [followings, setFollowings] = useState(0)
    const [follow, setFollow] = useState(false)
-   const [buttonName, setButtonName] = useState('')
    const { user, loading, error } = useSelector((state) => state.page)
+   const [open, setOpen] = useState(false)
+   const [message, setMessage] = useState('')
+
    const dispatch = useDispatch()
 
    const fetchProfileData = useCallback(() => {
@@ -29,6 +31,7 @@ function UserPage({ auth }) {
             })
             .catch((error) => {
                console.error('사용자 정보 가져오는 중 오류 발생:', error)
+               setOpen(true)
                alert('사용자 정보 가져오기를 실패했습니다.', error)
             })
       } else {
@@ -43,15 +46,14 @@ function UserPage({ auth }) {
                alert('사용자 정보 가져오기를 실패했습니다.', error)
             })
       }
-   }, [dispatch, id, followers, followings])
+   }, [dispatch, id])
+
+   const buttonName = useMemo(() => {
+      return <>{user?.Followers.filter((f) => f.id === auth?.id).length > 0 ? '언팔로우' : '팔로우'}</>
+   }, [follow])
 
    useEffect(() => {
       fetchProfileData()
-      if (user?.Followers.filter((f) => f.id === auth?.id).length > 0) {
-         setButtonName('언팔로우')
-      } else {
-         setButtonName('팔로우')
-      }
    }, [fetchProfileData, follow])
 
    const onClickFollow = useCallback(
@@ -60,23 +62,27 @@ function UserPage({ auth }) {
             dispatch(unFollowUserThunk(userId))
                .unwrap()
                .then(() => {
-                  alert('언팔로우 되었습니다!')
+                  setOpen(true)
+                  setMessage('언팔로우 되었습니다!')
                   setFollow((prev) => !prev)
                })
                .catch((error) => {
                   console.error('팔로우 중 :', error)
-                  alert('언팔로우를 실패했습니다.', error)
+                  setOpen(true)
+                  setMessage('팔로우 중 문제가 발생했습니다.')
                })
          } else {
             dispatch(followUserThunk(userId))
                .unwrap()
                .then(() => {
-                  alert('팔로우 되었습니다!')
+                  setOpen(true)
+                  setMessage('팔로우 되었습니다!')
                   setFollow((prev) => !prev)
                })
                .catch((error) => {
                   console.error('팔로우 중 :', error)
-                  alert('팔로우를 실패했습니다.', error)
+                  setOpen(true)
+                  setMessage('팔로우 중 문제가 발생했습니다.')
                })
          }
       },
@@ -113,6 +119,7 @@ function UserPage({ auth }) {
             </Box>
          </Stack>
          <ProfileTab user={user} />
+         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message={message} />
       </Container>
    )
 }

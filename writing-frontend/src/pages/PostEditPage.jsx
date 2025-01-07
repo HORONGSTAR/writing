@@ -31,13 +31,8 @@ function PostEditPage() {
       [dispatch, id]
    )
 
-   if (loading) {
-      return <LoadingBox />
-   }
-
-   if (error) {
-      return <NoticeBox>{error}</NoticeBox>
-   }
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container>

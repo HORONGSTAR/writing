@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createPost, getPosts, getPostById, getFolloingPosts, getUserPosts, updatePost, deletePost } from '../api/postApi'
+import { createPost, getPosts, getPostById, updatePost, deletePost } from '../api/postApi'
 
 export const createPostThunk = createAsyncThunk('posts/createPost', async (postData, { rejectWithValue }) => {
    try {
@@ -30,19 +30,9 @@ export const deletePostThunk = createAsyncThunk('posts/deletePost', async (id, {
 })
 
 export const getPostsThunk = createAsyncThunk('posts/getPosts', async (data, { rejectWithValue }) => {
-   const { page, limit } = data
+   const { page, limit, endpoint } = data
    try {
-      const response = await getPosts(page, limit)
-      return response.data
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
-   }
-})
-
-export const getFolloingPostsThunk = createAsyncThunk('posts/getFolloingPosts', async (data, { rejectWithValue }) => {
-   const { page, limit } = data
-   try {
-      const response = await getFolloingPosts(page, limit)
+      const response = await getPosts(page, limit, endpoint)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
@@ -65,7 +55,6 @@ const postSlice = createSlice({
       isAuthenticated: false,
       post: null,
       posts: [],
-      followingPosts: [],
       bookmarks: [],
       likemarks: [],
       loading: false,
@@ -96,19 +85,6 @@ const postSlice = createSlice({
             state.pagination = action.payload.pagination
          })
          .addCase(getPostsThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         .addCase(getFolloingPostsThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(getFolloingPostsThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.followingPosts = action.payload.followingPosts
-            state.pagination = action.payload.pagination
-         })
-         .addCase(getFolloingPostsThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

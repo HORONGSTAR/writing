@@ -28,9 +28,9 @@ function App() {
       <>
          <Navber isAuthenticated={isAuthenticated} user={user} />
          <Routes>
-            <Route path="/" element={<MainPage user={user} />} />
-            <Route path="/all" element={<MainPage />} />
-            <Route path="/follow" element={<MainPage />} />
+            <Route path="/" element={<MainPage user={user} endpoint="/" />} />
+            <Route path="/all" element={<MainPage endpoint="/all" />} />
+            <Route path="/follow" element={<MainPage endpoint="/follow" />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
             <Route path="/notice" element={<AlarmPage />} />

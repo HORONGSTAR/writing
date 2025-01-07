@@ -40,19 +40,9 @@ export const getPostById = async (id) => {
    }
 }
 
-export const getPosts = async (page, limit) => {
+export const getPosts = async (page, limit, endpoint) => {
    try {
-      const response = await writingApi.get(`/post/all?page=${page}&limit=${limit}`)
-      return response
-   } catch (error) {
-      console.error(`API Request 오류: ${error.message}`)
-      throw error
-   }
-}
-
-export const getFolloingPosts = async (page, limit) => {
-   try {
-      const response = await writingApi.get(`/post/following?page=${page}&limit=${limit}`)
+      const response = await writingApi.get(`/post${endpoint}?page=${page}&limit=${limit}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error.message}`)
