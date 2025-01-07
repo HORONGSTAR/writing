@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUserThunk } from '../../features/authSlice'
 import { Link as RouterLink } from 'react-router-dom'
-import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button, Typography } from '@mui/material'
+import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button } from '@mui/material'
 
 function Navber({ isAuthenticated, user }) {
    const dispatch = useDispatch()

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createTheme, getThemes, deleteTheme, getThemeList } from '../api/writingApi'
+import { createTheme, getThemes, deleteTheme, getThemeList } from '../api/themeApi'
 
 export const createThemeThunk = createAsyncThunk('theme/createTheme', async (themeData, { rejectWithValue }) => {
    try {

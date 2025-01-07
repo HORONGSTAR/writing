@@ -1,4 +1,4 @@
-import { Avatar, Typography, List, ListItem, Divider, Stack } from '@mui/material'
+import { Avatar, Typography, List, ListItem, Divider, Stack, Chip } from '@mui/material'
 import { Ellipsis } from '../../styles/StyledComponent'
 import { Link as RouterLink } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -26,6 +26,7 @@ function PostItem({ posts, line }) {
                         {dayjs(post.createdAt).format('YYYY-MM-DD')}
                      </Typography>
                   </ListItem>
+
                   {index === posts?.length - 1 || <Divider />}
                </List>
             ))}

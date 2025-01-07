@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { followUser, unFollowUser, addLikemark, removeLikemark, addBookmark, removeBookmark } from '../api/writingApi'
+import { followUser, unFollowUser, addLikemark, removeLikemark, addBookmark, removeBookmark } from '../api/userApi'
 
 export const followUserThunk = createAsyncThunk('user/followUser', async (id, { rejectWithValue }) => {
    try {

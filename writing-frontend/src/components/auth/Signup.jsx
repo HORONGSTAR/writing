@@ -16,28 +16,32 @@ function Signup({ onSubmit, loading, error }) {
       confirm: false,
    })
 
-   const handleSignUp = useCallback(() => {
-      const value = {
-         em: email.trim(),
-         nk: nick.trim(),
-         pw: password.trim(),
-         cf: confirm.trim(),
-      }
-      setAlert({
-         email: !value.em,
-         nick: !value.nk,
-         password: !value.pw,
-         confirm: !value.cf,
-         display: true,
-      })
-      if (!value.em || !value.nk || !value.pw || !value.cf) return
-      if (password !== confirm) return
+   const handleSignUp = useCallback(
+      (e) => {
+         e.preventDefault()
+         const value = {
+            em: email.trim(),
+            nk: nick.trim(),
+            pw: password.trim(),
+            cf: confirm.trim(),
+         }
+         setAlert({
+            email: !value.em,
+            nick: !value.nk,
+            password: !value.pw,
+            confirm: !value.cf,
+            display: true,
+         })
+         if (!value.em || !value.nk || !value.pw || !value.cf) return
+         if (password !== confirm) return
 
-      onSubmit({ email, nick, password })
-   }, [email, nick, password, confirm, alert])
+         onSubmit({ email, nick, password })
+      },
+      [email, nick, password, confirm, alert]
+   )
 
    return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Container component="form" onSubmit={handleSignUp} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
          <Stack sx={{ width: 400 }} spacing={2} noValidate autoComplete="off">
             <h4>회원가입</h4>
             <TextField
@@ -73,9 +77,7 @@ function Signup({ onSubmit, loading, error }) {
                value={confirm}
                onChange={(e) => setConfirm(e.target.value)}
                error={alert.confirm || password !== confirm}
-               helperText={
-                  (alert.confirm && '비밀번호를 한번 더 입력하세요') || (password !== confirm && '비밀번호가 다릅니다.')
-               }
+               helperText={(alert.confirm && '비밀번호를 한번 더 입력하세요') || (password !== confirm && '비밀번호가 다릅니다.')}
             />
             <AlertBox display={alert.display}>{error}</AlertBox>
             {loading ? (
@@ -83,7 +85,7 @@ function Signup({ onSubmit, loading, error }) {
                   <CircularProgress />
                </Container>
             ) : (
-               <Button onClick={handleSignUp} variant="contained">
+               <Button type="submit" variant="contained">
                   회원가입
                </Button>
             )}

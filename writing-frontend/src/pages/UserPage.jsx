@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom'
-import React, { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfileThunk, getProfileIdThunk } from '../features/pageSlice'
 import { followUserThunk, unFollowUserThunk } from '../features/userSlice'
 import { Box, Button, Typography, Stack, Container } from '@mui/material'
+import { ModalBox, LoadingBox, NoticeBox } from '../styles/StyledComponent'
 import FollowList from '../components/page/FollowList'
 import MySetting from '../components/page/MySetting'
 import MyProfile from '../components/page/MyProfile'
 import ProfileTab from '../components/page/ProfileTab'
-import { ModalBox, LoadingBox, NoticeBox } from '../styles/StyledComponent'
 
 function UserPage({ auth }) {
    const { id } = useParams()

@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createPost, getPosts, getPostById, getFolloingPosts, getUserPosts, updatePost, deletePost } from '../api/writingApi'
-import { Bookmark } from '@mui/icons-material'
+import { createPost, getPosts, getPostById, getFolloingPosts, getUserPosts, updatePost, deletePost } from '../api/postApi'
 
 export const createPostThunk = createAsyncThunk('posts/createPost', async (postData, { rejectWithValue }) => {
    try {

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Comment, User } = require('../models')
+const { Comment, User, Alarm, Post } = require('../models')
 const { isLoggedIn } = require('./middlewares')
 const { Op } = require('sequelize')
 
@@ -11,6 +11,17 @@ router.post('/', isLoggedIn, async (req, res) => {
          UserId: req.user.id,
          PostId: req.body.PostId,
       })
+
+      const target = await Post.findOne({ where: { id: req.body.PostId } })
+
+      if (target.UserId !== req.user.id) {
+         await Alarm.create({
+            category: 2,
+            linkId: req.body.PostId,
+            UserId1: target.UserId,
+            UserId2: req.user.id,
+         })
+      }
 
       const comments = await Comment.findAll({
          where: { PostId: req.body.PostId },

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getProfile, getProfileId } from '../api/writingApi'
+import { getProfile, getProfileId } from '../api/pageApi'
 
 export const getProfileThunk = createAsyncThunk('page/getProfile', async (_, { rejectWithValue }) => {
    try {

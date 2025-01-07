@@ -15,6 +15,7 @@ const themeRouter = require('./routes/theme')
 const pageRouter = require('./routes/page')
 const userRouter = require('./routes/user')
 const commentRouter = require('./routes/comment')
+const alarmRouter = require('./routes/alarm')
 
 const app = express()
 passportConfig()
@@ -57,6 +58,7 @@ app.use('/theme', themeRouter)
 app.use('/page', pageRouter)
 app.use('/user', userRouter)
 app.use('/comment', commentRouter)
+app.use('/alarm', alarmRouter)
 
 app.use((req, res, next) => {
    const error = new Error(`${req.method} ${req.url} 라우터가 존재하지 않습니다.`)

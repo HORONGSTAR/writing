@@ -1,4 +1,4 @@
-import { Container, Stack, TextField, Button, CircularProgress, Avatar, Box } from '@mui/material'
+import { Container, Stack, TextField, Button, Avatar, Box } from '@mui/material'
 import React, { useState, useCallback } from 'react'
 import { Upload } from '@mui/icons-material'
 import { editUserThunk } from '../../features/authSlice'

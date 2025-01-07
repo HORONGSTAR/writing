@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createComment, deleteComment, updateComment, getComments } from '../api/writingApi'
+import { createComment, deleteComment, updateComment, getComments } from '../api/commentApi'
 
 export const createCommentThunk = createAsyncThunk('auth/createComment', async (commentData, { rejectWithValue }) => {
    try {

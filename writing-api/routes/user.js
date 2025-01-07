@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { isLoggedIn } = require('./middlewares')
-const { User, Post } = require('../models')
+const { User, Post, Alarm } = require('../models')
 
 router.post('/follow/:id', isLoggedIn, async (req, res) => {
    try {
@@ -9,6 +9,14 @@ router.post('/follow/:id', isLoggedIn, async (req, res) => {
 
       if (user) {
          await user.addFollowing(parseInt(req.params.id, 10))
+         if (req.params.id !== req.user.id) {
+            await Alarm.create({
+               category: 1,
+               linkId: req.user.id,
+               UserId1: req.params.id,
+               UserId2: req.user.id,
+            })
+         }
          res.json({ success: true, message: '사용자를 성공적으로 팔로우했습니다.' })
       } else {
          res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' })
@@ -51,6 +59,16 @@ router.post('/likemark/:id', isLoggedIn, async (req, res) => {
 
       if (post) {
          await req.user.addLikemarkPost(post.id)
+
+         if (post.UserId !== req.user.id) {
+            await Alarm.create({
+               category: 3,
+               linkId: req.params.id,
+               UserId1: post.UserId,
+               UserId2: req.user.id,
+            })
+         }
+
          res.json({ success: true, message: '게시글에 좋아요를 표시했습니다.' })
       } else {
          res.status(404).json({ success: false, message: '게시글을 찾을 수 없습니다.' })

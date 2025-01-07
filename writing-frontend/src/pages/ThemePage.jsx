@@ -1,12 +1,11 @@
-import { Container, Stack, Box, Chip, Pagination, Typography, Divider } from '@mui/material'
+import { Container, Stack, Box, Chip, Pagination, Typography, Divider, Snackbar } from '@mui/material'
 import ThemeForm from '../components/theme/ThemeForm'
 import ThemeList from '../components/theme/ThemeList'
 import { useDispatch, useSelector } from 'react-redux'
 import { createThemeThunk } from '../features/themeSlice'
 import { useCallback, useState, useEffect } from 'react'
-import { ModalBox } from './../styles/StyledComponent'
 import { getThemesThunk } from '../features/themeSlice'
-import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import { LoadingBox, NoticeBox, ModalBox } from '../styles/StyledComponent'
 import { useParams } from 'react-router-dom'
 
 function ThemePage({ user }) {
@@ -15,6 +14,7 @@ function ThemePage({ user }) {
    const { loading, error, themes, themeList, pagination } = useSelector((state) => state.themes)
    const [value, setValue] = useState(id || null)
    const [page, setPage] = useState(1)
+   const [open, setOpen] = useState(false)
 
    useEffect(() => {
       dispatch(getThemesThunk({ page: page, limit: 10 }))
@@ -29,19 +29,14 @@ function ThemePage({ user }) {
             })
             .catch((error) => {
                console.error('게시물 등록 중 에러:', error)
-               alert('게시물 등록에 실패했습니다.')
+               setOpen(true)
             })
       },
       [dispatch, id]
    )
 
-   if (loading) {
-      return <LoadingBox />
-   }
-
-   if (error) {
-      return <NoticeBox>{error}</NoticeBox>
-   }
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container>
@@ -72,6 +67,7 @@ function ThemePage({ user }) {
                <Pagination count={pagination?.totalPages} page={page} onChange={(e, value) => setPage(value)} />
             </Stack>
          </Stack>
+         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message="게시물 등록에 실패했습니다." />
       </Container>
    )
 }

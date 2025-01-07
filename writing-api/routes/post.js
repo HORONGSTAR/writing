@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { User, Post, Theme, Comment } = require('../models')
+const { User, Post, Theme, Alarm } = require('../models')
 const { isLoggedIn } = require('./middlewares')
 
 router.post('/', isLoggedIn, async (req, res) => {
@@ -11,6 +11,7 @@ router.post('/', isLoggedIn, async (req, res) => {
          UserId: req.user.id,
          ThemeId: req.body.themeId,
       })
+
       res.json({
          success: true,
          post: {

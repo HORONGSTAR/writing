@@ -1,4 +1,4 @@
-import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack } from '@mui/material'
+import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack, Chip } from '@mui/material'
 import { deletePostThunk } from '../../features/postSlice'
 import { Link as RouterLink } from 'react-router-dom'
 import { useCallback } from 'react'
@@ -51,6 +51,9 @@ function PostDetail({ post, id, auth }) {
                <Divider />
                <ListItem>
                   <Typography sx={{ whiteSpace: 'pre-wrap' }}>{post.content}</Typography>
+               </ListItem>
+               <ListItem>
+                  <Chip component={RouterLink} to={`/theme/${post.Theme.id}`} label={post.Theme.keyword} sx={{ cursor: 'pointer' }} />
                </ListItem>
             </List>
          )}

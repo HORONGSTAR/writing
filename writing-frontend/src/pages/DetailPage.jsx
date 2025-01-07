@@ -1,13 +1,13 @@
-import PostDetail from '../components/post/PostDetail'
-import CommentBox from '../components/comment/CommentBox'
-import { Container, Paper, IconButton, Stack, Typography } from '@mui/material'
+import { Container, Paper, IconButton, Stack } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import { getPostByIdThunk } from '../features/postSlice'
-import { addLikemarkThunk, removeLikemarkThunk, addBookmarkThunk, removeBookmarkThunk } from '../features/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { addLikemarkThunk, removeLikemarkThunk, addBookmarkThunk, removeBookmarkThunk } from '../features/userSlice'
 import { TurnedIn, TurnedInNot, Favorite, FavoriteBorder, Comment, CommentOutlined } from '@mui/icons-material'
 import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import PostDetail from '../components/post/PostDetail'
+import CommentBox from '../components/comment/CommentBox'
 
 function PostPage({ auth }) {
    const [onLikemark, setOnLikemark] = useState(false)
@@ -35,11 +35,8 @@ function PostPage({ auth }) {
 
    useEffect(() => {
       likemarks.filter((user) => user.id === auth?.id).length > 0 ? setOnLikemark(true) : setOnLikemark(false)
-   }, [post, likemarks])
-
-   useEffect(() => {
       bookmarks.filter((user) => user.id === auth?.id).length > 0 ? setOnBookmark(true) : setOnBookmark(false)
-   }, [post, bookmarks])
+   }, [post, likemarks, bookmarks])
 
    const handleLikemark = useCallback(() => {
       if (onLikemark) {
@@ -71,10 +68,10 @@ function PostPage({ auth }) {
             <IconButton color="secondary" aria-label="댓글" onClick={() => setOnCommentBox(!onCommentBox)}>
                {onCommentBox ? <Comment /> : <CommentOutlined />}
             </IconButton>
-            <IconButton color="secondary" aria-label="좋아요" onClick={handleLikemark}>
+            <IconButton color="secondary" aria-label="좋아요" onClick={handleLikemark} disabled={!auth}>
                {onLikemark ? <Favorite /> : <FavoriteBorder />}
             </IconButton>
-            <IconButton color="secondary" aria-label="책갈피" onClick={handleBookmark}>
+            <IconButton color="secondary" aria-label="책갈피" onClick={handleBookmark} disabled={!auth}>
                {onBookmark ? <TurnedIn /> : <TurnedInNot />}
             </IconButton>
          </Stack>

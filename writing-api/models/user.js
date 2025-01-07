@@ -62,5 +62,15 @@ module.exports = class User extends Sequelize.Model {
          as: 'Followings',
          through: 'Follow',
       })
+      db.User.hasMany(db.Alarm, {
+         foreignKey: 'UserId1',
+         as: 'Alarm1',
+         sourceKey: 'id',
+      })
+      db.User.hasMany(db.Alarm, {
+         foreignKey: 'UserId2',
+         as: 'Alarm2',
+         sourceKey: 'id',
+      })
    }
 }

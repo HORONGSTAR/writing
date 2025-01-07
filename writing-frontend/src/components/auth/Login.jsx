@@ -1,38 +1,30 @@
-import { Container, Stack, TextField, Button, Box, Link, CircularProgress } from '@mui/material'
+import { Container, Stack, TextField, Button, Box, Link } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import React, { useState, useCallback } from 'react'
 import { AlertBox } from '../../styles/StyledComponent'
+import { NoticeBox, LoadingBox } from '../../styles/StyledComponent'
 
 function Login({ onSubmit, loading, error }) {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
-   const [alert, setAlert] = useState({
-      display: false,
-      email: false,
-      password: false,
-   })
+   const [alert, setAlert] = useState({ display: false, email: false, password: false })
 
    const handleLogin = useCallback(
       (e) => {
          e.preventDefault()
-         const value = {
-            em: email.trim(),
-            pw: password.trim(),
-         }
-         setAlert({
-            email: !value.em,
-            password: !value.pw,
-            display: true,
-         })
+         const value = { em: email.trim(), pw: password.trim() }
+         setAlert({ email: !value.em, password: !value.pw, display: true })
          if (!value.em || !value.pw) return
-
          onSubmit({ email, password })
       },
       [email, password, alert]
    )
 
+   if (loading) return <LoadingBox />
+   if (error) return <NoticeBox>{error}</NoticeBox>
+
    return (
-      <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Container component="form" onSubmit={handleLogin} sx={{ display: 'flex', justifyContent: 'center' }}>
          <Stack sx={{ width: 400 }} spacing={2} noValidate autoComplete="off">
             <h4>로그인</h4>
             <TextField
@@ -56,24 +48,16 @@ function Login({ onSubmit, loading, error }) {
                helperText={alert.password && '비밀번호를 입력하세요.'}
             />
 
-            {loading ? (
-               <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <CircularProgress />
-               </Container>
-            ) : (
-               <>
-                  <Button to="/login" onClick={handleLogin} variant="contained">
-                     로그인
-                  </Button>
-                  <AlertBox display={alert.display}>{error}</AlertBox>
-                  <Box>
-                     계정이 없으신가요? &nbsp;
-                     <Link component={RouterLink} to="/signup">
-                        회원가입
-                     </Link>
-                  </Box>
-               </>
-            )}
+            <Button type="submit" variant="contained">
+               로그인
+            </Button>
+            <AlertBox display={alert.display}>{error}</AlertBox>
+            <Box>
+               계정이 없으신가요? &nbsp;
+               <Link component={RouterLink} to="/signup">
+                  회원가입
+               </Link>
+            </Box>
          </Stack>
       </Container>
    )
