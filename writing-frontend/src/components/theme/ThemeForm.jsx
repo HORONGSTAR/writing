@@ -2,7 +2,7 @@ import { Button, Stack, TextField, Container, ToggleButton, ToggleButtonGroup } 
 import { useState, useCallback } from 'react'
 import { SliderPicker } from 'react-color'
 import ThemeItem from './ThemeItem'
-import { Image, ColorLens, Block, Contrast } from '@mui/icons-material'
+import { Image, ColorLens, Block } from '@mui/icons-material'
 
 function ThemeForm({ onSubmit, user }) {
    const [imgUrl, setImgUrl] = useState('')
