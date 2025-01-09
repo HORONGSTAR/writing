@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, AccordionActions, Button, Typography, Snackbar } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, AccordionActions, Button, Typography, Snackbar, Divider, Box } from '@mui/material'
 import PostItem from '../post/PostItem'
 import ThemeItem from './ThemeItem'
 import { useCallback, useState, useMemo } from 'react'
@@ -33,20 +33,29 @@ function ThemeList({ themes, auth }) {
                      <AccordionSummary>
                         <ThemeItem theme={theme} />
                      </AccordionSummary>
-                     <AccordionActions>
-                        {theme.UserId === auth?.id && (
-                           <ModalBox btnName={'삭제'}>
-                              <Typography variant="h6">정말로 주제를 삭제하시겠습니까?</Typography>
-                              <Typography>주제를 삭제하면 해당 주제에 등록된 글은 그대로 유지되며, 게시글의 주제만 미정으로 변환됩니다.</Typography>
-                              <Button color="secondary" sx={{ display: 'block', marginLeft: 'auto' }} onClick={() => onClickDelete(theme)}>
-                                 확인
-                              </Button>
-                           </ModalBox>
-                        )}
-                     </AccordionActions>
                      <AccordionDetails>
-                        <PostItem posts={theme.Posts} />
+                        <Typography variant="body2" color="#888" pl={2}>
+                           주제 소개 : {theme.info}
+                        </Typography>
+                        <Divider />
+                        <Box sx={{ maxHeight: 600, overflowY: 'auto' }}>
+                           <PostItem posts={theme.Posts} />
+                        </Box>
+                        <AccordionActions sx={{ py: 0 }}>
+                           {theme.UserId === auth?.id && (
+                              <ModalBox btnName={'주제 삭제하기'}>
+                                 <Typography variant="h6">정말로 주제를 삭제하시겠습니까?</Typography>
+                                 <Typography>
+                                    주제를 삭제하면 해당 주제에 등록된 글은 그대로 유지되며, 게시글의 주제만 미정으로 변환됩니다.
+                                 </Typography>
+                                 <Button color="secondary" sx={{ display: 'block', marginLeft: 'auto' }} onClick={() => onClickDelete(theme)}>
+                                    확인
+                                 </Button>
+                              </ModalBox>
+                           )}
+                        </AccordionActions>
                      </AccordionDetails>
+
                      <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message={'주제 삭제 중 오류가 발생했습니다.'} />
                   </Accordion>
                ))

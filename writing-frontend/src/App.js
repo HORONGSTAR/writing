@@ -7,6 +7,7 @@ import PostEditPage from './pages/PostEditPage'
 import AuthPage from './pages/AuthPage'
 import UserPage from './pages/UserPage'
 import AlarmPage from './pages/AlarmPage'
+import SearchPage from './pages/SearchPage'
 import Navber from './components/shared/Navber'
 import Footer from './components/shared/Footer'
 import { Route, Routes } from 'react-router-dom'
@@ -31,6 +32,8 @@ function App() {
             <Route path="/" element={<MainPage user={user} />} />
             <Route path="/all" element={<MainPage />} />
             <Route path="/follow" element={<MainPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/search/:searchValue" element={<SearchPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
             <Route path="/notice" element={<AlarmPage />} />

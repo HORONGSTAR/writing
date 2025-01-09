@@ -16,6 +16,10 @@ module.exports = class Theme extends Sequelize.Model {
                type: Sequelize.STRING(200),
                allowNull: true,
             },
+            info: {
+               type: Sequelize.STRING(200),
+               allowNull: true,
+            },
          },
          {
             sequelize,

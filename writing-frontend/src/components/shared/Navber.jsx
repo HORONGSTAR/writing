@@ -1,14 +1,19 @@
 import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUserThunk } from '../../features/authSlice'
-import { Link as RouterLink } from 'react-router-dom'
-import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button } from '@mui/material'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
+import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button, Box, InputBase, Stack } from '@mui/material'
+import { Search } from '@mui/icons-material'
+import { MobileMenu } from '../../styles/StyledComponent'
 
 function Navber({ isAuthenticated, user }) {
    const dispatch = useDispatch()
+   const location = useLocation().pathname
 
    const [anchorEl, setAnchorEl] = useState(null)
+   const [value, setValue] = useState('')
    const open = Boolean(anchorEl)
+
    const handleClick = (event) => {
       setAnchorEl(event.currentTarget)
    }
@@ -24,8 +29,37 @@ function Navber({ isAuthenticated, user }) {
          })
    }, [dispatch])
 
-   return (
+   const handleSearch = useCallback(
+      (e) => {
+         e.preventDefault()
+         if (value) window.location.href = `/search/${value}`
+      },
+      [value]
+   )
+
+   const navItem = (
       <>
+         <Link mr={3} component={RouterLink} to="/" underline="none" sx={{ fontWeight: 'bold' }}>
+            글조각
+         </Link>
+
+         <Link mr={3} component={RouterLink} to="/all" underline="hover">
+            전체 글
+         </Link>
+         {user && (
+            <Link mr={3} component={RouterLink} to="/follow" underline="hover">
+               구독
+            </Link>
+         )}
+
+         <Link mr={3} component={RouterLink} to="/theme" underline="hover">
+            주제 모음집
+         </Link>
+      </>
+   )
+
+   return (
+      <Box sx={{ background: '#efebe9', mb: 4 }}>
          <Container
             sx={{
                display: 'flex',
@@ -33,41 +67,43 @@ function Navber({ isAuthenticated, user }) {
                height: 80,
             }}
          >
-            <Link mr={3} component={RouterLink} to="/" underline="none">
-               글조각
-            </Link>
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}> {navItem}</Box>
+            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+               <MobileMenu>{navItem}</MobileMenu>
+            </Box>
 
-            <Link mr={3} component={RouterLink} to="/all" underline="hover">
-               전체 글
-            </Link>
-            {user && (
-               <Link mr={3} component={RouterLink} to="/follow" underline="hover">
-                  구독
-               </Link>
-            )}
-
-            <Link mr={3} component={RouterLink} to="/theme" underline="hover">
-               주제 모음집
-            </Link>
-
-            {isAuthenticated ? (
-               <Tooltip title="내 계정">
-                  <IconButton
-                     onClick={handleClick}
-                     size="small"
-                     sx={{ marginLeft: 'auto' }}
-                     aria-controls={open ? 'account-menu' : undefined}
-                     aria-haspopup="true"
-                     aria-expanded={open ? 'true' : undefined}
+            <Stack sx={{ marginLeft: 'auto' }} direction={'row'} spacing={2}>
+               {location.includes('search') || (
+                  <Box
+                     sx={{ display: 'flex', alignItems: 'center', width: 120, borderBottom: '1px solid #888' }}
+                     component={'form'}
+                     onSubmit={(e) => handleSearch(e)}
                   >
-                     <Avatar src={`${process.env.REACT_APP_API_URL}${user.avatar}`} sx={{ width: 32, height: 32 }} />
-                  </IconButton>
-               </Tooltip>
-            ) : (
-               <Button sx={{ marginLeft: 'auto' }} component={RouterLink} to="/login" variant="outlined">
-                  로그인
-               </Button>
-            )}
+                     <InputBase variant="standard" placeholder="검색" value={value} onChange={(e) => setValue(e.target.value)} />
+                     <IconButton aria-label="검색" type="submit">
+                        <Search />
+                     </IconButton>
+                  </Box>
+               )}
+
+               {isAuthenticated ? (
+                  <Tooltip title="내 계정">
+                     <IconButton
+                        onClick={handleClick}
+                        size="small"
+                        aria-controls={open ? 'account-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                     >
+                        <Avatar src={`${process.env.REACT_APP_API_URL}${user.avatar}`} sx={{ width: 32, height: 32 }} />
+                     </IconButton>
+                  </Tooltip>
+               ) : (
+                  <Button sx={{ marginLeft: 'auto' }} component={RouterLink} to="/login" variant="outlined">
+                     로그인
+                  </Button>
+               )}
+            </Stack>
          </Container>
          <Menu
             anchorEl={anchorEl}
@@ -129,7 +165,7 @@ function Navber({ isAuthenticated, user }) {
                </Link>
             </MenuItem>
          </Menu>
-      </>
+      </Box>
    )
 }
 

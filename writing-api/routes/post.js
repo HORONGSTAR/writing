@@ -207,7 +207,7 @@ router.get('/', async (req, res) => {
       res.json({
          success: true,
          posts,
-         message: '전체 게시물 리스트를 성공적으로 불러왔습니다.',
+         message: '게시물 리스트를 성공적으로 불러왔습니다.',
       })
    } catch (error) {
       console.error(error)
@@ -257,7 +257,7 @@ router.get('/all', async (req, res) => {
       console.error(error)
       res.status(500).json({
          success: false,
-         message: '게시물 리스트를 불러오는 중 오류가 발생했습니다.',
+         message: '전체 게시물 리스트를 불러오는 중 오류가 발생했습니다.',
          error,
       })
    }
@@ -303,7 +303,7 @@ router.get('/follow', async (req, res) => {
       console.error(error)
       res.status(500).json({
          success: false,
-         message: '게시물 리스트를 불러오는 중 오류가 발생했습니다.',
+         message: '구독 리스트를 불러오는 중 오류가 발생했습니다.',
          error,
       })
    }

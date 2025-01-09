@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { isLoggedIn } = require('./middlewares')
-const { User, Post, Alarm } = require('../models')
+const { User, Alarm } = require('../models')
 
 router.get('/', isLoggedIn, async (req, res) => {
    try {

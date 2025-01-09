@@ -135,8 +135,10 @@ router.delete('/:id', isLoggedIn, async (req, res) => {
          })
       }
 
+      await comment.destroy()
+
       const comments = await Comment.findAll({
-         where: { PostId: comment.PostId, [Op.not]: { id: comment.id } },
+         where: { PostId: comment.PostId },
          include: [
             {
                model: User,
@@ -144,8 +146,6 @@ router.delete('/:id', isLoggedIn, async (req, res) => {
             },
          ],
       })
-
-      await comment.destroy()
 
       res.json({
          success: true,
