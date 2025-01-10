@@ -10,7 +10,7 @@ function ThemeItem({ theme, fontsize }) {
             alignItems: 'center',
             width: '100%',
             height: '180px',
-            textShadow: '0 0 8px #000',
+            textShadow: '0 0 4px #000',
             color: '#fff',
             position: 'relative',
          }}
@@ -32,7 +32,9 @@ function ThemeItem({ theme, fontsize }) {
                position: 'absolute',
             }}
          >
-            <Typography variant={fontsize || 'h4'}>{theme.keyword}</Typography>
+            <Typography variant="h3" fontSize={fontsize}>
+               {theme.keyword}
+            </Typography>
             <Typography>글감 제공 : {theme.User?.nick || '익명'}</Typography>
             <Typography>{theme.Posts?.length || 0}편의 작품이 투고 되었습니다.</Typography>
          </Stack>

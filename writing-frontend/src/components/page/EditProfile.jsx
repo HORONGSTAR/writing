@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 function MySetting() {
    const { user } = useSelector((state) => state.page)
-   const [nick, setNick] = useState(user.nick || '')
    const [info, setInfo] = useState(user.info || '')
    const [imgUrl, setImgUrl] = useState(user.avatar ? process.env.REACT_APP_API_URL + user.avatar : '')
    const [imgFile, setImgFile] = useState(null)
@@ -26,9 +25,9 @@ function MySetting() {
    }, [])
 
    const handleProfileChange = useCallback(() => {
-      const value = { nk: nick.trim(), if: info.trim() }
-      setAlert({ nick: !value.nk, info: !value.if })
-      if (!value.nk || !value.if) return
+      const value = { if: info.trim() }
+      setAlert({ info: !value.if })
+      if (!value.if) return
 
       const formData = new FormData()
       if (imgFile) {
@@ -37,7 +36,6 @@ function MySetting() {
          })
          formData.append('avatar', encodedFile)
       }
-      formData.append('nick', nick)
       formData.append('info', info)
 
       dispatch(editUserThunk(formData))
@@ -46,7 +44,7 @@ function MySetting() {
          .catch((error) => {
             console.error('프로필 수정 중 에러 :', error)
          })
-   }, [nick, info, alert, imgFile, dispatch])
+   }, [info, alert, imgFile, dispatch])
 
    return (
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -60,14 +58,6 @@ function MySetting() {
                </Button>
             </Box>
 
-            <TextField
-               id="nick"
-               label="닉네임"
-               value={nick}
-               onChange={(e) => setNick(e.target.value)}
-               error={alert.nick}
-               helperText={alert.nick && '닉네임을 입력하세요.'}
-            />
             <TextField
                id="info"
                label="자기소개"

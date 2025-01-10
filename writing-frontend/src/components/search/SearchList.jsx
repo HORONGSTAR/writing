@@ -1,6 +1,6 @@
 import { List, ListItem, Typography, Avatar, Link, Divider, ListItemText } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
-import { Ellipsis } from '../../styles/StyledComponent'
+import { TextBox } from '../../styles/StyledComponent'
 import { NoticeBox } from '../../styles/StyledComponent'
 import dayjs from 'dayjs'
 
@@ -22,11 +22,11 @@ export const SearchPostItem = ({ posts }) => {
                   <Typography variant="body2" color="#888" mx={1}>
                      —
                   </Typography>
-                  <Ellipsis>
+                  <TextBox>
                      <Typography variant="body2" color="#888">
                         {post.content}
                      </Typography>
-                  </Ellipsis>
+                  </TextBox>
                </ListItem>
             </List>
          ))}
@@ -44,7 +44,7 @@ export const SearchUserItem = ({ users }) => {
                   {user.nick}
                </ListItem>
                <ListItem>
-                  <Ellipsis>{user.info || '등록된 자기 소개가 없습니다.'}</Ellipsis>
+                  <TextBox>{user.info || '등록된 자기 소개가 없습니다.'}</TextBox>
                </ListItem>
             </List>
          ))}
@@ -70,11 +70,11 @@ export const SearchThemeItem = ({ themes }) => {
                   <Typography variant="body2" color="#888" mx={1}>
                      —
                   </Typography>
-                  <Ellipsis>
+                  <TextBox>
                      <Typography variant="body2" color="#888">
                         {theme.info || '등록된 소개가 없습니다.'}
                      </Typography>
-                  </Ellipsis>
+                  </TextBox>
                </ListItem>
             </List>
          ))}

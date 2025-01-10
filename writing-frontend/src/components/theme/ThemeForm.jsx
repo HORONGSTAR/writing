@@ -10,7 +10,7 @@ function ThemeForm({ onSubmit, user }) {
    const [info, setInfo] = useState('')
    const [imgFile, setImgFile] = useState(null)
    const [imgAlt, setImgAlt] = useState('')
-   const [color, setColor] = useState('#b3c8e6')
+   const [color, setColor] = useState('#e6cbb3')
    const [type, setType] = useState('color')
 
    const handleImageChange = useCallback((e) => {
@@ -64,13 +64,13 @@ function ThemeForm({ onSubmit, user }) {
             <TextField
                fullWidth
                id="keyword"
-               label="글쓰기 주제"
+               label="글쓰기 주제 (필수)"
                value={keyword}
                onChange={(e) => setKeyword(e.target.value)}
                error={alert.keyword}
                helperText={alert.keyword && '주제를 입력하세요.'}
             />
-            <TextField fullWidth id="info" label="주제에 대한 추가 설명" value={info} onChange={(e) => setInfo(e.target.value)} />
+            <TextField fullWidth id="info" label="주제에 대한 추가 설명 (선택)" value={info} onChange={(e) => setInfo(e.target.value)} />
             <ToggleButtonGroup
                exclusive
                value={type}

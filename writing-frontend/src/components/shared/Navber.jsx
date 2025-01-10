@@ -2,9 +2,9 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUserThunk } from '../../features/authSlice'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button, Box, InputBase, Stack } from '@mui/material'
+import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button, Box, InputBase, Stack, Typography } from '@mui/material'
 import { Search } from '@mui/icons-material'
-import { MobileMenu } from '../../styles/StyledComponent'
+import { MobileMenu, LinkBox } from '../../styles/StyledComponent'
 
 function Navber({ isAuthenticated, user }) {
    const dispatch = useDispatch()
@@ -39,22 +39,12 @@ function Navber({ isAuthenticated, user }) {
 
    const navItem = (
       <>
-         <Link mr={3} component={RouterLink} to="/" underline="none" sx={{ fontWeight: 'bold' }}>
+         <LinkBox to="/" isHover="none" variant="h1">
             글조각
-         </Link>
-
-         <Link mr={3} component={RouterLink} to="/all" underline="hover">
-            전체 글
-         </Link>
-         {user && (
-            <Link mr={3} component={RouterLink} to="/follow" underline="hover">
-               구독
-            </Link>
-         )}
-
-         <Link mr={3} component={RouterLink} to="/theme" underline="hover">
-            주제 모음집
-         </Link>
+         </LinkBox>
+         <LinkBox to="/all">전체 글</LinkBox>
+         {user && <LinkBox to="/follow">구독</LinkBox>}
+         <LinkBox to="/theme">주제 모음집</LinkBox>
       </>
    )
 
@@ -67,8 +57,8 @@ function Navber({ isAuthenticated, user }) {
                height: 80,
             }}
          >
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}> {navItem}</Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ display: { xs: 'none', sm: 'flex' } }}> {navItem}</Box>
+            <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
                <MobileMenu>{navItem}</MobileMenu>
             </Box>
 
@@ -159,11 +149,13 @@ function Navber({ isAuthenticated, user }) {
                </Link>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleLogout}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/logout" underline="none">
-                  로그아웃
+            <MenuItem onClick={handleClose}>
+               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/setting" underline="none">
+                  계정 설정
                </Link>
+               <Divider />
             </MenuItem>
+            <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
          </Menu>
       </Box>
    )

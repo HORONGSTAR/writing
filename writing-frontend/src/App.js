@@ -8,6 +8,7 @@ import AuthPage from './pages/AuthPage'
 import UserPage from './pages/UserPage'
 import AlarmPage from './pages/AlarmPage'
 import SearchPage from './pages/SearchPage'
+import SettingPage from './pages/SettingPage'
 import Navber from './components/shared/Navber'
 import Footer from './components/shared/Footer'
 import { Route, Routes } from 'react-router-dom'
@@ -37,6 +38,7 @@ function App() {
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
             <Route path="/notice" element={<AlarmPage />} />
+            <Route path="/setting" element={<SettingPage />} />
             <Route path="/profile" element={<UserPage auth={user} />} />
             <Route path="/profile/:id" element={<UserPage auth={user} />} />
             <Route path="/detail/:id" element={<DetailPage auth={user} />} />

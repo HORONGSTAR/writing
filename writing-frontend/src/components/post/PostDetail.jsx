@@ -1,9 +1,10 @@
-import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack, Chip } from '@mui/material'
+import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack, Chip, Container, ListItemText } from '@mui/material'
 import { deletePostThunk } from '../../features/postSlice'
 import { Link as RouterLink } from 'react-router-dom'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
+import { TextBox } from '../../styles/StyledComponent'
 
 function PostDetail({ post, id, auth }) {
    const dispatch = useDispatch()
@@ -50,7 +51,9 @@ function PostDetail({ post, id, auth }) {
                </ListItem>
                <Divider />
                <ListItem>
-                  <Typography sx={{ whiteSpace: 'pre-wrap' }}>{post.content}</Typography>
+                  <TextBox $line="none" $space>
+                     {post.content}
+                  </TextBox>
                </ListItem>
                {post.Theme && (
                   <ListItem>

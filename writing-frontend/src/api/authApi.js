@@ -54,3 +54,13 @@ export const editUser = async (userData) => {
       throw error
    }
 }
+
+export const deleteUser = async () => {
+   try {
+      const response = await writingApi.delete(`/auth/delete`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error.message}`)
+      throw error
+   }
+}

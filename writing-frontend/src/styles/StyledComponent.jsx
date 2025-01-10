@@ -1,14 +1,42 @@
 import * as React from 'react'
 import { createTheme } from '@mui/material/styles'
 import styled from 'styled-components'
-import { Drawer, Typography, Modal, Box, Button, IconButton, Stack, CircularProgress } from '@mui/material'
+import { Drawer, Typography, Modal, Box, Button, IconButton, Stack, CircularProgress, Link } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 
 export const theme = createTheme({
    palette: {
       primary: { main: '#222' },
       secondary: { main: '#795548' },
+   },
+   typography: {
+      h1: {
+         fontSize: 18,
+         fontWeight: 'bold',
+         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
+      },
+      h2: {
+         fontSize: 24,
+         fontWeight: '500',
+         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
+      },
+      h3: {
+         fontSize: 28,
+         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
+      },
+      h4: {
+         fontSize: 24,
+         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
+      },
+      h5: {
+         fontSize: 20,
+      },
+      h6: {
+         fontSize: 18,
+      },
+      fontFamily: "'Pretendard', 'sans-serif'",
    },
 })
 
@@ -17,6 +45,16 @@ export const LoadingBox = () => {
       <Stack sx={{ alignItems: 'center', justifyContent: 'center', height: '400px' }}>
          <CircularProgress color="secondary" size={50} />
       </Stack>
+   )
+}
+
+export const LinkBox = ({ to, isHover, children, variant, color }) => {
+   return (
+      <Link mx={1} component={RouterLink} to={to} underline={isHover || 'hover'}>
+         <Typography color={color || 'primary'} variant={variant || 'body1'}>
+            {children}
+         </Typography>
+      </Link>
    )
 }
 
@@ -110,7 +148,7 @@ export const BannerImg = styled.div`
    text-shadow: 0 0 8px #000;
 `
 
-export const Ellipsis = styled.div`
+export const TextBox = styled.div`
    width: 100%;
    text-overflow: ellipsis;
    overflow: hidden;
@@ -118,4 +156,5 @@ export const Ellipsis = styled.div`
    display: -webkit-box;
    -webkit-line-clamp: ${(props) => props.$line || 1};
    -webkit-box-orient: vertical;
+   white-space: ${(props) => (props.$space ? 'pre-line' : 'normal')};
 `

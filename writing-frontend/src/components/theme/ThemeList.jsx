@@ -35,7 +35,7 @@ function ThemeList({ themes, auth }) {
                      </AccordionSummary>
                      <AccordionDetails>
                         <Typography variant="body2" color="#888" pl={2}>
-                           주제 소개 : {theme.info}
+                           주제 소개 : {theme.info || '등록된 소개가 없습니다.'}
                         </Typography>
                         <Divider />
                         <Box sx={{ maxHeight: 600, overflowY: 'auto' }}>

@@ -1,5 +1,5 @@
 import { Avatar, Typography, List, ListItem, Divider, Stack } from '@mui/material'
-import { Ellipsis } from '../../styles/StyledComponent'
+import { TextBox } from '../../styles/StyledComponent'
 import { Link as RouterLink } from 'react-router-dom'
 import { NoticeBox } from '../../styles/StyledComponent'
 import dayjs from 'dayjs'
@@ -11,12 +11,12 @@ function PostItem({ posts, line }) {
             posts.map((post, index) => (
                <List key={post.id}>
                   <ListItem component={RouterLink} to={`/detail/${post.id}`}>
-                     <Ellipsis>
-                        <Typography variant="h6">{post.content}</Typography>
-                     </Ellipsis>
+                     <TextBox>
+                        <Typography variant="h5">{post.title}</Typography>
+                     </TextBox>
                   </ListItem>
                   <ListItem>
-                     <Ellipsis $line={line}>{post.content}</Ellipsis>
+                     <TextBox $line={line}>{post.content}</TextBox>
                   </ListItem>
                   <ListItem>
                      <Stack direction="row" component={RouterLink} to={`/profile/${post.User.id}`} sx={{ color: 'inherit' }}>
