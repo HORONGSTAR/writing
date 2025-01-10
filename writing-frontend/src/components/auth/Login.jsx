@@ -7,13 +7,13 @@ import { NoticeBox, LoadingBox } from '../../styles/StyledComponent'
 function Login({ onSubmit, loading, error }) {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
-   const [alert, setAlert] = useState({ display: false, email: false, password: false })
+   const [alert, setAlert] = useState({ email: false, password: false })
 
    const handleLogin = useCallback(
       (e) => {
          e.preventDefault()
          const value = { em: email.trim(), pw: password.trim() }
-         setAlert({ email: !value.em, password: !value.pw, display: true })
+         setAlert({ email: !value.em, password: !value.pw })
          if (!value.em || !value.pw) return
          onSubmit({ email, password })
       },
@@ -21,7 +21,6 @@ function Login({ onSubmit, loading, error }) {
    )
 
    if (loading) return <LoadingBox />
-   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container component="form" onSubmit={handleLogin} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -51,10 +50,14 @@ function Login({ onSubmit, loading, error }) {
             <Button type="submit" variant="contained">
                로그인
             </Button>
-            <AlertBox display={alert.display}>{error}</AlertBox>
+            <AlertBox display={error}>{error}</AlertBox>
             <Box>
                계정이 없으신가요? &nbsp;
-               <Link component={RouterLink} to="/signup">
+               <Link
+                  onClick={() => {
+                     window.location.href = '/signup'
+                  }}
+               >
                   회원가입
                </Link>
             </Box>

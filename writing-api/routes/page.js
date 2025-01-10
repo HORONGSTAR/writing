@@ -11,12 +11,11 @@ router.get('/profile', isLoggedIn, async (req, res) => {
    })
 })
 
-router.get('/profile/:id', isLoggedIn, async (req, res) => {
+router.get('/profile/:id', async (req, res) => {
    try {
       const userId = req.params.id
       const user = await User.findOne({
          where: { id: userId },
-         attributes: ['id', 'nick', 'email', 'info', 'avatar', 'createdAt', 'updatedAt'],
          include: [
             {
                model: User,
@@ -54,12 +53,8 @@ router.get('/profile/:id', isLoggedIn, async (req, res) => {
                attributes: ['id', 'keyword', 'background'],
                include: [
                   {
-                     model: User,
-                     attributes: ['id', 'nick', 'avatar'],
-                  },
-                  {
                      model: Post,
-                     attributes: ['id', 'title', 'content'],
+                     attributes: ['id'],
                   },
                ],
             },

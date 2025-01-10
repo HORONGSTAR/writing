@@ -61,7 +61,7 @@ router.post('/', isLoggedIn, upload.single('background'), async (req, res) => {
    }
 })
 
-router.delete('/id/:id', async (req, res) => {
+router.delete('/id/:id', isLoggedIn, async (req, res) => {
    try {
       const theme = await Theme.findOne({
          where: {

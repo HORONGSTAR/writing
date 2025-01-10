@@ -10,7 +10,6 @@ module.exports = () => {
    passport.deserializeUser((id, done) => {
       User.findOne({
          where: { id },
-         attributes: ['id', 'nick', 'email', 'info', 'avatar', 'createdAt', 'updatedAt'],
          include: [
             {
                model: User,
@@ -48,12 +47,8 @@ module.exports = () => {
                attributes: ['id', 'keyword', 'background'],
                include: [
                   {
-                     model: User,
-                     attributes: ['id', 'nick', 'avatar'],
-                  },
-                  {
                      model: Post,
-                     attributes: ['id', 'title', 'content'],
+                     attributes: ['id'],
                   },
                ],
             },

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { User, Post, Theme, Alarm } = require('../models')
+const { User, Post, Theme } = require('../models')
 const { isLoggedIn } = require('./middlewares')
 
 router.post('/', isLoggedIn, async (req, res) => {
@@ -82,7 +82,7 @@ router.put('/id/:id', isLoggedIn, async (req, res) => {
    }
 })
 
-router.delete('/id/:id', async (req, res) => {
+router.delete('/id/:id', isLoggedIn, async (req, res) => {
    try {
       const post = await Post.findOne({
          where: {
@@ -304,50 +304,6 @@ router.get('/follow', async (req, res) => {
       res.status(500).json({
          success: false,
          message: '구독 리스트를 불러오는 중 오류가 발생했습니다.',
-         error,
-      })
-   }
-})
-
-router.get('/user/:id', async (req, res) => {
-   const page = parseInt(req.query.page, 10) || 1
-   const limit = parseInt(req.query.limit, 10) || 10
-   const offset = (page - 1) * limit
-   const userId = req.params.id
-   try {
-      const count = await Post.count({ where: { UserId: userId } })
-      const posts = await Post.findAll({
-         where: { UserId: userId },
-         limit,
-         offset,
-         include: [
-            {
-               model: User,
-               attributes: ['id', 'nick', 'avatar'],
-            },
-            {
-               model: Theme,
-               attributes: ['id', 'keyword'],
-            },
-         ],
-      })
-
-      res.json({
-         success: true,
-         posts,
-         pagination: {
-            totalPosts: count,
-            currentPage: page,
-            totalPages: Math.ceil(count / limit),
-            limit,
-         },
-         message: '게시물을 성공적으로 불러왔습니다.',
-      })
-   } catch (error) {
-      console.error(error)
-      res.status(500).json({
-         success: false,
-         message: '게시물을 불러오는 중 오류가 발생했습니다.',
          error,
       })
    }

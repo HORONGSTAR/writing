@@ -59,7 +59,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
       })
       res.status(201).json({
          success: true,
-         message: '사용자가 성공적으로 등록되었습니다.',
+         message: '사용자 등록 완료',
          user: {
             id: newUser.id,
             email: newUser.email,
@@ -70,7 +70,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
       console.error(err)
       res.status(500).json({
          success: false,
-         message: '회원가입 중 오류가 발생했습니다.',
+         message: '회원가입 중 오류 발생',
       })
       next(err)
    }
@@ -79,7 +79,11 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
    passport.authenticate('local', (authError, user, info) => {
       if (authError) {
-         return res.status(500).json({ success: false, message: '인증 중 오류 발생', error: authError })
+         return res.status(500).json({
+            success: false,
+            message: '인증 중 오류 발생',
+            error: authError,
+         })
       }
       if (!user) {
          return res.status(401).json({
@@ -89,7 +93,11 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
       }
       req.logIn(user, (loginError) => {
          if (loginError) {
-            return res.status(500).json({ success: false, message: '로그인 중 오류 발생', error: loginError })
+            return res.status(500).json({
+               success: false,
+               message: '로그인 중 오류 발생',
+               error: loginError,
+            })
          }
 
          res.json({
@@ -110,14 +118,14 @@ router.get('/logout', isLoggedIn, async (req, res, next) => {
          console.log(err)
          return res.status(500).json({
             success: false,
-            message: '로그아웃 중 오류가 발생했습니다.',
+            message: '로그아웃 중 오류 발생',
             error: err,
          })
       }
 
       res.json({
          success: true,
-         message: '로그아웃에 성공했습니다.',
+         message: '로그아웃 성공',
       })
    })
 })
@@ -143,6 +151,13 @@ router.put('/edit', isLoggedIn, upload.single('avatar'), async (req, res) => {
    try {
       const user = await User.findOne({ where: { id: req.user.id } })
 
+      if (!user) {
+         return res.status(401).json({
+            success: false,
+            message: info.message || '존재하지 않는 사용자입니다.',
+         })
+      }
+
       await user.update({
          avatar: req.file ? `/${req.file.filename}` : user.avatar,
          info: req.body.info,
@@ -150,31 +165,22 @@ router.put('/edit', isLoggedIn, upload.single('avatar'), async (req, res) => {
 
       const updatedUser = await User.findAll({
          where: { id: req.user.id },
-         attributes: ['id', 'nick', 'email', 'info', 'avatar', 'createdAt', 'updatedAt'],
-         include: [
-            {
-               model: User,
-               as: 'Followers',
-               attributes: ['id', 'nick', 'email', 'avatar'],
-            },
-            {
-               model: User,
-               as: 'Followings',
-               attributes: ['id', 'nick', 'email', 'avatar'],
-            },
-         ],
+         user: {
+            id: user.id,
+            nick: user.nick,
+         },
       })
 
       res.json({
          success: true,
          user: updatedUser,
-         message: '사용자 정보 수정을 성공적으로 완료하였습니다.',
+         message: '사용자 정보 수정 완료',
       })
    } catch (err) {
       console.error(err)
       res.status(500).json({
          success: false,
-         message: '사용자 정보 수정 중 오류가 발생했습니다.',
+         message: '사용자 정보 수정 중 오류 발생.',
       })
    }
 })
