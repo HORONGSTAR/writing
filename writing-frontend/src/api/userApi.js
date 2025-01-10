@@ -49,13 +49,3 @@ export const addBookmark = async (id) => {
       throw error
    }
 }
-
-export const removeBookmark = async (id) => {
-   try {
-      const response = await writingApi.delete(`/user/bookmark/${id}`)
-      return response
-   } catch (error) {
-      console.error(`API Request 오류: ${error.message}`)
-      throw error
-   }
-}

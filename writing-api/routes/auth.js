@@ -179,27 +179,4 @@ router.put('/edit', isLoggedIn, upload.single('avatar'), async (req, res) => {
    }
 })
 
-router.put('/delete', isLoggedIn, async (req, res) => {
-   try {
-      const user = await User.findOne({ where: { id: req.user.id } })
-
-      if (!user) {
-         return res.status(400).json({ success: false, message: '존재하지 않는 사용자입니다.' })
-      }
-
-      user.destroy()
-
-      res.json({
-         success: true,
-         message: '사용자 회원 탈퇴를 성공적으로 완료하였습니다.',
-      })
-   } catch (err) {
-      console.error(err)
-      res.status(500).json({
-         success: false,
-         message: '사용자 회원 탈퇴를 중 오류가 발생했습니다.',
-      })
-   }
-})
-
 module.exports = router

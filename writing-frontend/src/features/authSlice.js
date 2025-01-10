@@ -46,15 +46,6 @@ export const editUserThunk = createAsyncThunk('auth/editUser', async (userData, 
    }
 })
 
-export const deleteUserThunk = createAsyncThunk('auth/deleteUser', async (_, { rejectWithValue }) => {
-   try {
-      const response = await deleteUser(_)
-      return response.data
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '게시물 삭제 실패')
-   }
-})
-
 const authSlice = createSlice({
    name: 'auth',
    initialState: {
@@ -128,18 +119,6 @@ const authSlice = createSlice({
             state.user = action.payload.user
          })
          .addCase(editUserThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         .addCase(deleteUserThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(deleteUserThunk.fulfilled, (state) => {
-            state.loading = false
-            state.isAuthenticated = false
-         })
-         .addCase(deleteUserThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
