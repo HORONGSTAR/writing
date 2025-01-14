@@ -6,7 +6,7 @@ export const followUserThunk = createAsyncThunk('user/followUser', async (id, { 
       const response = await followUser(id)
       return response.data.message
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '팔로우 실패')
+      return rejectWithValue(error.response?.data?.message || '팔로우 중 문제가 발생했습니다.')
    }
 })
 
@@ -15,43 +15,43 @@ export const unFollowUserThunk = createAsyncThunk('user/unFollowUser', async (id
       const response = await unFollowUser(id)
       return response.data.message
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '언팔로우 실패')
+      return rejectWithValue(error.response?.data?.message || '언팔로우 중 문제가 발생했습니다.')
    }
 })
 
-export const addLikemarkThunk = createAsyncThunk('user/addLikemark', async (id, { rejectWithValue }) => {
+export const addLmkThunk = createAsyncThunk('user/addLikemark', async (id, { rejectWithValue }) => {
    try {
       const response = await addLikemark(id)
       return response.data.message
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '좋아요 추가 실패')
+      return rejectWithValue(error.response?.data?.message || '좋아요 추가 중 문제가 발생했습니다.')
    }
 })
 
-export const removeLikemarkThunk = createAsyncThunk('user/removeLikemark', async (id, { rejectWithValue }) => {
+export const removeLmkThunk = createAsyncThunk('user/removeLikemark', async (id, { rejectWithValue }) => {
    try {
       const response = await removeLikemark(id)
       return response.data.message
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '좋아요 삭제 실패')
+      return rejectWithValue(error.response?.data?.message || '좋아요 삭제 중 문제가 발생했습니다.')
    }
 })
 
-export const addBookmarkThunk = createAsyncThunk('user/addBookmark', async (id, { rejectWithValue }) => {
+export const addBmkThunk = createAsyncThunk('user/addBookmark', async (id, { rejectWithValue }) => {
    try {
       const response = await addBookmark(id)
       return response.data.message
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '북마크 추가 실패')
+      return rejectWithValue(error.response?.data?.message || '북마크 추가 중 문제가 발생했습니다.')
    }
 })
 
-export const removeBookmarkThunk = createAsyncThunk('user/removeBookmark', async (id, { rejectWithValue }) => {
+export const removeBmkThunk = createAsyncThunk('user/removeBookmark', async (id, { rejectWithValue }) => {
    try {
       const response = await removeBookmark(id)
       return response.data.message
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '북마크 삭제 실패')
+      return rejectWithValue(error.response?.data?.message || '북마크 삭제 중 문제가 발생했습니다.')
    }
 })
 
@@ -87,47 +87,47 @@ const userSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         .addCase(addLikemarkThunk.pending, (state) => {
+         .addCase(addLmkThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(addLikemarkThunk.fulfilled, (state) => {
+         .addCase(addLmkThunk.fulfilled, (state) => {
             state.loading = false
          })
-         .addCase(addLikemarkThunk.rejected, (state, action) => {
+         .addCase(addLmkThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
-         .addCase(removeLikemarkThunk.pending, (state) => {
+         .addCase(removeLmkThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(removeLikemarkThunk.fulfilled, (state) => {
+         .addCase(removeLmkThunk.fulfilled, (state) => {
             state.loading = false
          })
-         .addCase(removeLikemarkThunk.rejected, (state, action) => {
+         .addCase(removeLmkThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
-         .addCase(addBookmarkThunk.pending, (state) => {
+         .addCase(addBmkThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(addBookmarkThunk.fulfilled, (state) => {
+         .addCase(addBmkThunk.fulfilled, (state) => {
             state.loading = false
          })
-         .addCase(addBookmarkThunk.rejected, (state, action) => {
+         .addCase(addBmkThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
-         .addCase(removeBookmarkThunk.pending, (state) => {
+         .addCase(removeBmkThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(removeBookmarkThunk.fulfilled, (state) => {
+         .addCase(removeBmkThunk.fulfilled, (state) => {
             state.loading = false
          })
-         .addCase(removeBookmarkThunk.rejected, (state, action) => {
+         .addCase(removeBmkThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

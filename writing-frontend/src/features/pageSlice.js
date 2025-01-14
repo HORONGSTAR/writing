@@ -6,7 +6,7 @@ export const getProfileThunk = createAsyncThunk('page/getProfile', async (_, { r
       const response = await getProfile()
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '프로필정보 가져오기 실패')
+      return rejectWithValue(error.response?.data?.message || '프로필 정보를 가져오는 중 문제가 발생했습니다.')
    }
 })
 
@@ -15,7 +15,7 @@ export const getProfileIdThunk = createAsyncThunk('page/getProfileId', async (id
       const response = await getProfileId(id)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '프로필정보 가져오기 실패')
+      return rejectWithValue(error.response?.data?.message || '프로필 정보를 가져오는 중 문제가 발생했습니다.')
    }
 })
 

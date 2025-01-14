@@ -24,9 +24,10 @@ function PostEditPage() {
                window.location.href = '/'
             })
             .catch((error) => {
-               console.error('게시물 등록 중 에러:', error)
+               console.error(`게시물 수정 중 에러 \n : ${error}`)
                setOpen(true)
             })
+         return
       },
       [dispatch, id]
    )

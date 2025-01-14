@@ -1,26 +1,27 @@
-import { Container, Stack, Box, Chip, Pagination, Typography, Divider, Snackbar, Button } from '@mui/material'
+import { Container, Stack, Box, Chip, Pagination, Typography, Button } from '@mui/material'
 import ThemeForm from '../components/theme/ThemeForm'
 import ThemeList from '../components/theme/ThemeList'
 import { useDispatch, useSelector } from 'react-redux'
 import { createThemeThunk } from '../features/themeSlice'
 import { useCallback, useState, useEffect } from 'react'
 import { getThemesThunk } from '../features/themeSlice'
-import { LoadingBox, NoticeBox, ModalBox } from '../styles/StyledComponent'
+import { LoadingBox, NoticeBox, ModalBox, ErrorBox } from '../styles/StyledComponent'
 import { useParams } from 'react-router-dom'
 
 function ThemePage({ user }) {
-   const { id } = useParams()
    const dispatch = useDispatch()
-   const { loading, error, themes, themeList, pagination } = useSelector((state) => state.themes)
+   const { id } = useParams()
    const [value, setValue] = useState(null)
    const [page, setPage] = useState(1)
    const [open, setOpen] = useState(false)
    const [index, setIndex] = useState(10)
 
+   const { loading, error, themes, themeList, pagination } = useSelector((state) => state.themes)
+
    useEffect(() => {
       dispatch(getThemesThunk({ page: page, limit: 10 }))
       setValue(id)
-   }, [dispatch, page])
+   }, [dispatch, page, id])
 
    useEffect(() => {
       setIndex(themeList.length > 10 ? 10 : themeList.length)
@@ -34,9 +35,10 @@ function ThemePage({ user }) {
                window.location.href = '/theme'
             })
             .catch((error) => {
-               console.error('게시물 등록 중 에러:', error)
+               console.error(`주제 로드 중 에러 \n : ${error}`)
                setOpen(true)
             })
+         return
       },
       [dispatch]
    )
@@ -84,7 +86,7 @@ function ThemePage({ user }) {
                <Pagination count={pagination?.totalPages} page={page} onChange={(e, value) => setPage(value)} />
             </Stack>
          </Stack>
-         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message="게시물 등록에 실패했습니다." />
+         <ErrorBox open={open} setOpen={setOpen} error={error} />
       </Container>
    )
 }

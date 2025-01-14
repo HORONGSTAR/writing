@@ -30,8 +30,8 @@ function AlarmList({ alarmList }) {
          {alarmList.map((alarm, index) => (
             <Box key={'alarm' + alarm.id}>
                <Stack direction="row" p={2} onClick={() => handleOnClick(alarm.id)} component={RouterLink} to={page[alarm.category] + alarm.linkId}>
-                  <Avatar src={`${process.env.REACT_APP_API_URL}${alarm.User2.avatar}`} sx={{ width: 24, height: 24, marginRight: 0.5 }} />
-                  {alarm.User2.nick}
+                  <Avatar src={`${process.env.REACT_APP_API_URL}${alarm.formUser.avatar}`} sx={{ width: 24, height: 24, marginRight: 0.5 }} />
+                  {alarm.formUser.nick}
                   {message[alarm.category]}
                </Stack>
                {index === alarmList?.length - 1 || <Divider />}

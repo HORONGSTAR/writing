@@ -1,14 +1,12 @@
-import { Container, Stack, TextField, Button, CircularProgress } from '@mui/material'
+import { Container, Stack, TextField, Button } from '@mui/material'
 import React, { useState, useCallback } from 'react'
 
-import { AlertBox } from '../../styles/StyledComponent'
-
-function Signup({ onSubmit, loading, error }) {
+function Signup({ onSubmit }) {
    const [email, setEmail] = useState('')
    const [nick, setNick] = useState('')
    const [password, setPassword] = useState('')
    const [confirm, setConfirm] = useState('')
-   const [alert, setAlert] = useState({
+   const [error, setError] = useState({
       display: false,
       email: false,
       nick: false,
@@ -25,7 +23,7 @@ function Signup({ onSubmit, loading, error }) {
             pw: password.trim(),
             cf: confirm.trim(),
          }
-         setAlert({
+         setError({
             email: !value.em,
             nick: !value.nk,
             password: !value.pw,
@@ -37,11 +35,15 @@ function Signup({ onSubmit, loading, error }) {
 
          onSubmit({ email, nick, password })
       },
-      [email, nick, password, confirm, alert]
+      [email, nick, password, confirm, onSubmit]
    )
 
    return (
-      <Container component="form" onSubmit={handleSignUp} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Container
+         component="form"
+         onSubmit={handleSignUp}
+         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
          <Stack sx={{ width: 400 }} spacing={2} noValidate autoComplete="off">
             <h4>회원가입</h4>
             <TextField
@@ -49,16 +51,16 @@ function Signup({ onSubmit, loading, error }) {
                label="이메일"
                value={email}
                onChange={(e) => setEmail(e.target.value)}
-               error={alert.email}
-               helperText={alert.email && '이메일을 입력하세요.'}
+               error={error.email}
+               helperText={error.email && '이메일을 입력하세요.'}
             />
             <TextField
                id="nick"
                label="닉네임"
                value={nick}
                onChange={(e) => setNick(e.target.value)}
-               error={alert.nick}
-               helperText={alert.nick && '닉네임을 입력하세요.'}
+               error={error.nick}
+               helperText={error.nick && '닉네임을 입력하세요.'}
             />
 
             <TextField
@@ -67,8 +69,8 @@ function Signup({ onSubmit, loading, error }) {
                type="password"
                value={password}
                onChange={(e) => setPassword(e.target.value)}
-               error={alert.password}
-               helperText={alert.password && '비밀번호를 입력하세요.'}
+               error={error.password}
+               helperText={error.password && '비밀번호를 입력하세요.'}
             />
             <TextField
                id="confirm"
@@ -76,19 +78,14 @@ function Signup({ onSubmit, loading, error }) {
                type="password"
                value={confirm}
                onChange={(e) => setConfirm(e.target.value)}
-               error={alert.confirm || password !== confirm}
-               helperText={(alert.confirm && '비밀번호를 한번 더 입력하세요') || (password !== confirm && '비밀번호가 다릅니다.')}
+               error={error.confirm || password !== confirm}
+               helperText={
+                  (error.confirm && '비밀번호를 한번 더 입력하세요') || (password !== confirm && '비밀번호가 다릅니다.')
+               }
             />
-            <AlertBox display={alert.display}>{error}</AlertBox>
-            {loading ? (
-               <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <CircularProgress />
-               </Container>
-            ) : (
-               <Button type="submit" variant="contained">
-                  회원가입
-               </Button>
-            )}
+            <Button type="submit" variant="contained">
+               회원가입
+            </Button>
          </Stack>
       </Container>
    )

@@ -1,11 +1,9 @@
 import { InputBase, IconButton, Box } from '@mui/material'
-import { useParams } from 'react-router-dom'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { Search } from '@mui/icons-material'
 
 function SearchForm({ onSubmit }) {
-   const { searchValue } = useParams()
-   const [value, setValue] = useState(searchValue || '')
+   const [value, setValue] = useState('')
 
    const handleSearch = useCallback(
       (e) => {
@@ -15,10 +13,6 @@ function SearchForm({ onSubmit }) {
       },
       [value, onSubmit]
    )
-
-   useEffect(() => {
-      onSubmit(searchValue)
-   }, [searchValue])
 
    return (
       <Box

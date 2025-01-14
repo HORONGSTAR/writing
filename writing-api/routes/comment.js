@@ -18,8 +18,8 @@ router.post('/', isLoggedIn, async (req, res) => {
          await Alarm.create({
             category: 2,
             linkId: req.body.PostId,
-            UserId1: target.UserId,
-            UserId2: req.user.id,
+            toUser: target.UserId,
+            fromUser: req.user.id,
          })
       }
 

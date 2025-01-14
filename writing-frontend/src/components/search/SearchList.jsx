@@ -1,4 +1,4 @@
-import { List, ListItem, Typography, Avatar, Link, Divider, ListItemText } from '@mui/material'
+import { List, ListItem, Typography, Avatar, Link } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { TextBox } from '../../styles/StyledComponent'
 import { NoticeBox } from '../../styles/StyledComponent'

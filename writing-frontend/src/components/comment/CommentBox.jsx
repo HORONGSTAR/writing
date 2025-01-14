@@ -3,15 +3,15 @@ import { getCommentsThunk, createCommentThunk, updateCommentThunk, deleteComment
 import { useDispatch, useSelector } from 'react-redux'
 import { useCallback, useEffect, useState } from 'react'
 import { Create, Delete } from '@mui/icons-material'
-import { LoadingBox, NoticeBox } from '../../styles/StyledComponent'
+import { LoadingBox, ErrorBox } from '../../styles/StyledComponent'
 import dayjs from 'dayjs'
 
 function CommentBox({ id, auth }) {
    const dispatch = useDispatch()
+   const [open, setOpen] = useState(false)
    const [comment, setComment] = useState('')
    const [editComment, setEditComment] = useState('')
    const [editCommentId, setEditCommentId] = useState('')
-
    const { items, loading, error } = useSelector((state) => state.comments)
 
    const handleEditComment = useCallback(
@@ -56,7 +56,6 @@ function CommentBox({ id, auth }) {
    }, [dispatch, id])
 
    if (loading) return <LoadingBox />
-   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <>
@@ -105,6 +104,9 @@ function CommentBox({ id, auth }) {
                   )}
                </List>
             ))}
+         <ErrorBox open={open} setOpen={setOpen}>
+            {error}
+         </ErrorBox>
       </>
    )
 }

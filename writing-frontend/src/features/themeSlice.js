@@ -16,7 +16,7 @@ export const getThemesThunk = createAsyncThunk('theme/getThemes', async (data, {
       const response = await getThemes(page, limit)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '주제 불러오기 실패')
+      return rejectWithValue(error.response?.data?.message || '주제를 불러오는 중 문제가 발생했습니다.')
    }
 })
 
@@ -25,7 +25,7 @@ export const getThemeListThunk = createAsyncThunk('theme/getThemeList', async (_
       const response = await getThemeList(_)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '주제 불러오기 실패')
+      return rejectWithValue(error.response?.data?.message || '주제 목록을 불러오는 중 문제가 발생했습니다.')
    }
 })
 
@@ -34,7 +34,7 @@ export const deleteThemeThunk = createAsyncThunk('theme/deleteTheme', async (id,
       const response = await deleteTheme(id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '주제 불러오기 실패')
+      return rejectWithValue(error.response?.data?.message || '주제 삭제 중 문제가 발생했습니다.')
    }
 })
 const themeSlice = createSlice({

@@ -6,7 +6,7 @@ export const createUserThunk = createAsyncThunk('auth/createUser', async (userDa
       const response = await createUser(userData)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '회원가입 실패')
+      return rejectWithValue(error.response?.data?.message || '회원가입 중 문제가 발생했습니다.')
    }
 })
 
@@ -15,7 +15,7 @@ export const loginUserThunk = createAsyncThunk('auth/loginUser', async (credenti
       const response = await loginUser(credentials)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '로그인 실패')
+      return rejectWithValue(error.response?.data?.message || '로그인 중 문제가 발생했습니다.')
    }
 })
 
@@ -24,7 +24,7 @@ export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async (_, { r
       const response = await logoutUser()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '로그아웃 실패')
+      return rejectWithValue(error.response?.data?.message || '로그아웃 중 문제가 발생했습니다.')
    }
 })
 
@@ -33,7 +33,7 @@ export const authStatusThunk = createAsyncThunk('auth/authStatus', async (_, { r
       const response = await authStatus()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '상태 확인 실패')
+      return rejectWithValue(error.response?.data?.message || '사용자 계정 상태 확인 중 문제가 발생했습니다.')
    }
 })
 

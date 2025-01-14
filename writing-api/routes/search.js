@@ -9,12 +9,7 @@ router.get('/:search', async (req, res, next) => {
       const users = await User.findAll({
          order: [['createdAt', 'DESC']],
          where: {
-            [Op.or]: {
-               nick: {
-                  [Op.like]: `%${search}%`,
-                  [Op.like]: `%${search}%`,
-               },
-            },
+            nick: { [Op.like]: `%${search}%` },
          },
       })
 

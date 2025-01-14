@@ -63,13 +63,13 @@ module.exports = class User extends Sequelize.Model {
          through: 'Follow',
       })
       db.User.hasMany(db.Alarm, {
-         foreignKey: 'UserId1',
-         as: 'Alarm1',
+         foreignKey: 'toUserId',
+         as: 'toUser',
          sourceKey: 'id',
       })
       db.User.hasMany(db.Alarm, {
-         foreignKey: 'UserId2',
-         as: 'Alarm2',
+         foreignKey: 'fromUserId',
+         as: 'fromUser',
          sourceKey: 'id',
       })
    }

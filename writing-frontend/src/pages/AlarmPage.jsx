@@ -1,12 +1,13 @@
 import { Container, Typography, Button, Stack, Divider } from '@mui/material'
-import { getAlarmListThunk, deleteAlarmListThunk } from '../features/alarmSlice'
+import { LoadingBox, NoticeBox, ErrorBox } from '../styles/StyledComponent'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useCallback, useEffect } from 'react'
-import { LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import { getAlarmListThunk, deleteAlarmListThunk } from '../features/alarmSlice'
 import AlarmList from '../components/page/AlarmList'
 
 function AlarmPage() {
    const dispatch = useDispatch()
+   const [open, setOpen] = useState(false)
    const { alarmList, loading, error } = useSelector((state) => state.alarm)
 
    useEffect(() => {
@@ -15,10 +16,16 @@ function AlarmPage() {
 
    const handleOnClick = useCallback(() => {
       dispatch(deleteAlarmListThunk())
+         .unwrap()
+         .then()
+         .catch((error) => {
+            console.error(error)
+            setOpen(true)
+         })
+      return
    }, [dispatch])
 
    if (loading) return <LoadingBox />
-   if (error) return <NoticeBox>{error}</NoticeBox>
 
    return (
       <Container>
@@ -34,6 +41,7 @@ function AlarmPage() {
             <Divider />
             {alarmList.length !== 0 ? <AlarmList alarmList={alarmList} /> : <NoticeBox>새로운 알림이 없습니다.</NoticeBox>}
          </Stack>
+         <ErrorBox open={open} setOpen={setOpen} error={error} />
       </Container>
    )
 }

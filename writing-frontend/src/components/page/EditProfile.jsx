@@ -1,17 +1,15 @@
 import { Container, Stack, TextField, Button, Avatar, Box } from '@mui/material'
 import React, { useState, useCallback } from 'react'
 import { Upload } from '@mui/icons-material'
-import { editUserThunk } from '../../features/authSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-function MySetting() {
+function MySetting({ onSudmit }) {
    const { user } = useSelector((state) => state.page)
    const [info, setInfo] = useState(user.info || '')
    const [imgUrl, setImgUrl] = useState(user.avatar ? process.env.REACT_APP_API_URL + user.avatar : '')
    const [imgFile, setImgFile] = useState(null)
-   const [alert, setAlert] = useState({ info: false, nick: false })
+   const [error, setError] = useState({ info: false })
 
-   const dispatch = useDispatch()
    const handleImageChange = useCallback((e) => {
       const file = e.target.files && e.target.files[0]
       if (!file) return
@@ -24,9 +22,9 @@ function MySetting() {
       }
    }, [])
 
-   const handleProfileChange = useCallback(() => {
+   const handleEditProfile = useCallback(() => {
       const value = { if: info.trim() }
-      setAlert({ info: !value.if })
+      setError({ info: !value.if })
       if (!value.if) return
 
       const formData = new FormData()
@@ -37,14 +35,8 @@ function MySetting() {
          formData.append('avatar', encodedFile)
       }
       formData.append('info', info)
-
-      dispatch(editUserThunk(formData))
-         .unwrap()
-         .then(() => (window.location.href = '/profile'))
-         .catch((error) => {
-            console.error('프로필 수정 중 에러 :', error)
-         })
-   }, [info, alert, imgFile, dispatch])
+      onSudmit(formData)
+   }, [info, imgFile, onSudmit])
 
    return (
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -63,13 +55,13 @@ function MySetting() {
                label="자기소개"
                value={info}
                onChange={(e) => setInfo(e.target.value)}
-               error={alert.info}
+               error={error.info}
                multiline
                rows={4}
-               helperText={alert.info && '자기소개를 입력하세요.'}
+               helperText={error.info && '자기소개를 입력하세요.'}
             />
 
-            <Button onClick={handleProfileChange} variant="contained">
+            <Button onClick={handleEditProfile} variant="contained">
                완료
             </Button>
          </Stack>

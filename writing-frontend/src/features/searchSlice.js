@@ -6,11 +6,11 @@ export const searchResultThunk = createAsyncThunk('auth/searchResult', async (se
       const response = await searchResult(search)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '검색 실패')
+      return rejectWithValue(error.response?.data?.message || '검색 중 문제가 발생했습니다.')
    }
 })
 
-const alarmSlice = createSlice({
+const searchSlice = createSlice({
    name: 'search',
    initialState: {
       users: [],
@@ -39,4 +39,4 @@ const alarmSlice = createSlice({
    },
 })
 
-export default alarmSlice.reducer
+export default searchSlice.reducer

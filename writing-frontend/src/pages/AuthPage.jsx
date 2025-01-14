@@ -1,25 +1,30 @@
-import { useCallback } from 'react'
-import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Container, Stack, Button, Typography } from '@mui/material'
+import { LoadingBox, ErrorBox } from '../styles/StyledComponent'
+import { useState, useCallback } from 'react'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUserThunk, createUserThunk } from './../features/authSlice'
-import { Container, Stack, Button, Typography } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+
 import Login from '../components/auth/Login'
 import Signup from '../components/auth/Signup'
 
 function AuthPage() {
-   const { loading, error } = useSelector((state) => state.auth)
+   const [open, setOpen] = useState(false)
    const [isComplete, setComplete] = useState(false)
    const location = useLocation()
    const dispatch = useDispatch()
+
+   const { loading, error } = useSelector((state) => state.auth)
 
    const handleLogin = useCallback(
       (authData) => {
          dispatch(loginUserThunk(authData))
             .unwrap()
             .then(() => (window.location.href = '/'))
-            .catch((err) => console.error(err))
+            .catch((error) => {
+               console.error(error)
+               setOpen(true)
+            })
          return
       },
       [dispatch]
@@ -29,15 +34,20 @@ function AuthPage() {
          dispatch(createUserThunk(authData))
             .unwrap()
             .then(() => setComplete(true))
-            .catch((err) => console.error(err))
+            .catch((error) => {
+               console.error(error)
+               setOpen(true)
+            })
          return
       },
       [dispatch]
    )
 
+   if (loading) return <LoadingBox />
+
    return (
       <Container>
-         {location.pathname === '/login' && <Login onSubmit={handleLogin} error={error} loading={loading} />}
+         {location.pathname === '/login' && <Login onSubmit={handleLogin} />}
          {location.pathname === '/signup' &&
             (isComplete ? (
                <Stack spacing={2}>
@@ -48,8 +58,9 @@ function AuthPage() {
                   </Button>
                </Stack>
             ) : (
-               <Signup onSubmit={handleSignup} error={error} loading={loading} />
+               <Signup onSubmit={handleSignup} />
             ))}
+         <ErrorBox open={open} setOpen={setOpen} error={error} />
       </Container>
    )
 }

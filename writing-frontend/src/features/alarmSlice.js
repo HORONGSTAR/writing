@@ -6,7 +6,7 @@ export const getAlarmListThunk = createAsyncThunk('auth/getAlarmList', async (_,
       const response = await getAlarmList(_)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '알림 불러오기 실패')
+      return rejectWithValue(error.response?.data?.message || '알림을 불러오는 중 문제가 발생했습니다.')
    }
 })
 
@@ -15,7 +15,7 @@ export const deleteAlarmByIdThunk = createAsyncThunk('auth/deleteAlarmById', asy
       const response = await deleteAlarmById(id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '알림 삭제 실패')
+      return rejectWithValue(error.response?.data?.message || '알림 삭제 중 문제가 발생했습니다.')
    }
 })
 
@@ -24,7 +24,7 @@ export const deleteAlarmListThunk = createAsyncThunk('auth/deleteAlarmList', asy
       const response = await deleteAlarmList()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '알림 리스트 삭제 실패')
+      return rejectWithValue(error.response?.data?.message || '전체 알림 삭제 중 문제가 발생했습니다.')
    }
 })
 

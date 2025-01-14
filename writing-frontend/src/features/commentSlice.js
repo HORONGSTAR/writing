@@ -6,7 +6,7 @@ export const createCommentThunk = createAsyncThunk('auth/createComment', async (
       const response = await createComment(commentData)
       return response.data.comments
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '댓글 작성 실패')
+      return rejectWithValue(error.response?.data?.message || '댓글 작성 중 문제가 발생했습니다.')
    }
 })
 export const deleteCommentThunk = createAsyncThunk('auth/deleteComment', async (id, { rejectWithValue }) => {
@@ -14,7 +14,7 @@ export const deleteCommentThunk = createAsyncThunk('auth/deleteComment', async (
       const response = await deleteComment(id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '댓글 삭제 실패')
+      return rejectWithValue(error.response?.data?.message || '댓글 삭제 중 문제가 발생했습니다.')
    }
 })
 export const updateCommentThunk = createAsyncThunk('auth/updateComment', async (data, { rejectWithValue }) => {
@@ -23,7 +23,7 @@ export const updateCommentThunk = createAsyncThunk('auth/updateComment', async (
       const response = await updateComment(commentData, id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '댓글 수정 실패')
+      return rejectWithValue(error.response?.data?.message || '댓글 수정 중 문제가 발생했습니다.')
    }
 })
 export const getCommentsThunk = createAsyncThunk('auth/getComments', async (id, { rejectWithValue }) => {
@@ -31,7 +31,7 @@ export const getCommentsThunk = createAsyncThunk('auth/getComments', async (id, 
       const response = await getComments(id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '댓글 불러오기 실패')
+      return rejectWithValue(error.response?.data?.message || '댓글을 불러오는 중 문제가 발생했습니다.')
    }
 })
 

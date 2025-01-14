@@ -6,11 +6,11 @@ const { User, Alarm } = require('../models')
 router.get('/', isLoggedIn, async (req, res) => {
    try {
       const alarmList = await Alarm.findAll({
-         where: { Userid1: req.user.id },
+         where: { toUserId: req.user.id },
          include: [
             {
                model: User,
-               as: 'User2',
+               as: 'fromUser',
                attributes: ['id', 'nick', 'avatar'],
             },
          ],
@@ -48,11 +48,11 @@ router.delete('/:id', isLoggedIn, async (req, res) => {
       await alarm.destroy()
 
       const alarmList = await Alarm.findAll({
-         where: { Userid1: req.user.id },
+         where: { toUserId: req.user.id },
          include: [
             {
                model: User,
-               as: 'User2',
+               as: 'fromUser',
                attributes: ['id', 'nick', 'avatar'],
             },
          ],
@@ -77,7 +77,7 @@ router.delete('/', isLoggedIn, async (req, res) => {
    try {
       await Alarm.destroy({
          where: {
-            UserId1: req.user.id,
+            toUserId: req.user.id,
          },
       })
 

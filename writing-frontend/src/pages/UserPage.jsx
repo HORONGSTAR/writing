@@ -3,8 +3,9 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfileThunk, getProfileIdThunk } from '../features/pageSlice'
 import { followUserThunk, unFollowUserThunk } from '../features/userSlice'
-import { Box, Button, Typography, Stack, Container, Snackbar } from '@mui/material'
-import { ModalBox, LoadingBox, NoticeBox } from '../styles/StyledComponent'
+import { editUserThunk } from '../features/authSlice'
+import { Box, Button, Typography, Stack, Container } from '@mui/material'
+import { ModalBox, LoadingBox, ErrorBox, NoticeBox } from '../styles/StyledComponent'
 import FollowList from '../components/page/FollowList'
 import EditProfile from '../components/page/EditProfile'
 import MyProfile from '../components/page/MyProfile'
@@ -15,12 +16,11 @@ function UserPage({ auth }) {
    const [followers, setFollowers] = useState(0)
    const [followings, setFollowings] = useState(0)
    const [follow, setFollow] = useState(false)
-   const { user, loading, error } = useSelector((state) => state.page)
    const [open, setOpen] = useState(false)
-   const [message, setMessage] = useState('')
+   const [errMsg, setErrMsg] = useState('')
+   const { user, loading, error } = useSelector((state) => state.page)
 
    const dispatch = useDispatch()
-
    const fetchProfileData = useCallback(() => {
       if (id) {
          dispatch(getProfileIdThunk(id))
@@ -30,10 +30,11 @@ function UserPage({ auth }) {
                setFollowings(result.Followings.length)
             })
             .catch((error) => {
-               console.error('사용자 정보 가져오는 중 오류 발생:', error)
                setOpen(true)
-               alert('사용자 정보 가져오기를 실패했습니다.', error)
+               setErrMsg(error)
+               console.error(error)
             })
+         return
       } else {
          dispatch(getProfileThunk())
             .unwrap()
@@ -42,19 +43,28 @@ function UserPage({ auth }) {
                setFollowings(result.Followings.length)
             })
             .catch((error) => {
-               console.error('사용자 정보 가져오는 중 오류 발생:', error)
-               alert('사용자 정보 가져오기를 실패했습니다.', error)
+               setOpen(true)
+               setErrMsg(error)
+               console.error(error)
             })
+         return
       }
    }, [dispatch, id])
 
-   const buttonName = useMemo(() => {
-      return <>{user?.Followers.filter((f) => f.id === auth?.id).length > 0 ? '언팔로우' : '팔로우'}</>
-   }, [user?.Followers, auth?.id])
-
-   useEffect(() => {
-      fetchProfileData()
-   }, [fetchProfileData, follow])
+   const handleEditProfile = useCallback(
+      (formData) => {
+         dispatch(editUserThunk(formData))
+            .unwrap()
+            .then(() => (window.location.href = '/profile'))
+            .catch((error) => {
+               setOpen(true)
+               setErrMsg(error)
+               console.error(error)
+            })
+         return
+      },
+      [dispatch]
+   )
 
    const onClickFollow = useCallback(
       (userId) => {
@@ -62,32 +72,38 @@ function UserPage({ auth }) {
             dispatch(unFollowUserThunk(userId))
                .unwrap()
                .then(() => {
-                  setOpen(true)
-                  setMessage('언팔로우 되었습니다!')
                   setFollow((prev) => !prev)
                })
                .catch((error) => {
-                  console.error('팔로우 중 :', error)
                   setOpen(true)
-                  setMessage('팔로우 중 문제가 발생했습니다.')
+                  setErrMsg(error)
+                  console.error(error)
                })
+            return
          } else {
             dispatch(followUserThunk(userId))
                .unwrap()
                .then(() => {
-                  setOpen(true)
-                  setMessage('팔로우 되었습니다!')
                   setFollow((prev) => !prev)
                })
                .catch((error) => {
-                  console.error('팔로우 중 :', error)
                   setOpen(true)
-                  setMessage('팔로우 중 문제가 발생했습니다.')
+                  setErrMsg(error)
+                  console.error(error)
                })
+            return
          }
       },
-      [dispatch, user]
+      [dispatch, user, auth]
    )
+
+   useEffect(() => {
+      fetchProfileData()
+   }, [fetchProfileData, follow])
+
+   const buttonName = useMemo(() => {
+      return user?.Followers.filter((f) => f.id === auth?.id).length > 0 ? '언팔로우' : '팔로우'
+   }, [user?.Followers, auth?.id])
 
    if (loading) return <LoadingBox />
    if (error) return <NoticeBox>{error}</NoticeBox>
@@ -109,7 +125,7 @@ function UserPage({ auth }) {
             <Box>
                {!id || String(auth?.id) === String(id) ? (
                   <ModalBox btnName={'프로필 편집'}>
-                     <EditProfile />
+                     <EditProfile onSudmit={handleEditProfile} />
                   </ModalBox>
                ) : (
                   <Button variant="outlined" onClick={() => onClickFollow(user.id)}>
@@ -119,7 +135,9 @@ function UserPage({ auth }) {
             </Box>
          </Stack>
          <ProfileTab user={user} />
-         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)} message={message} />
+         <ErrorBox open={open} setOpen={setOpen}>
+            {errMsg}
+         </ErrorBox>
       </Container>
    )
 }

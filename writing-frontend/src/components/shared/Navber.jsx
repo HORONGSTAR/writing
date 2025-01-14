@@ -1,17 +1,13 @@
 import React, { useState, useCallback } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logoutUserThunk } from '../../features/authSlice'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
-import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Tooltip, Link, Button, Box, InputBase, Stack, Typography } from '@mui/material'
+import { Avatar, Menu, MenuItem, Divider, IconButton, Container, Box, Stack, Typography } from '@mui/material'
 import { Search } from '@mui/icons-material'
-import { MobileMenu, LinkBox } from '../../styles/StyledComponent'
 
 function Navber({ isAuthenticated, user }) {
    const dispatch = useDispatch()
-   const location = useLocation().pathname
-
    const [anchorEl, setAnchorEl] = useState(null)
-   const [value, setValue] = useState('')
    const open = Boolean(anchorEl)
 
    const handleClick = (event) => {
@@ -29,71 +25,44 @@ function Navber({ isAuthenticated, user }) {
          })
    }, [dispatch])
 
-   const handleSearch = useCallback(
-      (e) => {
-         e.preventDefault()
-         if (value) window.location.href = `/search/${value}`
-      },
-      [value]
-   )
-
-   const navItem = (
-      <>
-         <LinkBox to="/" isHover="none" variant="h1">
-            글조각
-         </LinkBox>
-         <LinkBox to="/all">전체 글</LinkBox>
-         {user && <LinkBox to="/follow">구독</LinkBox>}
-         <LinkBox to="/theme">주제 모음집</LinkBox>
-      </>
-   )
-
    return (
       <Box sx={{ background: '#efebe9', mb: 4 }}>
          <Container
             sx={{
                display: 'flex',
                alignItems: 'center',
-               height: 80,
+               height: 60,
             }}
          >
-            <Box sx={{ display: { xs: 'none', sm: 'flex' } }}> {navItem}</Box>
-            <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
-               <MobileMenu>{navItem}</MobileMenu>
-            </Box>
-
-            <Stack sx={{ marginLeft: 'auto' }} direction={'row'} spacing={2}>
-               {location.includes('search') || (
-                  <Box
-                     sx={{ display: 'flex', alignItems: 'center', width: 120, borderBottom: '1px solid #888' }}
-                     component={'form'}
-                     onSubmit={(e) => handleSearch(e)}
-                  >
-                     <InputBase variant="standard" placeholder="검색" value={value} onChange={(e) => setValue(e.target.value)} />
-                     <IconButton aria-label="검색" type="submit">
-                        <Search />
-                     </IconButton>
-                  </Box>
-               )}
-
-               {isAuthenticated ? (
-                  <Tooltip title="내 계정">
-                     <IconButton
-                        onClick={handleClick}
-                        size="small"
-                        aria-controls={open ? 'account-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                     >
-                        <Avatar src={`${process.env.REACT_APP_API_URL}${user.avatar}`} sx={{ width: 32, height: 32 }} />
-                     </IconButton>
-                  </Tooltip>
-               ) : (
-                  <Button sx={{ marginLeft: 'auto' }} component={RouterLink} to="/login" variant="outlined">
-                     로그인
-                  </Button>
-               )}
+            <Stack spacing={2} direction="row">
+               <Typography component={RouterLink} to="/" variant="h1">
+                  글조각
+               </Typography>
+               <RouterLink to="/all">전체 글</RouterLink>
+               {user && <RouterLink to="/follow">구독</RouterLink>}
+               <RouterLink to="/theme">주제 모음집</RouterLink>
             </Stack>
+
+            <IconButton component={RouterLink} to="/search" sx={{ marginLeft: 'auto' }}>
+               <Search aria-label="검색" />
+            </IconButton>
+
+            {!isAuthenticated ? (
+               <>
+                  <IconButton
+                     onClick={handleClick}
+                     size="small"
+                     aria-haspopup="true"
+                     aria-controls={open ? 'account-menu' : undefined}
+                     aria-expanded={open ? 'true' : undefined}
+                     aria-label="내 계정"
+                  >
+                     <Avatar src={`${process.env.REACT_APP_API_URL}${user?.avatar}`} sx={{ width: 32, height: 32 }} />
+                  </IconButton>
+               </>
+            ) : (
+               <RouterLink to="/login">로그인</RouterLink>
+            )}
          </Container>
          <Menu
             anchorEl={anchorEl}
@@ -132,29 +101,17 @@ function Navber({ isAuthenticated, user }) {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
          >
-            <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/post/create" underline="none">
-                  글 쓰기
-               </Link>
+            <MenuItem>
+               <RouterLink to="/post/create">글 쓰기</RouterLink>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/notice" underline="none">
-                  알림
-               </Link>
+            <MenuItem>
+               <RouterLink to="/notice">알림</RouterLink>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/profile" underline="none">
-                  마이페이지
-               </Link>
+            <MenuItem>
+               <RouterLink to="/profile">마이페이지</RouterLink>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleClose}>
-               <Link sx={{ minWidth: 100 }} component={RouterLink} to="/setting" underline="none">
-                  계정 설정
-               </Link>
-               <Divider />
-            </MenuItem>
             <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
          </Menu>
       </Box>

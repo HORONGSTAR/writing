@@ -1,44 +1,8 @@
 import * as React from 'react'
-import { createTheme } from '@mui/material/styles'
 import styled from 'styled-components'
-import { Drawer, Typography, Modal, Box, Button, IconButton, Stack, CircularProgress, Link } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
+import { Drawer, Typography, Modal, Box, Button, IconButton, Stack, CircularProgress, Dialog, DialogContent, DialogTitle, Chip } from '@mui/material'
+import { Menu, Close } from '@mui/icons-material'
 import { useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-
-export const theme = createTheme({
-   palette: {
-      primary: { main: '#222' },
-      secondary: { main: '#795548' },
-   },
-   typography: {
-      h1: {
-         fontSize: 18,
-         fontWeight: 'bold',
-         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
-      },
-      h2: {
-         fontSize: 24,
-         fontWeight: '500',
-         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
-      },
-      h3: {
-         fontSize: 28,
-         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
-      },
-      h4: {
-         fontSize: 24,
-         fontFamily: "'Gyeonggi_Batang_Regular','sans-serif'",
-      },
-      h5: {
-         fontSize: 20,
-      },
-      h6: {
-         fontSize: 18,
-      },
-      fontFamily: "'Pretendard', 'sans-serif'",
-   },
-})
 
 export const LoadingBox = () => {
    return (
@@ -48,57 +12,60 @@ export const LoadingBox = () => {
    )
 }
 
-export const LinkBox = ({ to, isHover, children, variant, color }) => {
+export const SubTitle = ({ title }) => {
    return (
-      <Link mx={1} component={RouterLink} to={to} underline={isHover || 'hover'}>
-         <Typography color={color || 'primary'} variant={variant || 'body1'}>
-            {children}
-         </Typography>
-      </Link>
+      <Typography variant="h2" color="secondary" gutterBottom>
+         {title}
+      </Typography>
    )
 }
 
 export const NoticeBox = ({ children }) => {
-   return <Stack sx={{ height: '100%', minHeight: '200px', alignItems: 'center', justifyContent: 'center' }}>{children}</Stack>
+   return (
+      <Stack sx={{ height: '100%', minHeight: '200px', alignItems: 'center', justifyContent: 'center', color: 'text.secondary' }}>{children}</Stack>
+   )
 }
 
-export const MobileMenu = ({ children }) => {
-   const [open, setOpen] = useState(false)
-
-   const toggleDrawer = (newOpen) => () => {
-      setOpen(newOpen)
-   }
-
+export const ErrorBox = ({ error, open, setOpen }) => {
    return (
       <>
-         <IconButton onClick={toggleDrawer(true)}>
-            <MenuIcon />
-         </IconButton>
-         <Drawer open={open} onClose={toggleDrawer(false)}>
-            <Stack spacing={3} p={3} width={100}>
-               {children}
-            </Stack>
-         </Drawer>
+         <Dialog
+            onClose={() => {
+               setOpen(false)
+            }}
+            aria-labelledby="에러 메세지"
+            open={open}
+         >
+            <DialogTitle sx={{ m: 0, p: 2 }} id="에러 메세지">
+               에러 메세지
+            </DialogTitle>
+            <IconButton
+               aria-label="close"
+               onClick={() => {
+                  setOpen(false)
+               }}
+               sx={(theme) => ({
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: theme.palette.grey[500],
+               })}
+            >
+               <Close />
+            </IconButton>
+            <DialogContent dividers>
+               <Typography gutterBottom color="error">
+                  {error}
+               </Typography>
+               <Typography gutterBottom variant="body2">
+                  문제가 계속 해결되지 않을 경우 관리자에게 문의 부탁드립니다.
+               </Typography>
+               <Typography gutterBottom variant="body2">
+                  <Chip label="Email : admin@naver.com" size="small" />
+               </Typography>
+            </DialogContent>
+         </Dialog>
       </>
-   )
-}
-
-export const ThemeBanner = () => {
-   return (
-      <BannerImg>
-         <Stack sx={{ alignItems: 'center', color: '#fff' }}>
-            <Typography variant="h5">첫번째 주제를 등록해보세요.</Typography>
-            <Typography>함께 글감을 나누며 글을 쓸 수 있어요!</Typography>
-         </Stack>
-      </BannerImg>
-   )
-}
-
-export const AlertBox = ({ children, display }) => {
-   return (
-      <Typography color="error" style={{ display: display ? 'block' : 'none' }}>
-         {children}
-      </Typography>
    )
 }
 
@@ -122,7 +89,7 @@ export const ModalBox = ({ children, btnName, variant, size }) => {
                   borderRadius: 1,
                   boxShadow: 24,
                   px: { xs: 0.5, sm: 3 },
-                  p: 3,
+                  py: 3,
                   maxHeight: '600px',
                   overflowY: 'auto',
                }}
@@ -131,6 +98,38 @@ export const ModalBox = ({ children, btnName, variant, size }) => {
             </Box>
          </Modal>
       </>
+   )
+}
+
+export const MobileMenu = ({ children }) => {
+   const [open, setOpen] = useState(false)
+
+   const toggleDrawer = (newOpen) => () => {
+      setOpen(newOpen)
+   }
+
+   return (
+      <>
+         <IconButton onClick={toggleDrawer(true)}>
+            <Menu />
+         </IconButton>
+         <Drawer open={open} onClose={toggleDrawer(false)}>
+            <Stack spacing={3} p={3} width={100}>
+               {children}
+            </Stack>
+         </Drawer>
+      </>
+   )
+}
+
+export const ThemeBanner = () => {
+   return (
+      <BannerImg>
+         <Stack sx={{ alignItems: 'center', color: '#fff' }}>
+            <Typography variant="h5">첫번째 주제를 등록해보세요.</Typography>
+            <Typography>함께 글감을 나누며 글을 쓸 수 있어요!</Typography>
+         </Stack>
+      </BannerImg>
    )
 }
 

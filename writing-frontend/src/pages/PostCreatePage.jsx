@@ -11,7 +11,9 @@ function PostCreatePage() {
          dispatch(createPostThunk(postData))
             .unwrap()
             .then(() => (window.location.href = '/'))
-            .catch((err) => console.error(err))
+            .catch((error) => {
+               console.error(`게시물 등록 중 에러 \n : ${error}`)
+            })
          return
       },
       [dispatch]

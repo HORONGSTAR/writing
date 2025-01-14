@@ -127,27 +127,6 @@ router.get('/id/:id', async (req, res) => {
    }
 })
 
-router.get('/list', async (req, res) => {
-   try {
-      const themeList = await Theme.findAll({
-         order: [['createdAt', 'DESC']],
-      })
-
-      res.json({
-         success: true,
-         themeList,
-         message: '전체 주제 리스트를 성공적으로 불러왔습니다.',
-      })
-   } catch (error) {
-      console.error(error)
-      res.status(500).json({
-         success: false,
-         message: '주제 리스트를 불러오는 중 오류가 발생했습니다.',
-         error,
-      })
-   }
-})
-
 router.get('/', async (req, res) => {
    const page = parseInt(req.query.page, 10) || 1
    const limit = parseInt(req.query.limit, 10) || 10
@@ -155,7 +134,6 @@ router.get('/', async (req, res) => {
 
    try {
       const count = await Theme.count()
-
       const themes = await Theme.findAll({
          limit,
          offset,
@@ -187,7 +165,27 @@ router.get('/', async (req, res) => {
             totalPages: Math.ceil(count / limit),
             limit,
          },
-         message: '전체 주제 리스트를 성공적으로 불러왔습니다.',
+         message: '주제 모음집을 성공적으로 불러왔습니다.',
+      })
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({
+         success: false,
+         message: '주제 모음집을 불러오는 중 오류가 발생했습니다.',
+         error,
+      })
+   }
+})
+
+router.get('/', async (req, res) => {
+   try {
+      const themeList = await Theme.findAll({
+         order: [['createdAt', 'DESC']],
+      })
+      res.json({
+         success: true,
+         themes,
+         message: '주제 리스트를 성공적으로 불러왔습니다.',
       })
    } catch (error) {
       console.error(error)

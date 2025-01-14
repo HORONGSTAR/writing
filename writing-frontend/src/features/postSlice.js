@@ -6,7 +6,7 @@ export const createPostThunk = createAsyncThunk('posts/createPost', async (postD
       const response = await createPost(postData)
       return response.data.post
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '게시물 작성 실패')
+      return rejectWithValue(error.response?.data?.message || '게시물 작성 중 문제가 발생했습니다.')
    }
 })
 
@@ -16,7 +16,7 @@ export const updatePostThunk = createAsyncThunk('posts/updatePost', async (data,
       const response = await updatePost(postData, id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '게시물 수정 실패')
+      return rejectWithValue(error.response?.data?.message || '게시물 수정 중 문제가 발생했습니다.')
    }
 })
 
@@ -25,7 +25,7 @@ export const deletePostThunk = createAsyncThunk('posts/deletePost', async (id, {
       const response = await deletePost(id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '게시물 삭제 실패')
+      return rejectWithValue(error.response?.data?.message || '게시물 삭제 중 문제가 발생했습니다.')
    }
 })
 
@@ -35,7 +35,7 @@ export const getPostsThunk = createAsyncThunk('posts/getPosts', async (data, { r
       const response = await getPosts(page, limit, endpoint)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '전체 게시물 가져오기 실패')
+      return rejectWithValue(error.response?.data?.message || '전체 게시물을 가져오는 중 문제가 발생했습니다.')
    }
 })
 
@@ -44,7 +44,7 @@ export const getPostByIdThunk = createAsyncThunk('posts/getPostById', async (id,
       const response = await getPostById(id)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '특정 게시물 가져오기 실패')
+      return rejectWithValue(error.response?.data?.message || '해당 게시물을 가져오는 중 문제가 발생했습니다.')
    }
 })
 
