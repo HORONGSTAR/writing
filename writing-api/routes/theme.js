@@ -177,14 +177,14 @@ router.get('/', async (req, res) => {
    }
 })
 
-router.get('/', async (req, res) => {
+router.get('/list', async (req, res) => {
    try {
       const themeList = await Theme.findAll({
          order: [['createdAt', 'DESC']],
       })
       res.json({
          success: true,
-         themes,
+         themeList,
          message: '주제 리스트를 성공적으로 불러왔습니다.',
       })
    } catch (error) {

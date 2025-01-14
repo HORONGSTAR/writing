@@ -29,8 +29,8 @@ function ThemeList({ themes, auth }) {
          <>
             {themes ? (
                themes.map((theme) => (
-                  <Accordion key={'theme' + theme.id}>
-                     <AccordionSummary>
+                  <Accordion key={'theme' + theme.id} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+                     <AccordionSummary sx={{ padding: 0, height: 180 }}>
                         <ThemeItem theme={theme} />
                      </AccordionSummary>
                      <AccordionDetails>

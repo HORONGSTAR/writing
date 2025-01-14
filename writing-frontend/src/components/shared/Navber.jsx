@@ -47,7 +47,7 @@ function Navber({ isAuthenticated, user }) {
                <Search aria-label="검색" />
             </IconButton>
 
-            {!isAuthenticated ? (
+            {isAuthenticated ? (
                <>
                   <IconButton
                      onClick={handleClick}
@@ -61,7 +61,9 @@ function Navber({ isAuthenticated, user }) {
                   </IconButton>
                </>
             ) : (
-               <RouterLink to="/login">로그인</RouterLink>
+               <Typography component={RouterLink} fontWeight="bold" color="secondary" to="/login">
+                  로그인
+               </Typography>
             )}
          </Container>
          <Menu

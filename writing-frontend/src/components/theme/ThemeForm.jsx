@@ -1,4 +1,4 @@
-import { Button, Stack, TextField, Container, ToggleButton, ToggleButtonGroup, Box } from '@mui/material'
+import { Button, Stack, TextField, Container, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import { useState, useCallback } from 'react'
 import { SliderPicker } from 'react-color'
 import ThemeItem from './ThemeItem'
@@ -6,11 +6,11 @@ import { Image, ColorLens, Block } from '@mui/icons-material'
 
 function ThemeForm({ onSubmit, user }) {
    const [imgUrl, setImgUrl] = useState('')
-   const [keyword, setKeyword] = useState('')
+   const [keyword, setKeyword] = useState('주제를 입력하세요.')
    const [info, setInfo] = useState('')
    const [imgFile, setImgFile] = useState(null)
    const [imgAlt, setImgAlt] = useState('')
-   const [color, setColor] = useState('#e6cbb3')
+   const [color, setColor] = useState('#d2a379')
    const [type, setType] = useState('color')
 
    const handleImageChange = useCallback((e) => {
@@ -69,6 +69,7 @@ function ThemeForm({ onSubmit, user }) {
                onChange={(e) => setKeyword(e.target.value)}
                error={alert.keyword}
                helperText={alert.keyword && '주제를 입력하세요.'}
+               slotProps={{ htmlInput: { maxLength: 20 } }}
             />
             <TextField fullWidth id="info" label="주제에 대한 추가 설명 (선택)" value={info} onChange={(e) => setInfo(e.target.value)} />
             <ToggleButtonGroup
@@ -78,17 +79,11 @@ function ThemeForm({ onSubmit, user }) {
                   setType(newValue)
                }}
             >
-               <ToggleButton value="none">
-                  <Block fontSize="small" />
-                  배경 없음
-               </ToggleButton>
                <ToggleButton value="color">
                   <ColorLens fontSize="small" />
-                  배경 색상
                </ToggleButton>
                <ToggleButton value="image">
                   <Image fontSize="small" />
-                  배경 이미지
                </ToggleButton>
             </ToggleButtonGroup>
 
@@ -112,7 +107,7 @@ function ThemeForm({ onSubmit, user }) {
                   background: type === 'color' ? color : type === 'image' ? imgUrl || '#EEEEEE' : '#EEEEEE',
                   User: user,
                }}
-               fontsize={'h6'}
+               fontsize={'22px'}
             />
             <Button variant="contained" type="submit">
                완료
