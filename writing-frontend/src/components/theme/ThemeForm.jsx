@@ -79,11 +79,17 @@ function ThemeForm({ onSubmit, user }) {
                   setType(newValue)
                }}
             >
+               <ToggleButton value="none">
+                  <Block fontSize="small" />
+                  배경 없음
+               </ToggleButton>
                <ToggleButton value="color">
                   <ColorLens fontSize="small" />
+                  배경 색상
                </ToggleButton>
                <ToggleButton value="image">
                   <Image fontSize="small" />
+                  배경 이미지
                </ToggleButton>
             </ToggleButtonGroup>
 
