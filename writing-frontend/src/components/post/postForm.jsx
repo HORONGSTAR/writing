@@ -48,7 +48,6 @@ function PostForm({ onSubmit, initialValues = {} }) {
                ))}
             </NativeSelect>
          </FormControl>
-
          <TextField fullWidth label="제목" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
          <TextField fullWidth multiline label="내용" rows={24} id="content" value={content} onChange={(e) => setContent(e.target.value)} />
          <Button sx={{ marginLeft: 'auto' }} onClick={handleSubmit} variant="contained">
