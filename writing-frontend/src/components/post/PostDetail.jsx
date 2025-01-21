@@ -1,4 +1,4 @@
-import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack, Chip, Container, ListItemText } from '@mui/material'
+import { Avatar, Typography, List, ListItem, Divider, Box, Button, Stack, Chip } from '@mui/material'
 import { deletePostThunk } from '../../features/postSlice'
 import { Link as RouterLink } from 'react-router-dom'
 import { useCallback } from 'react'
@@ -40,7 +40,7 @@ function PostDetail({ post, id, auth }) {
                         </Typography>
                      </Stack>
                   </Stack>
-                  {auth?.id === post.UserId && (
+                  {auth?.id === post.userId && (
                      <Box sx={{ marginLeft: 'auto' }}>
                         <Button onClick={onClickDelete}>삭제</Button>
                         <Button component={RouterLink} to={`/post/edit/${id}`}>

@@ -35,9 +35,8 @@ router.post('/', isLoggedIn, upload.single('background'), async (req, res) => {
          background: req.file ? `/${req.file.filename}` : req.body.background,
          alt: req.body.alt,
          info: req.body.info,
-         UserId: req.user.id,
+         userId: req.user.id,
       })
-      console.log(req.body, req.file)
 
       res.json({
          success: true,
@@ -47,7 +46,7 @@ router.post('/', isLoggedIn, upload.single('background'), async (req, res) => {
             background: theme.background,
             alt: theme.alt,
             info: req.body.info,
-            UserId: theme.UserId,
+            userId: theme.userId,
          },
          message: '주제를 성공적으로 등록했습니다.',
       })
@@ -66,7 +65,7 @@ router.delete('/id/:id', isLoggedIn, async (req, res) => {
       const theme = await Theme.findOne({
          where: {
             id: req.params.id,
-            UserId: req.user.id,
+            userId: req.user.id,
          },
       })
       if (!theme) {

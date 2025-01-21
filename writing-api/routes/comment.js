@@ -8,23 +8,23 @@ router.post('/', isLoggedIn, async (req, res) => {
    try {
       await Comment.create({
          comment: req.body.comment,
-         UserId: req.user.id,
-         PostId: req.body.PostId,
+         userId: req.user.id,
+         postId: req.body.postId,
       })
 
-      const target = await Post.findOne({ where: { id: req.body.PostId } })
+      const target = await Post.findOne({ where: { id: req.body.postId } })
 
-      if (target.UserId !== req.user.id) {
+      if (target.userId !== req.user.id) {
          await Alarm.create({
             category: 2,
-            linkId: req.body.PostId,
-            toUser: target.UserId,
-            fromUser: req.user.id,
+            linkId: req.body.postId,
+            toUserId: target.userId,
+            fromUserId: req.user.id,
          })
       }
 
       const comments = await Comment.findAll({
-         where: { PostId: req.body.PostId },
+         where: { postId: req.body.postId },
          include: [
             {
                model: User,
@@ -51,7 +51,7 @@ router.post('/', isLoggedIn, async (req, res) => {
 router.get('/:id', async (req, res) => {
    try {
       const comments = await Comment.findAll({
-         where: { PostId: req.params.id },
+         where: { postId: req.params.id },
          include: [
             {
                model: User,
@@ -80,7 +80,7 @@ router.put('/:id', isLoggedIn, async (req, res) => {
       const comment = await Comment.findOne({
          where: {
             id: req.params.id,
-            UserId: req.user.id,
+            userId: req.user.id,
          },
       })
 
@@ -96,7 +96,7 @@ router.put('/:id', isLoggedIn, async (req, res) => {
       })
 
       const comments = await Comment.findAll({
-         where: { PostId: comment.PostId },
+         where: { postId: comment.postId },
          include: [
             {
                model: User,
@@ -138,7 +138,7 @@ router.delete('/:id', isLoggedIn, async (req, res) => {
       await comment.destroy()
 
       const comments = await Comment.findAll({
-         where: { PostId: comment.PostId },
+         where: { postId: comment.postId },
          include: [
             {
                model: User,

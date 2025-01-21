@@ -29,12 +29,12 @@ module.exports = class Alarm extends Sequelize.Model {
    static associate(db) {
       db.Alarm.belongsTo(db.User, {
          foreignKey: 'toUserId',
-         as: 'toUser',
+         as: 'ToUser',
          targetKey: 'id',
       })
       db.Alarm.belongsTo(db.User, {
          foreignKey: 'fromUserId',
-         as: 'fromUser',
+         as: 'FromUser',
          targetKey: 'id',
       })
    }

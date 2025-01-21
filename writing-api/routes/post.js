@@ -8,8 +8,8 @@ router.post('/', isLoggedIn, async (req, res) => {
       const post = await Post.create({
          title: req.body.title,
          content: req.body.content,
-         UserId: req.user.id,
-         ThemeId: req.body.themeId,
+         userId: req.user.id,
+         themeId: req.body.themeId,
       })
 
       res.json({
@@ -18,8 +18,8 @@ router.post('/', isLoggedIn, async (req, res) => {
             id: post.id,
             title: post.title,
             content: post.content,
-            UserId: post.UserId,
-            ThemeId: post.ThemeId,
+            userId: post.UserId,
+            themeId: post.ThemeId,
          },
          message: '게시물이 성공적으로 등록되었습니다.',
       })
@@ -38,7 +38,7 @@ router.put('/id/:id', isLoggedIn, async (req, res) => {
       const post = await Post.findOne({
          where: {
             id: req.params.id,
-            UserId: req.user.id,
+            userId: req.user.id,
          },
       })
       if (!post) {
@@ -51,7 +51,7 @@ router.put('/id/:id', isLoggedIn, async (req, res) => {
       await post.update({
          title: req.body.title,
          content: req.body.content,
-         ThemeId: req.body.themeId,
+         themeId: req.body.themeId,
       })
 
       const updatedPost = await Post.findOne({
@@ -87,7 +87,7 @@ router.delete('/id/:id', isLoggedIn, async (req, res) => {
       const post = await Post.findOne({
          where: {
             id: req.params.id,
-            UserId: req.user.id,
+            userId: req.user.id,
          },
       })
       if (!post) {
@@ -187,7 +187,7 @@ router.get('/', async (req, res) => {
          const follow = await Post.findAll({
             limit,
             offset,
-            where: { UserId: followingId },
+            where: { userId: followingId },
             order: [['createdAt', 'DESC']],
             include: [
                {

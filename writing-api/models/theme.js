@@ -36,11 +36,11 @@ module.exports = class Theme extends Sequelize.Model {
 
    static associate(db) {
       db.Theme.belongsTo(db.User, {
-         foreignKey: 'UserId',
+         foreignKey: 'userId',
          targetKey: 'id',
       })
       db.Theme.hasMany(db.Post, {
-         foreignKey: 'ThemeId',
+         foreignKey: 'themeId',
          sourceKey: 'id',
       })
    }

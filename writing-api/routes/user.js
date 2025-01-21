@@ -13,8 +13,8 @@ router.post('/follow/:id', isLoggedIn, async (req, res) => {
             await Alarm.create({
                category: 1,
                linkId: req.user.id,
-               toUser: req.params.id,
-               fromUser: req.user.id,
+               toUserId: req.params.id,
+               fromUserId: req.user.id,
             })
          }
          res.json({ success: true, message: '사용자를 성공적으로 팔로우했습니다.' })
@@ -60,12 +60,12 @@ router.post('/likemark/:id', isLoggedIn, async (req, res) => {
       if (post) {
          await req.user.addLikemarkPost(post.id)
 
-         if (post.UserId !== req.user.id) {
+         if (post.userId !== req.user.id) {
             await Alarm.create({
                category: 3,
                linkId: req.params.id,
-               toUser: post.UserId,
-               fromUser: req.user.id,
+               toUserId: post.userId,
+               fromUserId: req.user.id,
             })
          }
 

@@ -42,7 +42,7 @@ function ThemeList({ themes, auth }) {
                            <PostItem posts={theme.Posts} />
                         </Box>
                         <AccordionActions sx={{ py: 0 }}>
-                           {theme.UserId === auth?.id && (
+                           {theme.userId === auth?.id && (
                               <ModalBox btnName={'주제 삭제하기'}>
                                  <Typography variant="h6">정말로 주제를 삭제하시겠습니까?</Typography>
                                  <Typography>
@@ -64,7 +64,7 @@ function ThemeList({ themes, auth }) {
             )}
          </>
       )
-   }, [themes, auth])
+   }, [themes, auth, onClickDelete, open])
 
    return items
 }

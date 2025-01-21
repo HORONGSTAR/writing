@@ -44,7 +44,7 @@ function CommentBox({ id, auth }) {
    )
 
    const handleOnSubmit = useCallback(() => {
-      dispatch(createCommentThunk({ PostId: id, comment: comment }))
+      dispatch(createCommentThunk({ postId: id, comment: comment }))
          .unwrap()
          .then(() => setComment(''))
          .catch((err) => console.error(err))

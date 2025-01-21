@@ -10,7 +10,7 @@ router.get('/', isLoggedIn, async (req, res) => {
          include: [
             {
                model: User,
-               as: 'fromUser',
+               as: 'FromUser',
                attributes: ['id', 'nick', 'avatar'],
             },
          ],
@@ -52,7 +52,7 @@ router.delete('/:id', isLoggedIn, async (req, res) => {
          include: [
             {
                model: User,
-               as: 'fromUser',
+               as: 'FromUser',
                attributes: ['id', 'nick', 'avatar'],
             },
          ],

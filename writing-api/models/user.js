@@ -41,35 +41,48 @@ module.exports = class User extends Sequelize.Model {
    }
 
    static associate(db) {
-      db.User.hasMany(db.Post)
+      db.User.hasMany(db.Post, {
+         foreignKey: 'userId',
+         sourceKey: 'id',
+      })
       db.User.hasMany(db.Theme, {
-         foreignKey: 'UserId',
+         foreignKey: 'userId',
          sourceKey: 'id',
       })
       db.User.hasMany(db.Comment, {
-         foreignKey: 'UserId',
+         foreignKey: 'userId',
          sourceKey: 'id',
       })
-      db.User.belongsToMany(db.Post, { as: 'LikemarkPost', through: 'Likemark' })
-      db.User.belongsToMany(db.Post, { as: 'BookmarkPost', through: 'Bookmark' })
+      db.User.belongsToMany(db.Post, {
+         foreignKey: 'postId',
+         sourceKey: 'id',
+         as: 'LikemarkPost',
+         through: 'Likemark',
+      })
+      db.User.belongsToMany(db.Post, {
+         foreignKey: 'postId',
+         sourceKey: 'id',
+         as: 'BookmarkPost',
+         through: 'Bookmark',
+      })
       db.User.belongsToMany(db.User, {
-         foreignKey: 'FollowingId',
+         foreignKey: 'followingId',
          as: 'Followers',
          through: 'Follow',
       })
       db.User.belongsToMany(db.User, {
-         foreignKey: 'FollowerId',
+         foreignKey: 'followerId',
          as: 'Followings',
          through: 'Follow',
       })
       db.User.hasMany(db.Alarm, {
          foreignKey: 'toUserId',
-         as: 'toUser',
+         as: 'ToUser',
          sourceKey: 'id',
       })
       db.User.hasMany(db.Alarm, {
          foreignKey: 'fromUserId',
-         as: 'fromUser',
+         as: 'FromUser',
          sourceKey: 'id',
       })
    }

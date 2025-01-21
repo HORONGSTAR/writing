@@ -9,7 +9,6 @@ import ThemeItem from '../components/theme/ThemeItem'
 
 function MainPage() {
    const endpoint = useLocation().pathname
-   const [open, setOpen] = useState(false)
    const [page, setPage] = useState(1)
 
    const { loading, error, posts, pagination } = useSelector((state) => state.posts)
@@ -36,7 +35,7 @@ function MainPage() {
             <Grid2 container rowSpacing={8} columnSpacing={2}>
                <Grid2 size={{ xs: 12 }}>
                   <SubTitle title="최근 주제" />
-                  <Box width="100%" component={RouterLink} to={'/theme'}>
+                  <Box component={RouterLink} to={'/theme'}>
                      {themeList[0] ? <ThemeItem theme={themeList[0]} /> : <ThemeBanner />}
                   </Box>
                </Grid2>
