@@ -36,7 +36,7 @@ function MainPage() {
             <Grid2 container rowSpacing={8} columnSpacing={2}>
                <Grid2 size={{ xs: 12 }}>
                   <SubTitle title="최근 주제" />
-                  <Box component={RouterLink} to={'/theme'}>
+                  <Box width="100%" component={RouterLink} to={'/theme'}>
                      {themeList[0] ? <ThemeItem theme={themeList[0]} /> : <ThemeBanner />}
                   </Box>
                </Grid2>
